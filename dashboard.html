@@ -258,7 +258,7 @@ async function loadCases() {
     const list = document.getElementById('caseList');
 
     document.getElementById('activeCases').textContent =
-        ddata.filter(c => c.status === 'active').length
+        data.filter(c => c.status === 'active').length
 
     if (!data.length) {
 
