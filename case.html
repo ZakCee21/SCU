@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SCU Case Details</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b1120;
+            color: #e5e7eb;
+        }
+
+        header {
+            background: #111827;
+            padding: 20px 30px;
+            border-bottom: 1px solid #1f2937;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #60a5fa;
+            font-size: 22px;
+        }
+
+        button {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .case-header {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .case-number {
+            color: #60a5fa;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .case-title {
+            font-size: 28px;
+            margin: 0 0 15px 0;
+        }
+
+        .status {
+            display: inline-block;
+            background: #065f46;
+            color: #a7f3d0;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .section {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #93c5fd;
+            font-size: 18px;
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 12px;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            box-sizing: border-box;
+            background: #0f172a;
+            color: #e5e7eb;
+            border: 1px solid #374151;
+            border-radius: 5px;
+            padding: 11px;
+            font-size: 14px;
+        }
+
+        .field textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #9ca3af;
+        }
+
+        .error {
+            background: #450a0a;
+            color: #fecaca;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>SCU CASE MANAGEMENT</h1>
+
+    <button onclick="window.location.href='dashboard.html'">
+        ← BACK TO DASHBOARD
+    </button>
+
+</header>
+
+
+<div class="container">
+
+    <div id="loading" class="loading">
+        Loading case...
+    </div>
+
+
+    <div id="caseContent" style="display:none;">
+
+        <div class="case-header">
+
+            <div class="case-number" id="caseNumber">
+                SCU-0000
+            </div>
+
+            <h1 class="case-title" id="caseTitle">
+                Case
+            </h1>
+
+            <span class="status" id="caseStatus">
+                ACTIVE
+            </span>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>CASE INFORMATION</h2>
+
+            <div class="field">
+
+                <label>Case Name</label>
+
+                <input
+                    type="text"
+                    id="caseName"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Classification</label>
+
+                <select id="classification">
+
+                    <option value="CONFIDENTIAL">
+                        CONFIDENTIAL
+                    </option>
+
+                    <option value="RESTRICTED">
+                        RESTRICTED
+                    </option>
+
+                    <option value="SENSITIVE">
+                        SENSITIVE
+                    </option>
+
+                    <option value="TOP SECRET">
+                        TOP SECRET
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>Description</label>
+
+                <textarea
+                    id="description"
+                ></textarea>
+
+            </div>
+
+
+            <button id="saveCase">
+                SAVE CHANGES
+            </button>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>CASE INFORMATION — MORE TO COME</h2>
+
+            <p style="color:#9ca3af;">
+                Suspects, intelligence, surveillance,
+                evidence, documents, links and activity
+                history will be added here.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div id="error" class="error" style="display:none;"></div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+// Get case ID from the URL
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const caseId =
+    params.get('id');
+
+
+async function loadCase() {
+
+    if (!caseId) {
+
+        showError(
+            'No case was specified.'
+        );
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('cases')
+        .select('*')
+        .eq('id', caseId)
+        .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+        showError(
+            'Unable to load this case: ' +
+            error.message
+        );
+
+        return;
+    }
+
+
+    document.getElementById('caseNumber')
+        .textContent =
+        data.case_number;
+
+
+    document.getElementById('caseTitle')
+        .textContent =
+        data.case_name;
+
+
+    document.getElementById('caseStatus')
+        .textContent =
+        data.status;
+
+
+    document.getElementById('caseName')
+        .value =
+        data.case_name || '';
+
+
+    document.getElementById('classification')
+        .value =
+        data.classification || 'CONFIDENTIAL';
+
+
+    document.getElementById('description')
+        .value =
+        data.description || '';
+
+
+    document.getElementById('loading')
+        .style.display = 'none';
+
+
+    document.getElementById('caseContent')
+        .style.display = 'block';
+
+}
+
+
+function showError(message) {
+
+    document.getElementById('loading')
+        .style.display = 'none';
+
+    const error =
+        document.getElementById('error');
+
+    error.textContent = message;
+
+    error.style.display = 'block';
+
+}
+
+
+document.getElementById('saveCase')
+    .addEventListener('click', async function() {
+
+        const caseName =
+            document.getElementById('caseName')
+                .value.trim();
+
+        const classification =
+            document.getElementById('classification')
+                .value;
+
+        const description =
+            document.getElementById('description')
+                .value.trim();
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from('cases')
+            .update({
+                case_name: caseName,
+                classification: classification,
+                description: description,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', caseId);
+
+
+        if (error) {
+
+            alert(
+                'SAVE FAILED: ' +
+                error.message
+            );
+
+            console.error(error);
+
+            return;
+        }
+
+
+        document.getElementById('caseTitle')
+            .textContent =
+            caseName;
+
+
+        alert('CASE UPDATED SUCCESSFULLY');
+
+    });
+
+
+loadCase();
+
+</script>
+
+</body>
+</html>
