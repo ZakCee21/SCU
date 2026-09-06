@@ -1128,7 +1128,86 @@ document
     }
 
 });
-    
+    async function setupDeleteCase() {
+
+    const deleteButton =
+        document.getElementById('deleteCase');
+
+    if (!deleteButton) {
+        console.error('DELETE CASE BUTTON NOT FOUND');
+        return;
+    }
+
+    const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (!user) {
+        deleteButton.style.display = 'none';
+        return;
+    }
+
+    const {
+        data: officer,
+        error
+    } = await supabaseClient
+        .from('officers')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    if (error) {
+        console.error('MASTER CHECK FAILED:', error);
+        deleteButton.style.display = 'none';
+        return;
+    }
+
+    if (!officer || officer.role !== 'master') {
+        deleteButton.style.display = 'none';
+        return;
+    }
+
+    deleteButton.addEventListener('click', async function() {
+
+        const confirmed = confirm(
+            'WARNING!\n\n' +
+            'Are you sure you want to permanently DELETE this case?\n\n' +
+            'This will remove the case and all associated case data.\n\n' +
+            'THIS ACTION CANNOT BE UNDONE.'
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        const {
+            error: deleteError
+        } = await supabaseClient.rpc(
+            'delete_case',
+            {
+                p_case_id: caseId
+            }
+        );
+
+        if (deleteError) {
+
+            alert(
+                'CASE COULD NOT BE DELETED:\n\n' +
+                deleteError.message
+            );
+
+            console.error(deleteError);
+
+            return;
+        }
+
+        alert('CASE DELETED SUCCESSFULLY');
+
+        window.location.href = 'dashboard.html';
+
+    });
+
+}
     setupDeleteCase();
 
 loadCase();
