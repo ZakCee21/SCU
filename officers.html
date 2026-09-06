@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SCU Officer Management</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0f14;
+            color: #e6edf3;
+        }
+
+        header {
+            background: #111820;
+            border-bottom: 1px solid #26313c;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+
+        .master {
+            font-size: 13px;
+            color: #7dd3fc;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .top-bar h2 {
+            margin: 0;
+        }
+
+        button {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .logout {
+            background: #374151;
+        }
+
+        .logout:hover {
+            background: #4b5563;
+        }
+
+        .panel {
+            background: #111820;
+            border: 1px solid #26313c;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #26313c;
+        }
+
+        th {
+            background: #151d26;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        .role {
+            color: #7dd3fc;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>SCU // OFFICER MANAGEMENT</h1>
+    <div>
+        <span class="master">MASTER ACCESS</span>
+        <button class="logout" onclick="logout()">LOGOUT</button>
+    </div>
+</header>
+
+<main>
+
+    <div class="top-bar">
+        <h2>Authorised Officers</h2>
+        <button onclick="alert('Officer creation will be added next.')">
+            + ADD OFFICER
+        </button>
+    </div>
+
+    <div class="panel">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Callsign</th>
+                    <th>Name</th>
+                    <th>Rank</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="officerList">
+                <tr>
+                    <td colspan="5" class="empty">
+                        Loading officers...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</main>
+
+<script>
+
+    const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+    async function checkMaster() {
+
+        const { data: { session } } =
+            await supabaseClient.auth.getSession();
+
+        if (!session) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const { data: officer, error } =
+            await supabaseClient
+                .from('officers')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+
+        if (error || !officer || officer.role !== 'master') {
+
+            alert('ACCESS DENIED');
+
+            window.location.href = 'dashboard.html';
+
+            return;
+        }
+
+        loadOfficers();
+    }
+
+
+    async function loadOfficers() {
+
+        const { data, error } =
+            await supabaseClient
+                .from('officers')
+                .select('*')
+                .order('callsign');
+
+        const list =
+            document.getElementById('officerList');
+
+        if (error) {
+
+            list.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">
+                        Unable to load officers.
+                    </td>
+                </tr>
+            `;
+
+            console.error(error);
+
+            return;
+        }
+
+        if (!data || data.length === 0) {
+
+            list.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">
+                        No officers found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        list.innerHTML = data.map(officer => `
+
+            <tr>
+
+                <td>
+                    ${officer.callsign || '-'}
+                </td>
+
+                <td>
+                    ${officer.full_name || '-'}
+                </td>
+
+                <td>
+                    ${officer.rank || '-'}
+                </td>
+
+                <td class="role">
+                    ${officer.role || '-'}
+                </td>
+
+                <td class="status">
+                    ACTIVE
+                </td>
+
+            </tr>
+
+        `).join('');
+    }
+
+
+    async function logout() {
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = 'index.html';
+    }
+
+
+    checkMaster();
+
+</script>
+
+</body>
+</html>
