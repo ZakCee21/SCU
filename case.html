@@ -396,7 +396,15 @@ const params =
 
 const caseId =
     params.get('id');
+function escapeHtml(text) {
 
+    const div = document.createElement('div');
+
+    div.textContent = text ?? '';
+
+    return div.innerHTML;
+
+}
 
 async function loadCase() {
 
@@ -805,6 +813,8 @@ document
 loadCase();
 
 loadCaseOfficers();
+
+loadEvidence();
 document
     .getElementById('addEvidenceLink')
     .addEventListener('click', async function() {
@@ -889,6 +899,7 @@ loadCase();
 loadCaseOfficers();
 
 loadEvidence();
+        
     });
 </script>
 
