@@ -949,7 +949,106 @@ loadCaseOfficers();
 loadEvidence();
         
     });
+document
+    .getElementById('uploadEvidence')
+    .addEventListener('click', async function() {
 
+        const fileInput =
+            document.getElementById('evidenceFile');
+
+        const title =
+            document.getElementById('evidenceTitle')
+                .value.trim();
+
+        const description =
+            document.getElementById('evidenceDescription')
+                .value.trim();
+
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Please select a document to upload.');
+            return;
+        }
+
+        if (!title) {
+            alert('Please enter an evidence title.');
+            return;
+        }
+
+        const {
+            data: { user }
+        } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+            alert('You are not logged in.');
+            return;
+        }
+
+        const safeFileName =
+            file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+
+        const filePath =
+            `${caseId}/${Date.now()}-${safeFileName}`;
+
+        const {
+            error: uploadError
+        } = await supabaseClient
+            .storage
+            .from('case-evidence')
+            .upload(filePath, file);
+
+        if (uploadError) {
+
+            alert(
+                'DOCUMENT UPLOAD FAILED: ' +
+                uploadError.message
+            );
+
+            console.error(uploadError);
+
+            return;
+        }
+
+        const {
+            error: evidenceError
+        } = await supabaseClient
+            .from('evidence')
+            .insert({
+                case_id: caseId,
+                officer_id: user.id,
+                evidence_type: 'document',
+                title: title,
+                description: description,
+                file_url: filePath
+            });
+
+        if (evidenceError) {
+
+            alert(
+                'DOCUMENT RECORD COULD NOT BE SAVED: ' +
+                evidenceError.message
+            );
+
+            console.error(evidenceError);
+
+            return;
+        }
+
+        fileInput.value = '';
+
+        document.getElementById('evidenceTitle')
+            .value = '';
+
+        document.getElementById('evidenceDescription')
+            .value = '';
+
+        alert('DOCUMENT UPLOADED SUCCESSFULLY');
+
+        loadEvidence();
+
+    });
+    
     setupDeleteCase();
 
 loadCase();
