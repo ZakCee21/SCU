@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -135,6 +136,38 @@
         </div>
 
     </div>
+<script>
+    const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+</script>
+    <script>
+    const loginForm = document.querySelector('form');
+
+    loginForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            alert('LOGIN FAILED: ' + error.message);
+            return;
+        }
+
+        alert('LOGIN SUCCESSFUL');
+
+        window.location.href = 'dashboard.html';
+    });
+</script>
 </body>
 </html>
