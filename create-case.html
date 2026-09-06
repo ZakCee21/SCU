@@ -399,17 +399,11 @@ async function loadOfficers() {
 
 }
 
-
-document
+        document
     .getElementById('caseForm')
     .addEventListener('submit', async function(event) {
 
         event.preventDefault();
-
-
-        const caseNumber =
-            document.getElementById('caseNumber')
-                .value.trim();
 
         const caseName =
             document.getElementById('caseName')
@@ -423,7 +417,6 @@ document
             document.getElementById('classification')
                 .value;
 
-
         const selectedOfficers =
             Array.from(
                 document.querySelectorAll(
@@ -433,68 +426,51 @@ document
 
 
         /*
-         * Create the case.
+         * Create the case securely through Supabase.
          */
 
-        const caseName =
-    document.getElementById('caseName')
-        .value.trim();
+        const {
+            data: newCaseId,
+            error: caseError
+        } = await supabaseClient.rpc('create_case', {
 
-const description =
-    document.getElementById('description')
-        .value.trim();
+            p_case_name: caseName,
 
-const classification =
-    document.getElementById('classification')
-        .value;
+            p_description: description,
 
-const selectedOfficers =
-    Array.from(
-        document.querySelectorAll(
-            '.officer-checkbox:checked'
-        )
-    ).map(checkbox => checkbox.value);
+            p_classification: classification,
+
+            p_officer_ids: selectedOfficers
+
+        });
 
 
-/*
- * Create the case securely through Supabase.
- */
+        if (caseError) {
 
-const {
-    data: newCaseId,
-    error: caseError
-} = await supabaseClient.rpc('create_case', {
-    p_case_name: caseName,
-    p_description: description,
-    p_classification: classification,
-    p_officer_ids: selectedOfficers
-});
+            showMessage(
+                'CASE CREATION FAILED: ' +
+                caseError.message
+            );
+
+            console.error(caseError);
+
+            return;
+        }
 
 
-if (caseError) {
-
-    showMessage(
-        'CASE CREATION FAILED: ' +
-        caseError.message
-    );
-
-    console.error(caseError);
-
-    return;
-}
+        showMessage(
+            'CASE CREATED SUCCESSFULLY'
+        );
 
 
-showMessage(
-    'CASE CREATED SUCCESSFULLY'
-);
+        setTimeout(() => {
 
+            window.location.href =
+                'dashboard.html';
 
-setTimeout(() => {
+        }, 1200);
 
-    window.location.href =
-        'dashboard.html';
-
-}, 1200);
+    });
 
 function showMessage(text) {
 
