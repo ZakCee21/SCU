@@ -750,7 +750,7 @@ document
         loadCaseOfficers();
 
     });
-    async function loadEvidence() {
+   async function loadEvidence() {
 
     const {
         data,
@@ -761,10 +761,8 @@ document
         .eq('case_id', caseId)
         .order('created_at', { ascending: false });
 
-
     const list =
         document.getElementById('evidenceList');
-
 
     if (error) {
 
@@ -776,7 +774,6 @@ document
         return;
     }
 
-
     if (!data || data.length === 0) {
 
         list.innerHTML =
@@ -784,7 +781,6 @@ document
 
         return;
     }
-
 
     list.innerHTML = data.map(item => `
 
@@ -817,7 +813,6 @@ document
 
             </div>
 
-
             ${
                 item.description
                 ? `
@@ -832,37 +827,34 @@ document
                 : ''
             }
 
-
             ${
-               ${
-    item.file_url
-    ? `
-        <div style="margin-top:12px;">
+                item.file_url
+                ? `
+                    <div style="margin-top:12px;">
 
-            <button
-                class="open-evidence-button"
-                data-evidence-id="${item.id}"
-                style="
-                    background:#1d4ed8;
-                    color:white;
-                    border:none;
-                    padding:8px 14px;
-                    border-radius:5px;
-                    cursor:pointer;
-                    font-weight:bold;
-                "
-            >
-                ${
-                    item.evidence_type === 'document'
-                    ? 'OPEN DOCUMENT'
-                    : 'OPEN LINK'
-                }
-            </button>
+                        <button
+                            class="open-evidence-button"
+                            data-evidence-id="${item.id}"
+                            style="
+                                background:#1d4ed8;
+                                color:white;
+                                border:none;
+                                padding:8px 14px;
+                                border-radius:5px;
+                                cursor:pointer;
+                                font-weight:bold;
+                            "
+                        >
+                            ${
+                                item.evidence_type === 'document'
+                                ? 'OPEN DOCUMENT'
+                                : 'OPEN LINK'
+                            }
+                        </button>
 
-        </div>
-    `
-    : ''
-}
+                    </div>
+                `
+                : ''
             }
 
         </div>
