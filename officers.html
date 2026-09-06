@@ -36,12 +36,13 @@
         }
 
         .master {
-            font-size: 13px;
             color: #7dd3fc;
+            font-size: 13px;
+            margin-right: 15px;
         }
 
         main {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
@@ -53,7 +54,7 @@
             margin-bottom: 25px;
         }
 
-        .top-bar h2 {
+        h2 {
             margin: 0;
         }
 
@@ -61,7 +62,7 @@
             background: #1d4ed8;
             color: white;
             border: none;
-            padding: 11px 18px;
+            padding: 10px 16px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -83,36 +84,55 @@
             background: #111820;
             border: 1px solid #26313c;
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 850px;
         }
 
         th,
         td {
-            padding: 15px;
+            padding: 14px;
             text-align: left;
             border-bottom: 1px solid #26313c;
         }
 
         th {
             background: #151d26;
+            color: #94a3b8;
             font-size: 12px;
             text-transform: uppercase;
-            color: #94a3b8;
         }
 
         td {
             font-size: 14px;
         }
 
-        .role {
-            color: #7dd3fc;
-            font-weight: bold;
-            text-transform: uppercase;
+        input,
+        select {
+            width: 100%;
+            padding: 9px;
+            background: #0b0f14;
+            color: white;
+            border: 1px solid #374151;
+            border-radius: 4px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #7dd3fc;
+        }
+
+        .save {
+            background: #15803d;
+        }
+
+        .save:hover {
+            background: #16a34a;
         }
 
         .status {
@@ -125,173 +145,362 @@
             text-align: center;
             color: #94a3b8;
         }
+
+        .warning {
+            margin-bottom: 20px;
+            padding: 14px;
+            background: #151d26;
+            border: 1px solid #26313c;
+            border-radius: 6px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
     </style>
 </head>
 
 <body>
 
 <header>
+
     <h1>SCU // OFFICER MANAGEMENT</h1>
+
     <div>
         <span class="master">MASTER ACCESS</span>
-        <button class="logout" onclick="logout()">LOGOUT</button>
+
+        <button class="logout" onclick="logout()">
+            LOGOUT
+        </button>
     </div>
+
 </header>
 
 <main>
 
     <div class="top-bar">
+
         <h2>Authorised Officers</h2>
-        <button onclick="alert('Officer creation will be added next.')">
-            + ADD OFFICER
-        </button>
+
+    </div>
+
+    <div class="warning">
+        Changes made here are saved directly to the SCU database.
+        System roles control website permissions.
     </div>
 
     <div class="panel">
 
         <table>
+
             <thead>
+
                 <tr>
                     <th>Callsign</th>
-                    <th>Name</th>
+                    <th>In-Game Name</th>
                     <th>Rank</th>
-                    <th>Role</th>
+                    <th>System Role</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
+
             </thead>
 
             <tbody id="officerList">
+
                 <tr>
-                    <td colspan="5" class="empty">
+                    <td colspan="6" class="empty">
                         Loading officers...
                     </td>
                 </tr>
+
             </tbody>
+
         </table>
 
     </div>
 
 </main>
 
+
 <script>
 
-    const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
-    const supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-
-    async function checkMaster() {
-
-        const { data: { session } } =
-            await supabaseClient.auth.getSession();
-
-        if (!session) {
-            window.location.href = 'index.html';
-            return;
-        }
-
-        const { data: officer, error } =
-            await supabaseClient
-                .from('officers')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
-
-        if (error || !officer || officer.role !== 'master') {
-
-            alert('ACCESS DENIED');
-
-            window.location.href = 'dashboard.html';
-
-            return;
-        }
-
-        loadOfficers();
-    }
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 
-    async function loadOfficers() {
+async function checkMaster() {
 
-        const { data, error } =
-            await supabaseClient
-                .from('officers')
-                .select('*')
-                .order('callsign');
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
 
-        const list =
-            document.getElementById('officerList');
-
-        if (error) {
-
-            list.innerHTML = `
-                <tr>
-                    <td colspan="5" class="empty">
-                        Unable to load officers.
-                    </td>
-                </tr>
-            `;
-
-            console.error(error);
-
-            return;
-        }
-
-        if (!data || data.length === 0) {
-
-            list.innerHTML = `
-                <tr>
-                    <td colspan="5" class="empty">
-                        No officers found.
-                    </td>
-                </tr>
-            `;
-
-            return;
-        }
-
-        list.innerHTML = data.map(officer => `
-
-            <tr>
-
-                <td>
-                    ${officer.callsign || '-'}
-                </td>
-
-                <td>
-                    ${officer.full_name || '-'}
-                </td>
-
-                <td>
-                    ${officer.rank || '-'}
-                </td>
-
-                <td class="role">
-                    ${officer.role || '-'}
-                </td>
-
-                <td class="status">
-                    ACTIVE
-                </td>
-
-            </tr>
-
-        `).join('');
-    }
-
-
-    async function logout() {
-
-        await supabaseClient.auth.signOut();
+    if (!session) {
 
         window.location.href = 'index.html';
+
+        return;
     }
 
 
-    checkMaster();
+    const {
+        data: officer,
+        error
+    } = await supabaseClient
+        .from('officers')
+        .select('*')
+        .eq('id', session.user.id)
+        .single();
+
+
+    if (
+        error ||
+        !officer ||
+        officer.role !== 'master'
+    ) {
+
+        alert('ACCESS DENIED');
+
+        window.location.href = 'dashboard.html';
+
+        return;
+    }
+
+
+    loadOfficers();
+
+}
+
+
+async function loadOfficers() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('officers')
+        .select('*')
+        .order('callsign');
+
+
+    const list =
+        document.getElementById('officerList');
+
+
+    if (error) {
+
+        console.error(error);
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    Unable to load officers.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty">
+                    No officers found.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML = data.map(officer => `
+
+        <tr>
+
+            <td>
+
+                <input
+                    id="callsign-${officer.id}"
+                    value="${escapeHtml(officer.callsign || '')}"
+                >
+
+            </td>
+
+
+            <td>
+
+                <input
+                    id="name-${officer.id}"
+                    value="${escapeHtml(officer.full_name || '')}"
+                >
+
+            </td>
+
+
+            <td>
+
+                <input
+                    id="rank-${officer.id}"
+                    value="${escapeHtml(officer.rank || '')}"
+                    placeholder="e.g. Detective"
+                >
+
+            </td>
+
+
+            <td>
+
+                <select id="role-${officer.id}">
+
+                    <option value="officer"
+                        ${officer.role === 'officer' ? 'selected' : ''}>
+                        Officer
+                    </option>
+
+                    <option value="investigator"
+                        ${officer.role === 'investigator' ? 'selected' : ''}>
+                        Investigator
+                    </option>
+
+                    <option value="lead"
+                        ${officer.role === 'lead' ? 'selected' : ''}>
+                        Case Lead
+                    </option>
+
+                    <option value="master"
+                        ${officer.role === 'master' ? 'selected' : ''}>
+                        Master
+                    </option>
+
+                </select>
+
+            </td>
+
+
+            <td class="status">
+                ACTIVE
+            </td>
+
+
+            <td>
+
+                <button
+                    class="save"
+                    onclick="saveOfficer('${officer.id}')"
+                >
+                    SAVE
+                </button>
+
+            </td>
+
+        </tr>
+
+    `).join('');
+
+}
+
+
+async function saveOfficer(id) {
+
+    const callsign =
+        document.getElementById(`callsign-${id}`).value.trim();
+
+    const fullName =
+        document.getElementById(`name-${id}`).value.trim();
+
+    const rank =
+        document.getElementById(`rank-${id}`).value.trim();
+
+    const role =
+        document.getElementById(`role-${id}`).value;
+
+
+    if (!callsign || !fullName || !rank) {
+
+        alert('Please complete Callsign, Name and Rank.');
+
+        return;
+    }
+
+
+    /*
+     * Prevent the currently logged-in Master
+     * from accidentally removing their own Master role.
+     */
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+
+    if (id === session.user.id && role !== 'master') {
+
+        alert('You cannot remove your own Master role.');
+
+        return;
+    }
+
+
+    const {
+        error
+    } = await supabaseClient
+        .from('officers')
+        .update({
+            callsign: callsign,
+            full_name: fullName,
+            rank: rank,
+            role: role
+        })
+        .eq('id', id);
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            'SAVE FAILED: ' +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert('OFFICER UPDATED SUCCESSFULLY');
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+}
+
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href = 'index.html';
+
+}
+
+
+checkMaster();
 
 </script>
 
