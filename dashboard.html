@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCU Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #080c11;
+            color: #e8edf2;
+        }
+
+        .header {
+            background: #111821;
+            border-bottom: 1px solid #293542;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 21px;
+            letter-spacing: 1.5px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #7f8c99;
+            font-size: 11px;
+        }
+
+        .logout {
+            background: #202c38;
+            color: white;
+            border: 1px solid #354554;
+            padding: 9px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            margin: 0 0 6px;
+        }
+
+        .welcome p {
+            color: #7f8c99;
+            margin: 0;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #111821;
+            border: 1px solid #293542;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-title {
+            color: #8996a3;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .panel {
+            background: #111821;
+            border: 1px solid #293542;
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .panel h2 {
+            margin-top: 0;
+        }
+
+        .case-row {
+            border-top: 1px solid #293542;
+            padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .case-name {
+            font-weight: bold;
+        }
+
+        .case-number {
+            color: #7f8c99;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .status {
+            padding: 5px 9px;
+            background: #1c2935;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        .empty {
+            color: #6f7c88;
+            text-align: center;
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div>
+        <h1>SCU CASE MANAGEMENT</h1>
+        <p>STREET CRIMES UNIT • SECURE OPERATIONS</p>
+    </div>
+
+    <button class="logout" onclick="logout()">LOG OUT</button>
+
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h2>SCU Dashboard</h2>
+        <p>Authorised officer access.</p>
+    </section>
+
+    <section class="cards">
+
+        <div class="card">
+            <div class="card-title">Active Cases</div>
+            <div class="number" id="activeCases">0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">My Cases</div>
+            <div class="number" id="myCases">0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Evidence</div>
+            <div class="number" id="evidenceCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Officer Status</div>
+            <div class="number" style="font-size:20px;">ONLINE</div>
+        </div>
+
+    </section>
+
+    <section class="panel">
+
+        <h2>Accessible Case Files</h2>
+
+        <div id="caseList">
+            <div class="empty">
+                Loading case files...
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// Check login
+async function checkLogin() {
+
+    const { data: { session } } =
+        await supabaseClient.auth.getSession();
+
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    loadCases();
+}
+
+
+// Load authorised cases
+async function loadCases() {
+
+    const { data, error } = await supabaseClient
+        .from('cases')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+
+        document.getElementById('caseList').innerHTML =
+            '<div class="empty">Unable to load case files.</div>';
+
+        console.error(error);
+        return;
+    }
+
+    const list = document.getElementById('caseList');
+
+    document.getElementById('activeCases').textContent =
+        data.filter(c => c.status === 'Open').length;
+
+    if (!data.length) {
+
+        list.innerHTML =
+            '<div class="empty">No authorised case files found.</div>';
+
+        return;
+    }
+
+    list.innerHTML = '';
+
+    data.forEach(caseFile => {
+
+        const row = document.createElement('div');
+
+        row.className = 'case-row';
+
+        row.innerHTML = `
+            <div>
+                <div class="case-name">${caseFile.case_name}</div>
+                <div class="case-number">${caseFile.case_number}</div>
+            </div>
+
+            <div class="status">
+                ${caseFile.status}
+            </div>
+        `;
+
+        list.appendChild(row);
+
+    });
+
+}
+
+
+// Logout
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href = 'index.html';
+}
+
+
+checkLogin();
+
+</script>
+
+</body>
+</html>
