@@ -271,7 +271,90 @@
 
 </div>
 
+<div class="section">
 
+    <h2>EVIDENCE & DOCUMENTS</h2>
+
+    <p style="color:#9ca3af;">
+        Upload case documents or attach external links.
+        Evidence is restricted to authorised personnel.
+    </p>
+
+
+    <h3 style="color:#e5e7eb; margin-top:25px;">
+        UPLOAD DOCUMENT
+    </h3>
+
+    <input
+        type="file"
+        id="evidenceFile"
+        style="margin-top:10px;"
+    >
+
+    <input
+        type="text"
+        id="evidenceTitle"
+        placeholder="Evidence title"
+        style="margin-top:10px;"
+    >
+
+    <textarea
+        id="evidenceDescription"
+        placeholder="Description / notes"
+        style="margin-top:10px; min-height:80px;"
+    ></textarea>
+
+    <button
+        id="uploadEvidence"
+        style="margin-top:12px;"
+    >
+        UPLOAD DOCUMENT
+    </button>
+
+
+    <h3 style="color:#e5e7eb; margin-top:35px;">
+        ADD EXTERNAL LINK
+    </h3>
+
+    <input
+        type="text"
+        id="evidenceLinkTitle"
+        placeholder="Link title"
+        style="margin-top:10px;"
+    >
+
+    <input
+        type="url"
+        id="evidenceLink"
+        placeholder="https://..."
+        style="margin-top:10px;"
+    >
+
+    <textarea
+        id="evidenceLinkDescription"
+        placeholder="Description / notes"
+        style="margin-top:10px; min-height:80px;"
+    ></textarea>
+
+    <button
+        id="addEvidenceLink"
+        style="margin-top:12px;"
+    >
+        ADD LINK
+    </button>
+
+
+    <h3 style="color:#e5e7eb; margin-top:35px;">
+        ATTACHED EVIDENCE
+    </h3>
+
+    <div id="evidenceList">
+
+        Loading evidence...
+
+    </div>
+
+</div>
 <div class="section">
 
     <h2>CASE INFORMATION — MORE TO COME</h2>
@@ -611,10 +694,198 @@ document
         loadCaseOfficers();
 
     });
+    async function loadEvidence() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('evidence')
+        .select('*')
+        .eq('case_id', caseId)
+        .order('created_at', { ascending: false });
+
+
+    const list =
+        document.getElementById('evidenceList');
+
+
+    if (error) {
+
+        console.error(error);
+
+        list.innerHTML =
+            '<div style="color:#fca5a5;">Unable to load evidence.</div>';
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML =
+            '<div style="color:#9ca3af;">No evidence attached to this case yet.</div>';
+
+        return;
+    }
+
+
+    list.innerHTML = data.map(item => `
+
+        <div style="
+            border:1px solid #26313c;
+            border-radius:6px;
+            padding:15px;
+            margin-top:10px;
+            background:#0b0f14;
+        ">
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                gap:10px;
+            ">
+
+                <strong>
+                    ${escapeHtml(item.title || 'Untitled Evidence')}
+                </strong>
+
+                <span style="
+                    color:#7dd3fc;
+                    font-size:11px;
+                    text-transform:uppercase;
+                ">
+                    ${escapeHtml(item.evidence_type || 'evidence')}
+                </span>
+
+            </div>
+
+
+            ${
+                item.description
+                ? `
+                    <div style="
+                        color:#9ca3af;
+                        font-size:13px;
+                        margin-top:8px;
+                    ">
+                        ${escapeHtml(item.description)}
+                    </div>
+                `
+                : ''
+            }
+
+
+            ${
+                item.file_url
+                ? `
+                    <div style="margin-top:12px;">
+
+                        <a
+                            href="${escapeHtml(item.file_url)}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style="color:#60a5fa;"
+                        >
+                            OPEN EVIDENCE
+                        </a>
+
+                    </div>
+                `
+                : ''
+            }
+
+        </div>
+
+    `).join('');
+
+}
 loadCase();
 
 loadCaseOfficers();
+document
+    .getElementById('addEvidenceLink')
+    .addEventListener('click', async function() {
 
+        const title =
+            document.getElementById('evidenceLinkTitle')
+                .value.trim();
+
+        const url =
+            document.getElementById('evidenceLink')
+                .value.trim();
+
+        const description =
+            document.getElementById('evidenceLinkDescription')
+                .value.trim();
+
+
+        if (!title || !url) {
+
+            alert(
+                'Please enter a title and link.'
+            );
+
+            return;
+        }
+
+
+        const {
+            data: { user }
+        } = await supabaseClient.auth.getUser();
+
+
+        if (!user) {
+
+            alert('You are not logged in.');
+
+            return;
+        }
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from('evidence')
+            .insert({
+                case_id: caseId,
+                officer_id: user.id,
+                evidence_type: 'link',
+                title: title,
+                description: description,
+                file_url: url
+            });
+
+
+        if (error) {
+
+            alert(
+                'LINK COULD NOT BE ADDED: ' +
+                error.message
+            );
+
+            console.error(error);
+
+            return;
+        }
+
+
+        document.getElementById('evidenceLinkTitle')
+            .value = '';
+
+        document.getElementById('evidenceLink')
+            .value = '';
+
+        document.getElementById('evidenceLinkDescription')
+            .value = '';
+
+
+        alert('LINK ADDED SUCCESSFULLY');
+
+        loadEvidence();
+
+    });
 </script>
 
 </body>
