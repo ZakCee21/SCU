@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCU Case Management</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0f14;
+            color: #e8edf2;
+        }
+
+        .header {
+            background: #111821;
+            border-bottom: 1px solid #26313d;
+            padding: 20px 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #8e9aa7;
+            font-size: 13px;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            margin: 0 0 8px;
+        }
+
+        .welcome p {
+            color: #8e9aa7;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: #121922;
+            border: 1px solid #26313d;
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 15px;
+            color: #9eabb8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 9px;
+            border-radius: 4px;
+            background: #1b2835;
+            color: #7fb3d5;
+            font-size: 12px;
+        }
+
+        .cases {
+            margin-top: 30px;
+            background: #121922;
+            border: 1px solid #26313d;
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .cases h2 {
+            margin-top: 0;
+        }
+
+        .empty {
+            color: #7f8b97;
+            padding: 25px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <h1>SCU CASE MANAGEMENT</h1>
+        <p>STREET CRIMES UNIT • SECURE CASE MANAGEMENT SYSTEM</p>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <h2>SCU Dashboard</h2>
+            <p>Welcome to the Street Crimes Unit case management system.</p>
+        </section>
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Active Cases</h3>
+                <div class="number">0</div>
+                <span class="status">No active cases</span>
+            </div>
+
+            <div class="card">
+                <h3>My Cases</h3>
+                <div class="number">0</div>
+                <span class="status">Awaiting cases</span>
+            </div>
+
+            <div class="card">
+                <h3>Evidence</h3>
+                <div class="number">0</div>
+                <span class="status">No evidence logged</span>
+            </div>
+
+            <div class="card">
+                <h3>Investigators</h3>
+                <div class="number">1</div>
+                <span class="status">SCU operational</span>
+            </div>
+
+        </section>
+
+        <section class="cases">
+            <h2>Case Files</h2>
+
+            <div class="empty">
+                No cases have been created yet.
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
