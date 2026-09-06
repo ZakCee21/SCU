@@ -270,27 +270,33 @@ async function loadCases() {
 
     list.innerHTML = '';
 
-    data.forEach(caseFile => {
+   data.forEach(caseFile => {
 
-        const row = document.createElement('div');
+    const row = document.createElement('div');
 
-        row.className = 'case-row';
+    row.className = 'case-row';
 
-        row.innerHTML = `
-            <div>
-                <div class="case-name">${caseFile.case_name}</div>
-                <div class="case-number">${caseFile.case_number}</div>
-            </div>
+    row.style.cursor = 'pointer';
 
-            <div class="status">
-                ${caseFile.status}
-            </div>
-        `;
+    row.onclick = function() {
+        window.location.href =
+            `case.html?id=${caseFile.id}`;
+    };
 
-        list.appendChild(row);
+    row.innerHTML = `
+        <div>
+            <div class="case-name">${caseFile.case_name}</div>
+            <div class="case-number">${caseFile.case_number}</div>
+        </div>
 
-    });
+        <div class="status">
+            ${caseFile.status}
+        </div>
+    `;
 
+    list.appendChild(row);
+
+});
 }
 
 
