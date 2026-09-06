@@ -445,104 +445,65 @@ document
          * Create the case.
          */
 
-        const {
-            data: newCase,
-            error: caseError
-        } = await supabaseClient
-            .from('cases')
-            .insert({
-                case_number: caseNumber,
-                case_name: caseName,
-                description: description,
-                classification: classification,
-                status: 'active',
-                created_by: currentUser.id
-            })
-            .select()
-            .single();
+        const caseName =
+    document.getElementById('caseName')
+        .value.trim();
+
+const description =
+    document.getElementById('description')
+        .value.trim();
+
+const classification =
+    document.getElementById('classification')
+        .value;
+
+const selectedOfficers =
+    Array.from(
+        document.querySelectorAll(
+            '.officer-checkbox:checked'
+        )
+    ).map(checkbox => checkbox.value);
 
 
-        if (caseError) {
+/*
+ * Create the case securely through Supabase.
+ */
 
-            showMessage(
-                'CASE CREATION FAILED: ' +
-                caseError.message
-            );
-
-            console.error(caseError);
-
-            return;
-        }
-
-
-        /*
-         * Give the creator access as Case Lead.
-         */
-
-        const accessRecords = [
-
-            {
-                case_id: newCase.id,
-                officer_id: currentUser.id,
-                permission: 'lead'
-            }
-
-        ];
+const {
+    data: newCaseId,
+    error: caseError
+} = await supabaseClient.rpc('create_case', {
+    p_case_name: caseName,
+    p_description: description,
+    p_classification: classification,
+    p_officer_ids: selectedOfficers
+});
 
 
-        /*
-         * Add the selected officers.
-         */
+if (caseError) {
 
-        selectedOfficers.forEach(officerId => {
+    showMessage(
+        'CASE CREATION FAILED: ' +
+        caseError.message
+    );
 
-            accessRecords.push({
+    console.error(caseError);
 
-                case_id: newCase.id,
-
-                officer_id: officerId,
-
-                permission: 'view'
-
-            });
-
-        });
+    return;
+}
 
 
-        const {
-            error: accessError
-        } = await supabaseClient
-            .from('case_access')
-            .insert(accessRecords);
+showMessage(
+    'CASE CREATED SUCCESSFULLY'
+);
 
 
-        if (accessError) {
+setTimeout(() => {
 
-            showMessage(
-                'CASE CREATED, BUT ACCESS SETUP FAILED: ' +
-                accessError.message
-            );
+    window.location.href =
+        'dashboard.html';
 
-            console.error(accessError);
-
-            return;
-        }
-
-
-        showMessage(
-            'CASE CREATED SUCCESSFULLY'
-        );
-
-
-        setTimeout(() => {
-
-            window.location.href =
-                'dashboard.html';
-
-        }, 1200);
-
-    });
-
+}, 1200);
 
 function showMessage(text) {
 
