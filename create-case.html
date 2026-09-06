@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create SCU Case</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b0f14;
+            color: #e6edf3;
+        }
+
+        header {
+            background: #111820;
+            border-bottom: 1px solid #26313c;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+
+        .master {
+            color: #7dd3fc;
+            font-size: 13px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .panel {
+            background: #111820;
+            border: 1px solid #26313c;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        h2 {
+            margin-top: 0;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 7px;
+            color: #94a3b8;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #0b0f14;
+            color: white;
+            border: 1px solid #374151;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #7dd3fc;
+        }
+
+        .officers {
+            margin-top: 10px;
+            border: 1px solid #26313c;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .officer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-bottom: 1px solid #26313c;
+        }
+
+        .officer:last-child {
+            border-bottom: none;
+        }
+
+        .officer input {
+            width: auto;
+        }
+
+        .officer-info {
+            flex: 1;
+        }
+
+        .callsign {
+            font-weight: bold;
+        }
+
+        .rank {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 13px 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .create {
+            background: #1d4ed8;
+            color: white;
+            flex: 1;
+        }
+
+        .create:hover {
+            background: #2563eb;
+        }
+
+        .cancel {
+            background: #374151;
+            color: white;
+        }
+
+        .cancel:hover {
+            background: #4b5563;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 5px;
+            display: none;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>SCU // CASE MANAGEMENT</h1>
+
+    <div>
+        <span class="master">AUTHORISED PERSONNEL</span>
+    </div>
+
+</header>
+
+
+<main>
+
+    <div class="panel">
+
+        <h2>CREATE NEW CASE</h2>
+
+        <div class="subtitle">
+            Create an active SCU investigation and select which officers can access it.
+        </div>
+
+
+        <form id="caseForm">
+
+            <label for="caseNumber">
+                Case Number
+            </label>
+
+            <input
+                type="text"
+                id="caseNumber"
+                placeholder="e.g. SCU-001"
+                required
+            >
+
+
+            <label for="caseName">
+                Case Name
+            </label>
+
+            <input
+                type="text"
+                id="caseName"
+                placeholder="e.g. Operation Nightfall"
+                required
+            >
+
+
+            <label for="description">
+                Initial Case Information
+            </label>
+
+            <textarea
+                id="description"
+                placeholder="Enter the initial case information..."
+            ></textarea>
+
+
+            <label for="classification">
+                Classification
+            </label>
+
+            <select id="classification">
+
+                <option value="CONFIDENTIAL">
+                    CONFIDENTIAL
+                </option>
+
+                <option value="RESTRICTED">
+                    RESTRICTED
+                </option>
+
+                <option value="SENSITIVE">
+                    SENSITIVE
+                </option>
+
+                <option value="TOP SECRET">
+                    TOP SECRET
+                </option>
+
+            </select>
+
+
+            <label>
+                Officers With Access
+            </label>
+
+            <div class="officers" id="officerList">
+
+                Loading officers...
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button
+                    type="button"
+                    class="cancel"
+                    onclick="window.location.href='dashboard.html'"
+                >
+                    CANCEL
+                </button>
+
+                <button
+                    type="submit"
+                    class="create"
+                >
+                    CREATE CASE
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+let currentUser = null;
+
+
+async function initialise() {
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+
+    if (!session) {
+
+        window.location.href = 'index.html';
+
+        return;
+    }
+
+
+    currentUser = session.user;
+
+    loadOfficers();
+
+}
+
+
+async function loadOfficers() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('officers')
+        .select('id, callsign, full_name, rank')
+        .order('callsign');
+
+
+    const list =
+        document.getElementById('officerList');
+
+
+    if (error) {
+
+        list.innerHTML =
+            'Unable to load officers.';
+
+        console.error(error);
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        list.innerHTML =
+            'No officers found.';
+
+        return;
+    }
+
+
+    list.innerHTML = data
+        .filter(officer => officer.id !== currentUser.id)
+        .map(officer => `
+
+            <label class="officer">
+
+                <input
+                    type="checkbox"
+                    value="${officer.id}"
+                    class="officer-checkbox"
+                >
+
+                <div class="officer-info">
+
+                    <div class="callsign">
+                        ${escapeHtml(officer.callsign || 'UNASSIGNED')}
+                    </div>
+
+                    <div class="rank">
+                        ${escapeHtml(officer.full_name || '')}
+                        —
+                        ${escapeHtml(officer.rank || 'Officer')}
+                    </div>
+
+                </div>
+
+            </label>
+
+        `).join('');
+
+}
+
+
+document
+    .getElementById('caseForm')
+    .addEventListener('submit', async function(event) {
+
+        event.preventDefault();
+
+
+        const caseNumber =
+            document.getElementById('caseNumber')
+                .value.trim();
+
+        const caseName =
+            document.getElementById('caseName')
+                .value.trim();
+
+        const description =
+            document.getElementById('description')
+                .value.trim();
+
+        const classification =
+            document.getElementById('classification')
+                .value;
+
+
+        const selectedOfficers =
+            Array.from(
+                document.querySelectorAll(
+                    '.officer-checkbox:checked'
+                )
+            ).map(checkbox => checkbox.value);
+
+
+        /*
+         * Create the case.
+         */
+
+        const {
+            data: newCase,
+            error: caseError
+        } = await supabaseClient
+            .from('cases')
+            .insert({
+                case_number: caseNumber,
+                case_name: caseName,
+                description: description,
+                classification: classification,
+                status: 'active',
+                created_by: currentUser.id
+            })
+            .select()
+            .single();
+
+
+        if (caseError) {
+
+            showMessage(
+                'CASE CREATION FAILED: ' +
+                caseError.message
+            );
+
+            console.error(caseError);
+
+            return;
+        }
+
+
+        /*
+         * Give the creator access as Case Lead.
+         */
+
+        const accessRecords = [
+
+            {
+                case_id: newCase.id,
+                officer_id: currentUser.id,
+                permission: 'lead'
+            }
+
+        ];
+
+
+        /*
+         * Add the selected officers.
+         */
+
+        selectedOfficers.forEach(officerId => {
+
+            accessRecords.push({
+
+                case_id: newCase.id,
+
+                officer_id: officerId,
+
+                permission: 'view'
+
+            });
+
+        });
+
+
+        const {
+            error: accessError
+        } = await supabaseClient
+            .from('case_access')
+            .insert(accessRecords);
+
+
+        if (accessError) {
+
+            showMessage(
+                'CASE CREATED, BUT ACCESS SETUP FAILED: ' +
+                accessError.message
+            );
+
+            console.error(accessError);
+
+            return;
+        }
+
+
+        showMessage(
+            'CASE CREATED SUCCESSFULLY'
+        );
+
+
+        setTimeout(() => {
+
+            window.location.href =
+                'dashboard.html';
+
+        }, 1200);
+
+    });
+
+
+function showMessage(text) {
+
+    const message =
+        document.getElementById('message');
+
+    message.textContent = text;
+
+    message.style.display = 'block';
+
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+}
+
+
+initialise();
+
+</script>
+
+</body>
+</html>
