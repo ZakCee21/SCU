@@ -12,155 +12,129 @@
 
         body {
             margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: Arial, sans-serif;
-            background: #0b0f14;
+            background: #080c11;
             color: #e8edf2;
         }
 
-        .header {
+        .login-box {
+            width: 400px;
+            max-width: 90%;
             background: #111821;
-            border-bottom: 1px solid #26313d;
-            padding: 20px 30px;
+            border: 1px solid #293542;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.45);
         }
 
-        .header h1 {
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
+
+        .logo p {
+            margin: 8px 0 0;
+            color: #7f8c99;
+            font-size: 12px;
             letter-spacing: 1px;
         }
 
-        .header p {
-            margin: 5px 0 0;
-            color: #8e9aa7;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aeb9c4;
             font-size: 13px;
         }
 
-        .container {
-            padding: 30px;
-            max-width: 1400px;
-            margin: auto;
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 20px;
+            border: 1px solid #303c48;
+            border-radius: 6px;
+            background: #0b1117;
+            color: white;
+            font-size: 14px;
+            outline: none;
         }
 
-        .welcome {
-            margin-bottom: 25px;
+        input:focus {
+            border-color: #667788;
         }
 
-        .welcome h2 {
-            margin: 0 0 8px;
-        }
-
-        .welcome p {
-            color: #8e9aa7;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
-        }
-
-        .card {
-            background: #121922;
-            border: 1px solid #26313d;
-            border-radius: 8px;
-            padding: 22px;
-        }
-
-        .card h3 {
-            margin-top: 0;
-            font-size: 15px;
-            color: #9eabb8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .number {
-            font-size: 32px;
+        button {
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 6px;
+            background: #263746;
+            color: white;
+            font-size: 14px;
             font-weight: bold;
-            margin-top: 12px;
+            cursor: pointer;
         }
 
-        .status {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 5px 9px;
-            border-radius: 4px;
-            background: #1b2835;
-            color: #7fb3d5;
-            font-size: 12px;
+        button:hover {
+            background: #32495c;
         }
 
-        .cases {
-            margin-top: 30px;
-            background: #121922;
-            border: 1px solid #26313d;
-            border-radius: 8px;
-            padding: 22px;
-        }
-
-        .cases h2 {
-            margin-top: 0;
-        }
-
-        .empty {
-            color: #7f8b97;
-            padding: 25px 0;
+        .footer {
             text-align: center;
+            margin-top: 25px;
+            color: #596673;
+            font-size: 11px;
         }
     </style>
 </head>
 
 <body>
 
-    <header class="header">
-        <h1>SCU CASE MANAGEMENT</h1>
-        <p>STREET CRIMES UNIT • SECURE CASE MANAGEMENT SYSTEM</p>
-    </header>
+    <div class="login-box">
 
-    <main class="container">
+        <div class="logo">
+            <h1>SCU CASE MANAGEMENT</h1>
+            <p>STREET CRIMES UNIT</p>
+        </div>
 
-        <section class="welcome">
-            <h2>SCU Dashboard</h2>
-            <p>Welcome to the Street Crimes Unit case management system.</p>
-        </section>
+        <form>
 
-        <section class="cards">
+            <label for="email">Officer Email</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required
+            >
 
-            <div class="card">
-                <h3>Active Cases</h3>
-                <div class="number">0</div>
-                <span class="status">No active cases</span>
-            </div>
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+            >
 
-            <div class="card">
-                <h3>My Cases</h3>
-                <div class="number">0</div>
-                <span class="status">Awaiting cases</span>
-            </div>
+            <button type="submit">
+                SECURE LOGIN
+            </button>
 
-            <div class="card">
-                <h3>Evidence</h3>
-                <div class="number">0</div>
-                <span class="status">No evidence logged</span>
-            </div>
+        </form>
 
-            <div class="card">
-                <h3>Investigators</h3>
-                <div class="number">1</div>
-                <span class="status">SCU operational</span>
-            </div>
+        <div class="footer">
+            AUTHORISED PERSONNEL ONLY
+        </div>
 
-        </section>
-
-        <section class="cases">
-            <h2>Case Files</h2>
-
-            <div class="empty">
-                No cases have been created yet.
-            </div>
-        </section>
-
-    </main>
+    </div>
 
 </body>
 </html>
