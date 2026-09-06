@@ -834,22 +834,35 @@ document
 
 
             ${
-                item.file_url
-                ? `
-                    <div style="margin-top:12px;">
+               ${
+    item.file_url
+    ? `
+        <div style="margin-top:12px;">
 
-                        <a
-                            href="${escapeHtml(item.file_url)}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style="color:#60a5fa;"
-                        >
-                            OPEN EVIDENCE
-                        </a>
+            <button
+                class="open-evidence-button"
+                data-evidence-id="${item.id}"
+                style="
+                    background:#1d4ed8;
+                    color:white;
+                    border:none;
+                    padding:8px 14px;
+                    border-radius:5px;
+                    cursor:pointer;
+                    font-weight:bold;
+                "
+            >
+                ${
+                    item.evidence_type === 'document'
+                    ? 'OPEN DOCUMENT'
+                    : 'OPEN LINK'
+                }
+            </button>
 
-                    </div>
-                `
-                : ''
+        </div>
+    `
+    : ''
+}
             }
 
         </div>
@@ -1048,6 +1061,81 @@ document
         loadEvidence();
 
     });
+
+    document.addEventListener('click', async function(event) {
+
+    const button =
+        event.target.closest('.open-evidence-button');
+
+    if (!button) {
+        return;
+    }
+
+    const evidenceId =
+        button.dataset.evidenceId;
+
+    const {
+        data: evidence,
+        error: evidenceError
+    } = await supabaseClient
+        .from('evidence')
+        .select('*')
+        .eq('id', evidenceId)
+        .single();
+
+    if (evidenceError || !evidence) {
+        alert('Unable to find this evidence.');
+        console.error(evidenceError);
+        return;
+    }
+
+    // External link
+    if (evidence.evidence_type === 'link') {
+
+        window.open(
+            evidence.file_url,
+            '_blank',
+            'noopener,noreferrer'
+        );
+
+        return;
+    }
+
+    // Uploaded document
+    if (evidence.evidence_type === 'document') {
+
+        const {
+            data: signedUrl,
+            error: signedUrlError
+        } = await supabaseClient
+            .storage
+            .from('case-evidence')
+            .createSignedUrl(
+                evidence.file_url,
+                600
+            );
+
+        if (signedUrlError) {
+
+            alert(
+                'Unable to open document: ' +
+                signedUrlError.message
+            );
+
+            console.error(signedUrlError);
+
+            return;
+        }
+
+        window.open(
+            signedUrl.signedUrl,
+            '_blank',
+            'noopener,noreferrer'
+        );
+
+    }
+
+});
     
     setupDeleteCase();
 
