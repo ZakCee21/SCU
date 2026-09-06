@@ -247,17 +247,42 @@
         </div>
 
 
-        <div class="section">
+    <div class="section">
 
-            <h2>CASE INFORMATION — MORE TO COME</h2>
+    <h2>OFFICER ACCESS</h2>
 
-            <p style="color:#9ca3af;">
-                Suspects, intelligence, surveillance,
-                evidence, documents, links and activity
-                history will be added here.
-            </p>
+    <p style="color:#9ca3af;">
+        Select which officers are authorised to access this case.
+        Case Masters and the case creator always retain access.
+    </p>
 
-        </div>
+    <div id="caseOfficerList">
+
+        Loading officers...
+
+    </div>
+
+    <button
+        id="saveAccess"
+        style="margin-top:20px;"
+    >
+        SAVE ACCESS CHANGES
+    </button>
+
+</div>
+
+
+<div class="section">
+
+    <h2>CASE INFORMATION — MORE TO COME</h2>
+
+    <p style="color:#9ca3af;">
+        Suspects, intelligence, surveillance,
+        evidence, documents, links and activity
+        history will be added here.
+    </p>
+
+</div>
 
     </div>
 
@@ -431,8 +456,164 @@ document.getElementById('saveCase')
 
     });
 
+async function loadCaseOfficers() {
 
+    const {
+        data: officers,
+        error: officersError
+    } = await supabaseClient
+        .from('officers')
+        .select('id, callsign, full_name, rank, role')
+        .order('callsign');
+
+
+    const {
+        data: access,
+        error: accessError
+    } = await supabaseClient
+        .from('case_access')
+        .select('officer_id, permission')
+        .eq('case_id', caseId);
+
+
+    const list =
+        document.getElementById('caseOfficerList');
+
+
+    if (officersError || accessError) {
+
+        console.error(
+            officersError || accessError
+        );
+
+        list.innerHTML =
+            'Unable to load officer access.';
+
+        return;
+    }
+
+
+    const accessMap = new Map(
+        access.map(item => [
+            item.officer_id,
+            item.permission
+        ])
+    );
+
+
+    list.innerHTML = officers
+        .filter(officer => officer.role !== 'master')
+        .map(officer => {
+
+            const hasAccess =
+                accessMap.has(officer.id);
+
+            return `
+
+                <label style="
+                    display:flex;
+                    align-items:center;
+                    gap:12px;
+                    padding:12px;
+                    border-bottom:1px solid #1f2937;
+                    cursor:pointer;
+                ">
+
+                    <input
+                        type="checkbox"
+                        class="case-officer-checkbox"
+                        value="${officer.id}"
+                        ${hasAccess ? 'checked' : ''}
+                    >
+
+                    <div>
+
+                        <div style="font-weight:bold;">
+                            ${escapeHtml(
+                                officer.callsign ||
+                                'UNASSIGNED'
+                            )}
+                        </div>
+
+                        <div style="
+                            color:#9ca3af;
+                            font-size:12px;
+                            margin-top:3px;
+                        ">
+
+                            ${escapeHtml(
+                                officer.full_name ||
+                                ''
+                            )}
+
+                            —
+                            
+                            ${escapeHtml(
+                                officer.rank ||
+                                'Officer'
+                            )}
+
+                        </div>
+
+                    </div>
+
+                </label>
+
+            `;
+
+        })
+        .join('');
+
+}
+
+
+document
+    .getElementById('saveAccess')
+    .addEventListener('click', async function() {
+
+        const selectedOfficers =
+            Array.from(
+                document.querySelectorAll(
+                    '.case-officer-checkbox:checked'
+                )
+            )
+            .map(checkbox => checkbox.value);
+
+
+        const {
+            error
+        } = await supabaseClient.rpc(
+            'update_case_access',
+            {
+                p_case_id: caseId,
+                p_officer_ids: selectedOfficers
+            }
+        );
+
+
+        if (error) {
+
+            alert(
+                'ACCESS UPDATE FAILED: ' +
+                error.message
+            );
+
+            console.error(error);
+
+            return;
+        }
+
+
+        alert(
+            'OFFICER ACCESS UPDATED SUCCESSFULLY'
+        );
+
+        loadCaseOfficers();
+
+    });
 loadCase();
+
+loadCaseOfficers();
 
 </script>
 
