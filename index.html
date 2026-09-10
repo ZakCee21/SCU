@@ -159,14 +159,43 @@
             password: password
         });
 
-        if (error) {
-            alert('LOGIN FAILED: ' + error.message);
-            return;
-        }
+       if (error) {
+    alert('LOGIN FAILED: ' + error.message);
+    return;
+}
 
-        alert('LOGIN SUCCESSFUL');
+const {
+    data: officer,
+    error: officerError
+} = await supabaseClient
+    .from('officers')
+    .select('active')
+    .eq('id', data.user.id)
+    .single();
 
-        window.location.href = 'dashboard.html';
+if (officerError || !officer) {
+    await supabaseClient.auth.signOut();
+
+    alert('OFFICER PROFILE NOT FOUND');
+
+    return;
+}
+
+if (!officer.active) {
+    await supabaseClient.auth.signOut();
+
+    alert(
+        'ACCESS DENIED\n\n' +
+        'Your SCU account has been deactivated.\n\n' +
+        'Please contact a Master if you believe this is an error.'
+    );
+
+    return;
+}
+
+alert('LOGIN SUCCESSFUL');
+
+window.location.href = 'dashboard.html';
     });
 </script>
 </body>
