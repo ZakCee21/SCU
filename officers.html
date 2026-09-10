@@ -390,15 +390,28 @@ async function loadOfficers() {
 
             <td>
 
-                <button
-                    class="save"
-                    onclick="saveOfficer('${officer.id}')"
-                >
-                    SAVE
-                </button>
+<td>
 
-            </td>
+    <button
+        class="save"
+        onclick="saveOfficer('${officer.id}')"
+    >
+        SAVE
+    </button>
 
+    <br>
+
+    <button
+        onclick="toggleOfficerStatus('${officer.id}', ${officer.active})"
+        style="
+            margin-top:8px;
+            background:${officer.active ? '#991b1b' : '#15803d'};
+        "
+    >
+        ${officer.active ? 'DEACTIVATE' : 'REACTIVATE'}
+    </button>
+
+</td>
         </tr>
 
     `).join('');
