@@ -109,14 +109,13 @@
 
         <form>
 
-            <label for="email">Officer Email</label>
-            <input
-                type="email"
-                id="email"
-                placeholder="Enter your email"
-                required
-            >
-
+           <label for="username">In-City Name</label>
+<input
+    type="text"
+    id="username"
+    placeholder="Enter your in-city name"
+    required
+>
             <label for="password">Password</label>
             <input
                 type="password"
@@ -151,13 +150,49 @@
     loginForm.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+       const username =
+    document.getElementById('username').value.trim();
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+const password =
+    document.getElementById('password').value;
+
+const {
+    data: loginEmail,
+    error: lookupError
+} = await supabaseClient.rpc(
+    'get_login_email',
+    {
+        p_username: username
+    }
+);
+
+if (lookupError) {
+    console.error(lookupError);
+
+    alert(
+        'LOGIN FAILED: Unable to verify officer account.'
+    );
+
+    return;
+}
+
+if (!loginEmail) {
+
+    alert(
+        'LOGIN FAILED:\n\n' +
+        'In-city name not found, or the officer account is inactive.'
+    );
+
+    return;
+}
+
+const {
+    data,
+    error
+} = await supabaseClient.auth.signInWithPassword({
+    email: loginEmail,
+    password: password
+});
 
        if (error) {
     alert('LOGIN FAILED: ' + error.message);
