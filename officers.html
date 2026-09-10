@@ -489,7 +489,66 @@ async function saveOfficer(id) {
     alert('OFFICER UPDATED SUCCESSFULLY');
 
 }
+async function toggleOfficerStatus(id, currentlyActive) {
 
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if (!session) {
+        alert('You are not logged in.');
+        return;
+    }
+
+    // Prevent a Master from deactivating themselves
+    if (id === session.user.id && currentlyActive) {
+        alert('You cannot deactivate your own account.');
+        return;
+    }
+
+    const newStatus = !currentlyActive;
+
+    const action = newStatus
+        ? 'reactivate'
+        : 'deactivate';
+
+    const confirmed = confirm(
+        `Are you sure you want to ${action} this officer?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const {
+        error
+    } = await supabaseClient
+        .from('officers')
+        .update({
+            active: newStatus
+        })
+        .eq('id', id);
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            'STATUS UPDATE FAILED: ' +
+            error.message
+        );
+
+        return;
+    }
+
+    alert(
+        newStatus
+            ? 'OFFICER REACTIVATED SUCCESSFULLY'
+            : 'OFFICER DEACTIVATED SUCCESSFULLY'
+    );
+
+    loadOfficers();
+}
 
 function escapeHtml(value) {
 
