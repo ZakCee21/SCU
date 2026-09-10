@@ -176,12 +176,25 @@ if (lookupError) {
     return;
 }
 
+console.log('USERNAME ENTERED:', username);
+console.log('LOGIN EMAIL RETURNED:', loginEmail);
+console.log('LOOKUP ERROR:', lookupError);
+
+alert(
+    'DEBUG RESULT:\n\n' +
+    'Username: ' + username + '\n\n' +
+    'Email returned: ' + loginEmail
+);
+
 if (!loginEmail) {
 
     alert(
         'LOGIN FAILED:\n\n' +
         'In-city name not found, or the officer account is inactive.'
     );
+
+    return;
+}
 
     return;
 }
