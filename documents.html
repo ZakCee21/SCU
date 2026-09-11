@@ -168,6 +168,117 @@
 
 </main>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// Check that the officer is logged in
+async function checkLogin() {
+
+    const { data: { session } } =
+        await supabaseClient.auth.getSession();
+
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    loadDocuments();
+}
+
+
+// Load documents from Supabase
+async function loadDocuments() {
+
+    const { data, error } = await supabaseClient
+        .from('documents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+
+    if (error) {
+
+        console.error(error);
+
+        document.querySelector('.documents').innerHTML = `
+            <div class="empty">
+                Unable to load documents.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    const documentList =
+        document.querySelector('.documents');
+
+
+    if (!data.length) {
+
+        documentList.innerHTML = `
+            <div class="empty">
+                No documents or templates have been added yet.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    documentList.innerHTML = '';
+
+
+    data.forEach(document => {
+
+        const card =
+            document.createElement('div');
+
+        card.className = 'document-card';
+
+
+        card.innerHTML = `
+
+            <h3>${document.title}</h3>
+
+            <p>
+                ${document.description || ''}
+            </p>
+
+            <a
+                class="open-button"
+                href="${document.url}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                OPEN DOCUMENT
+            </a>
+
+        `;
+
+
+        documentList.appendChild(card);
+
+    });
+
+}
+
+
+checkLogin();
+
+</script>
+
 </body>
 
 </html>
