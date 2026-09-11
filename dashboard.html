@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SCU Dashboard</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -46,18 +49,19 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .profile-button {
-    background: #263746;
-    color: white;
-    border: 1px solid #354554;
-    padding: 9px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
 
-.profile-button:hover {
-    background: #32495c;
-}
+        .profile-button {
+            background: #263746;
+            color: white;
+            border: 1px solid #354554;
+            padding: 9px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .profile-button:hover {
+            background: #32495c;
+        }
 
         .container {
             max-width: 1400px;
@@ -76,6 +80,48 @@
         .welcome p {
             color: #7f8c99;
             margin: 0;
+        }
+
+        .dashboard-buttons {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-button {
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .create-case-button {
+            background: #1d4ed8;
+            border: none;
+        }
+
+        .create-case-button:hover {
+            background: #2563eb;
+        }
+
+        .documents-button {
+            background: #263746;
+            border: 1px solid #354554;
+        }
+
+        .documents-button:hover {
+            background: #32495c;
+        }
+
+        .intel-button {
+            background: #166534;
+            border: 1px solid #22c55e;
+        }
+
+        .intel-button:hover {
+            background: #15803d;
         }
 
         .cards {
@@ -103,6 +149,20 @@
             font-size: 30px;
             font-weight: bold;
             margin-top: 10px;
+        }
+
+        .intel-card {
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .intel-card:hover {
+            border-color: #22c55e;
+            background: #141f1a;
+        }
+
+        .intel-card .number {
+            color: #4ade80;
         }
 
         .panel {
@@ -146,161 +206,304 @@
             text-align: center;
             padding: 30px;
         }
+
     </style>
+
 </head>
 
+
 <body>
+
 
 <header class="header">
 
     <div>
+
         <h1>SCU CASE MANAGEMENT</h1>
-        <p>STREET CRIMES UNIT • SECURE OPERATIONS</p>
+
+        <p>
+            STREET CRIMES UNIT • SECURE OPERATIONS
+        </p>
+
     </div>
+
 
     <div style="display: flex; gap: 10px;">
 
-    <button
-        class="profile-button"
-        onclick="window.location.href='profile.html'"
-    >
-        PROFILE
-    </button>
+        <button
+            class="profile-button"
+            onclick="window.location.href='profile.html'"
+        >
+            PROFILE
+        </button>
 
-    <button class="logout" onclick="logout()">
-        LOG OUT
-    </button>
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            LOG OUT
+        </button>
 
-</div>
+    </div>
 
 </header>
 
+
 <main class="container">
 
+
     <section class="welcome">
-        <h2>SCU Dashboard</h2>
-        <p>Authorised officer access.</p>
+
+        <h2>
+            SCU Dashboard
+        </h2>
+
+        <p>
+            Authorised officer access.
+        </p>
+
     </section>
-<div style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
 
-    <button
-        onclick="window.location.href='create-case.html'"
-        style="
-            background: #1d4ed8;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        "
-    >
-        + CREATE NEW CASE
-    </button>
 
-    <button
-        onclick="window.location.href='documents.html'"
-        style="
-            background: #263746;
-            color: white;
-            border: 1px solid #354554;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        "
-    >
-        DOCUMENTS & TEMPLATES
-    </button>
+    <!-- DASHBOARD ACTIONS -->
 
-</div>
+    <div class="dashboard-buttons">
+
+        <button
+            class="dashboard-button create-case-button"
+            onclick="window.location.href='create-case.html'"
+        >
+            + CREATE NEW CASE
+        </button>
+
+
+        <button
+            class="dashboard-button documents-button"
+            onclick="window.location.href='documents.html'"
+        >
+            DOCUMENTS & TEMPLATES
+        </button>
+
+
+        <button
+            class="dashboard-button intel-button"
+            onclick="window.location.href='submit-intel.html'"
+        >
+            SUBMIT SCU INTEL
+        </button>
+
+    </div>
+
+
+    <!-- DASHBOARD CARDS -->
+
     <section class="cards">
 
-        <div class="card">
-            <div class="card-title">Active Cases</div>
-            <div class="number" id="activeCases">0</div>
-        </div>
 
         <div class="card">
-            <div class="card-title">My Cases</div>
-            <div class="number" id="myCases">0</div>
+
+            <div class="card-title">
+                Active Cases
+            </div>
+
+            <div
+                class="number"
+                id="activeCases"
+            >
+                0
+            </div>
+
         </div>
 
-        <div class="card">
-            <div class="card-title">Evidence</div>
-            <div class="number" id="evidenceCount">0</div>
-        </div>
 
         <div class="card">
-            <div class="card-title">Officer Status</div>
-            <div class="number" style="font-size:20px;">ONLINE</div>
+
+            <div class="card-title">
+                My Cases
+            </div>
+
+            <div
+                class="number"
+                id="myCases"
+            >
+                0
+            </div>
+
         </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Evidence
+            </div>
+
+            <div
+                class="number"
+                id="evidenceCount"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <!-- NEW INTEL -->
+
+        <div
+            class="card intel-card"
+            onclick="window.location.href='intel.html'"
+        >
+
+            <div class="card-title">
+                New Intel
+            </div>
+
+            <div
+                class="number"
+                id="newIntel"
+            >
+                0
+            </div>
+
+        </div>
+
 
     </section>
+
+
+    <!-- CASE FILES -->
 
     <section class="panel">
 
-        <h2>Accessible Case Files</h2>
+        <h2>
+            Accessible Case Files
+        </h2>
 
         <div id="caseList">
+
             <div class="empty">
                 Loading case files...
             </div>
+
         </div>
 
     </section>
 
+
 </main>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
 
-const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const SUPABASE_URL =
+    'https://mtlozyseibrefhxnocvb.supabase.co';
 
 
-// Check login
+const SUPABASE_KEY =
+    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+// ======================================================
+// CHECK LOGIN
+// ======================================================
+
 async function checkLogin() {
 
-    const { data: { session } } =
-        await supabaseClient.auth.getSession();
+
+    const {
+        data: {
+            session
+        }
+    } = await supabaseClient.auth.getSession();
+
 
     if (!session) {
-        window.location.href = 'index.html';
+
+        window.location.href =
+            'index.html';
+
         return;
+
     }
 
+
+    // Load existing cases
+
     loadCases();
+
+
+    // Load new intelligence count
+
+    loadNewIntel(
+        session.user.id
+    );
+
 }
 
 
-// Load authorised cases
+// ======================================================
+// LOAD AUTHORISED CASES
+// ======================================================
+
 async function loadCases() {
 
-    const { data, error } = await supabaseClient
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+
         .from('cases')
+
         .select('*')
-        .order('created_at', { ascending: false });
+
+        .order(
+            'created_at',
+            {
+                ascending: false
+            }
+        );
+
 
     if (error) {
 
-        document.getElementById('caseList').innerHTML =
-            '<div class="empty">Unable to load case files.</div>';
+        document
+            .getElementById('caseList')
+            .innerHTML =
+                '<div class="empty">Unable to load case files.</div>';
 
         console.error(error);
+
         return;
+
     }
 
-    const list = document.getElementById('caseList');
 
-    document.getElementById('activeCases').textContent =
-        data.filter(c => c.status === 'active').length
+    const list =
+        document.getElementById(
+            'caseList'
+        );
+
+
+    document
+        .getElementById('activeCases')
+        .textContent =
+            data.filter(
+                c => c.status === 'active'
+            ).length;
+
 
     if (!data.length) {
 
@@ -308,52 +511,155 @@ async function loadCases() {
             '<div class="empty">No authorised case files found.</div>';
 
         return;
+
     }
+
 
     list.innerHTML = '';
 
-   data.forEach(caseFile => {
 
-    const row = document.createElement('div');
+    data.forEach(
+        caseFile => {
 
-    row.className = 'case-row';
 
-    row.style.cursor = 'pointer';
+            const row =
+                document.createElement('div');
 
-    row.onclick = function() {
-        window.location.href =
-            `case.html?id=${caseFile.id}`;
-    };
 
-    row.innerHTML = `
-        <div>
-            <div class="case-name">${caseFile.case_name}</div>
-            <div class="case-number">${caseFile.case_number}</div>
-        </div>
+            row.className =
+                'case-row';
 
-        <div class="status">
-            ${caseFile.status}
-        </div>
-    `;
 
-    list.appendChild(row);
+            row.style.cursor =
+                'pointer';
 
-});
+
+            row.onclick =
+                function() {
+
+                    window.location.href =
+                        `case.html?id=${caseFile.id}`;
+
+                };
+
+
+            row.innerHTML = `
+
+                <div>
+
+                    <div class="case-name">
+
+                        ${caseFile.case_name}
+
+                    </div>
+
+                    <div class="case-number">
+
+                        ${caseFile.case_number}
+
+                    </div>
+
+                </div>
+
+
+                <div class="status">
+
+                    ${caseFile.status}
+
+                </div>
+
+            `;
+
+
+            list.appendChild(
+                row
+            );
+
+        }
+    );
+
 }
 
 
-// Logout
+// ======================================================
+// LOAD NEW INTELLIGENCE
+// ======================================================
+
+async function loadNewIntel(userId) {
+
+
+    const {
+        count,
+        error
+    } = await supabaseClient
+
+        .from('intel_submissions')
+
+        .select(
+            'id',
+            {
+                count: 'exact',
+                head: true
+            }
+        )
+
+        .eq(
+            'recipient_id',
+            userId
+        );
+
+
+    if (error) {
+
+        console.error(
+            'Load intel count error:',
+            error
+        );
+
+        document
+            .getElementById('newIntel')
+            .textContent =
+                '0';
+
+        return;
+
+    }
+
+
+    document
+        .getElementById('newIntel')
+        .textContent =
+            count || 0;
+
+}
+
+
+// ======================================================
+// LOGOUT
+// ======================================================
+
 async function logout() {
+
 
     await supabaseClient.auth.signOut();
 
-    window.location.href = 'index.html';
+
+    window.location.href =
+        'index.html';
+
 }
 
 
+// ======================================================
+// START
+// ======================================================
+
 checkLogin();
+
 
 </script>
 
+
 </body>
+
 </html>
