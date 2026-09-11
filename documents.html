@@ -8,7 +8,6 @@
 
     <title>SCU Documents & Templates</title>
 
-    <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
@@ -79,8 +78,8 @@
         /* MASTER CONTROLS */
 
         .admin-controls {
-            margin-bottom: 25px;
             display: none;
+            margin-bottom: 25px;
         }
 
         .add-button {
@@ -98,9 +97,10 @@
             background: #15803d;
         }
 
-        /* ADD FORM */
+        /* FORMS */
 
-        .add-form {
+        .add-form,
+        .edit-form {
             display: none;
             background: #111821;
             border: 1px solid #293542;
@@ -110,7 +110,8 @@
             max-width: 700px;
         }
 
-        .add-form h3 {
+        .add-form h3,
+        .edit-form h3 {
             margin: 0 0 18px;
         }
 
@@ -247,6 +248,21 @@
             background: #2563eb;
         }
 
+        .edit-button {
+            background: #374151;
+            color: white;
+            border: 1px solid #4b5563;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .edit-button:hover {
+            background: #4b5563;
+        }
+
         .delete-button {
             background: #7f1d1d;
             color: white;
@@ -290,6 +306,7 @@
 <body>
 
     <div class="header">
+
         <div>
             <h1>SCU DOCUMENTS & TEMPLATES</h1>
             <p>Serious Crime Unit — Internal Resources</p>
@@ -298,29 +315,47 @@
         <button class="back-button" onclick="goBack()">
             ← Back
         </button>
+
     </div>
+
 
     <div class="container">
 
         <div class="welcome">
+
             <h2>Documents & Templates</h2>
-            <p>Access SCU documents, forms and operational templates.</p>
+
+            <p>
+                Access SCU documents, forms and operational templates.
+            </p>
+
         </div>
+
 
         <div id="status" class="status"></div>
 
-        <!-- MASTER ONLY -->
+
+        <!-- MASTER CONTROLS -->
+
         <div id="adminControls" class="admin-controls">
 
-            <button class="add-button" onclick="toggleAddForm()">
+            <button
+                class="add-button"
+                onclick="toggleAddForm()"
+            >
                 + Upload Document
             </button>
+
+
+            <!-- UPLOAD FORM -->
 
             <div id="addForm" class="add-form">
 
                 <h3>Upload New Document</h3>
 
+
                 <div class="form-group">
+
                     <label for="documentTitle">
                         Document Title
                     </label>
@@ -330,9 +365,12 @@
                         id="documentTitle"
                         placeholder="e.g. Intelligence Report Template"
                     >
+
                 </div>
 
+
                 <div class="form-group">
+
                     <label for="documentDescription">
                         Description
                     </label>
@@ -341,9 +379,12 @@
                         id="documentDescription"
                         placeholder="Brief description of the document..."
                     ></textarea>
+
                 </div>
 
+
                 <div class="form-group">
+
                     <label for="documentFile">
                         Document File
                     </label>
@@ -352,7 +393,9 @@
                         type="file"
                         id="documentFile"
                     >
+
                 </div>
+
 
                 <div class="form-buttons">
 
@@ -373,7 +416,88 @@
                 </div>
 
             </div>
+
+
+            <!-- EDIT FORM -->
+
+            <div id="editForm" class="edit-form">
+
+                <h3>Edit Document</h3>
+
+                <input
+                    type="hidden"
+                    id="editDocumentId"
+                >
+
+                <input
+                    type="hidden"
+                    id="editOldFilePath"
+                >
+
+
+                <div class="form-group">
+
+                    <label for="editDocumentTitle">
+                        Document Title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editDocumentTitle"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editDocumentDescription">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="editDocumentDescription"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="editDocumentFile">
+                        Replace File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="editDocumentFile"
+                    >
+
+                </div>
+
+
+                <div class="form-buttons">
+
+                    <button
+                        class="save-button"
+                        onclick="saveEdit()"
+                    >
+                        Save Changes
+                    </button>
+
+                    <button
+                        class="cancel-button"
+                        onclick="cancelEdit()"
+                    >
+                        Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
+
 
         <div id="documents" class="documents">
 
@@ -388,163 +512,177 @@
 
     <script>
 
-        /*
-        ============================================================
-        SUPABASE CONFIGURATION
-        ============================================================
+        /* ========================================================
+           SUPABASE
+        ======================================================== */
 
-        PUT THE SAME SUPABASE URL AND ANON KEY HERE THAT YOU USE
-        ON YOUR OTHER SCU PAGES.
-        */
+        const SUPABASE_URL =
+            "https://mtlozyseibrefhxnocvb.supabase.co";
 
-        const SUPABASE_URL = "https://mtlozyseibrefhxnocvb.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
-
-        const supabaseClient = supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY
-        );
+        const SUPABASE_ANON_KEY =
+            "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
 
-        /*
-        ============================================================
-        SETTINGS
-        ============================================================
-        */
+        const supabaseClient =
+            supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_ANON_KEY
+            );
+
+
+        /* ========================================================
+           SETTINGS
+        ======================================================== */
 
         const DOCUMENTS_TABLE = "documents";
 
-        /*
-        IMPORTANT:
-
-        This is the Supabase Storage bucket where the uploaded files
-        are stored.
-
-        If your existing bucket has a different name, change this.
-        */
         const STORAGE_BUCKET = "documents";
 
 
-        /*
-        ============================================================
-        USER / ROLE
-        ============================================================
-        */
-
         let currentUser = null;
+
         let currentRole = null;
 
 
-        /*
-        ============================================================
-        INITIALISE
-        ============================================================
-        */
+        /* ========================================================
+           START
+        ======================================================== */
 
-        document.addEventListener("DOMContentLoaded", async function () {
+        document.addEventListener(
+            "DOMContentLoaded",
+            async function () {
 
-            await getCurrentUser();
+                await getCurrentUser();
 
-            await loadDocuments();
+                await loadDocuments();
 
-        });
+            }
+        );
 
 
-        /*
-        ============================================================
-        GET CURRENT USER
-        ============================================================
-        */
+        /* ========================================================
+           GET USER
+        ======================================================== */
 
         async function getCurrentUser() {
 
             try {
 
                 const {
-                    data: {
-                        user
-                    },
+                    data,
                     error
-                } = await supabaseClient.auth.getUser();
+                } =
+                    await supabaseClient.auth.getUser();
+
 
                 if (error) {
-                    console.error(error);
+
+                    console.error(
+                        "Auth error:",
+                        error
+                    );
+
                     return;
+
                 }
 
-                currentUser = user;
 
-                if (!user) {
-                    showError("You are not logged in.");
+                currentUser = data.user;
+
+
+                if (!currentUser) {
+
+                    showError(
+                        "You are not logged in."
+                    );
+
                     return;
+
                 }
 
 
                 /*
-                ----------------------------------------------------
-                GET USER ROLE
-                ----------------------------------------------------
+                Get the user's role.
 
-                This expects your user profile table to contain:
-
+                Your SCU profile table uses:
+                profiles
                 id
                 role
-
-                If your existing SCU portal uses a different table,
-                keep the role logic from your existing page here.
                 */
 
                 const {
                     data: profile,
                     error: profileError
-                } = await supabaseClient
-                    .from("profiles")
-                    .select("role")
-                    .eq("id", user.id)
-                    .single();
+                } =
+                    await supabaseClient
+                        .from("profiles")
+                        .select("role")
+                        .eq(
+                            "id",
+                            currentUser.id
+                        )
+                        .single();
 
 
-                if (!profileError && profile) {
+                if (profileError) {
 
-                    currentRole = profile.role;
+                    console.error(
+                        "Profile error:",
+                        profileError
+                    );
+
+                    return;
+
+                }
+
+
+                if (profile) {
+
+                    currentRole =
+                        String(
+                            profile.role || ""
+                        ).toLowerCase();
 
                 }
 
 
                 /*
-                ----------------------------------------------------
-                MASTER ACCESS
-                ----------------------------------------------------
+                MASTER ONLY
                 */
 
                 if (
-                    currentRole &&
-                    currentRole.toLowerCase() === "master"
+                    currentRole === "master"
                 ) {
 
-                    document.getElementById("adminControls").style.display = "block";
+                    document.getElementById(
+                        "adminControls"
+                    ).style.display = "block";
 
                 }
 
             } catch (error) {
 
-                console.error("User error:", error);
+                console.error(
+                    "User error:",
+                    error
+                );
 
             }
 
         }
 
 
-        /*
-        ============================================================
-        LOAD DOCUMENTS
-        ============================================================
-        */
+        /* ========================================================
+           LOAD DOCUMENTS
+        ======================================================== */
 
         async function loadDocuments() {
 
             const container =
-                document.getElementById("documents");
+                document.getElementById(
+                    "documents"
+                );
+
 
             container.innerHTML =
                 '<div class="loading">Loading documents...</div>';
@@ -555,31 +693,43 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 const {
                     data,
                     error
-                } = await supabaseClient
-                    .from(DOCUMENTS_TABLE)
-                    .select("*")
-                    .order("created_at", {
-                        ascending: false
-                    });
+                } =
+                    await supabaseClient
+                        .from(DOCUMENTS_TABLE)
+                        .select("*")
+                        .order(
+                            "created_at",
+                            {
+                                ascending: false
+                            }
+                        );
 
 
                 if (error) {
 
-                    console.error("Documents error:", error);
-
-                    showError(
-                        "Unable to load documents. Check the browser console for details."
+                    console.error(
+                        "Documents error:",
+                        error
                     );
 
                     container.innerHTML =
                         '<div class="empty">Unable to load documents.</div>';
+
+
+                    showError(
+                        "Unable to load documents: " +
+                        error.message
+                    );
 
                     return;
 
                 }
 
 
-                if (!data || data.length === 0) {
+                if (
+                    !data ||
+                    data.length === 0
+                ) {
 
                     container.innerHTML =
                         '<div class="empty">No documents have been uploaded yet.</div>';
@@ -592,25 +742,31 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 container.innerHTML = "";
 
 
-                data.forEach(function (document) {
+                data.forEach(
+                    function (doc) {
 
-                    const card =
-                        createDocumentCard(document);
+                        container.appendChild(
+                            createDocumentCard(doc)
+                        );
 
-                    container.appendChild(card);
-
-                });
+                    }
+                );
 
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "Load error:",
+                    error
+                );
+
 
                 container.innerHTML =
                     '<div class="empty">Unable to load documents.</div>';
 
+
                 showError(
-                    "An unexpected error occurred while loading the documents."
+                    "An unexpected error occurred while loading documents."
                 );
 
             }
@@ -618,65 +774,65 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
         }
 
 
-        /*
-        ============================================================
-        CREATE DOCUMENT CARD
-        ============================================================
-        */
+        /* ========================================================
+           CREATE CARD
+        ======================================================== */
 
-        function createDocumentCard(document) {
+        function createDocumentCard(doc) {
 
             const card =
-                document.createElement
-                ? document.createElement("div")
-                : null;
-
-            const element =
-                document.ownerDocument
-                ? document.ownerDocument.createElement("div")
-                : window.document.createElement("div");
+                window.document.createElement(
+                    "div"
+                );
 
 
-            element.className = "document-card";
+            card.className =
+                "document-card";
 
 
             const title =
                 escapeHtml(
-                    document.title ||
-                    document.name ||
+                    doc.title ||
+                    doc.name ||
                     "Untitled Document"
                 );
 
 
             const description =
                 escapeHtml(
-                    document.description ||
+                    doc.description ||
                     "SCU document."
                 );
 
 
             let fileUrl =
-                document.file_url ||
-                document.url ||
+                doc.file_url ||
+                doc.url ||
                 "";
 
 
             /*
-            If the database stores a storage path rather than
-            a complete URL, create a public URL.
+            Create public URL if only a storage
+            path exists.
             */
 
             if (
                 !fileUrl &&
-                document.file_path
+                doc.file_path
             ) {
 
                 const {
                     data
-                } = supabaseClient
-                    .storage
-                    .from(STORAGE_BUCKET)
-                    .getPublicUrl(document.file_path);
+                } =
+                    supabaseClient
+                        .storage
+                        .from(
+                            STORAGE_BUCKET
+                        )
+                        .getPublicUrl(
+                            doc.file_path
+                        );
+
 
                 fileUrl =
                     data.publicUrl;
@@ -686,15 +842,21 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
             if (
                 !fileUrl &&
-                document.storage_path
+                doc.storage_path
             ) {
 
                 const {
                     data
-                } = supabaseClient
-                    .storage
-                    .from(STORAGE_BUCKET)
-                    .getPublicUrl(document.storage_path);
+                } =
+                    supabaseClient
+                        .storage
+                        .from(
+                            STORAGE_BUCKET
+                        )
+                        .getPublicUrl(
+                            doc.storage_path
+                        );
+
 
                 fileUrl =
                     data.publicUrl;
@@ -702,12 +864,13 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
             }
 
 
-            let buttons = "";
+            let actions = "";
 
 
             if (fileUrl) {
 
-                buttons += `
+                actions += `
+
                     <a
                         href="${escapeAttribute(fileUrl)}"
                         target="_blank"
@@ -716,39 +879,51 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                     >
                         Open Document
                     </a>
+
                 `;
 
             }
 
 
             /*
-            MASTER DELETE BUTTON
+            MASTER BUTTONS
             */
 
             if (
-                currentRole &&
-                currentRole.toLowerCase() === "master"
+                currentRole === "master"
             ) {
 
-                buttons += `
+                actions += `
+
+                    <button
+                        class="edit-button"
+                        onclick="openEdit(
+                            '${escapeAttribute(String(doc.id))}',
+                            '${escapeAttribute(String(doc.title || doc.name || ""))}',
+                            '${escapeAttribute(String(doc.description || ""))}',
+                            '${escapeAttribute(String(doc.file_path || doc.storage_path || ""))}'
+                        )"
+                    >
+                        Edit
+                    </button>
+
+
                     <button
                         class="delete-button"
-                        onclick="deleteDocument('${escapeAttribute(
-                            document.id || ""
-                        )}', '${escapeAttribute(
-                            document.file_path ||
-                            document.storage_path ||
-                            ""
-                        )}')"
+                        onclick="deleteDocument(
+                            '${escapeAttribute(String(doc.id))}',
+                            '${escapeAttribute(String(doc.file_path || doc.storage_path || ""))}'
+                        )"
                     >
                         Delete
                     </button>
+
                 `;
 
             }
 
 
-            element.innerHTML = `
+            card.innerHTML = `
 
                 <h3>${title}</h3>
 
@@ -756,29 +931,341 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
                 <div class="document-actions">
 
-                    ${buttons}
+                    ${actions}
 
                 </div>
 
             `;
 
 
-            return element;
+            return card;
 
         }
 
 
-        /*
-        ============================================================
-        UPLOAD DOCUMENT
-        ============================================================
-        */
+        /* ========================================================
+           OPEN EDIT
+        ======================================================== */
+
+        function openEdit(
+            id,
+            title,
+            description,
+            filePath
+        ) {
+
+            if (
+                currentRole !== "master"
+            ) {
+
+                showError(
+                    "Only Master users can edit documents."
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "editDocumentId"
+            ).value = id;
+
+
+            document.getElementById(
+                "editDocumentTitle"
+            ).value = title;
+
+
+            document.getElementById(
+                "editDocumentDescription"
+            ).value = description;
+
+
+            document.getElementById(
+                "editOldFilePath"
+            ).value = filePath;
+
+
+            document.getElementById(
+                "editDocumentFile"
+            ).value = "";
+
+
+            document.getElementById(
+                "addForm"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "editForm"
+            ).style.display = "block";
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+        /* ========================================================
+           CANCEL EDIT
+        ======================================================== */
+
+        function cancelEdit() {
+
+            document.getElementById(
+                "editForm"
+            ).style.display = "none";
+
+        }
+
+
+        /* ========================================================
+           SAVE EDIT
+        ======================================================== */
+
+        async function saveEdit() {
+
+            if (
+                currentRole !== "master"
+            ) {
+
+                showError(
+                    "Only Master users can edit documents."
+                );
+
+                return;
+
+            }
+
+
+            const id =
+                document.getElementById(
+                    "editDocumentId"
+                ).value;
+
+
+            const oldFilePath =
+                document.getElementById(
+                    "editOldFilePath"
+                ).value;
+
+
+            const title =
+                document.getElementById(
+                    "editDocumentTitle"
+                ).value.trim();
+
+
+            const description =
+                document.getElementById(
+                    "editDocumentDescription"
+                ).value.trim();
+
+
+            const fileInput =
+                document.getElementById(
+                    "editDocumentFile"
+                );
+
+
+            const newFile =
+                fileInput.files[0];
+
+
+            if (!title) {
+
+                showError(
+                    "Please enter a document title."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                showSuccess(
+                    "Saving changes..."
+                );
+
+
+                let updateData = {
+
+                    title: title,
+
+                    description: description
+
+                };
+
+
+                /*
+                If Master selected a replacement
+                file, upload it.
+                */
+
+                if (newFile) {
+
+                    const newFilePath =
+                        Date.now() +
+                        "_" +
+                        newFile.name.replace(
+                            /[^a-zA-Z0-9._-]/g,
+                            "_"
+                        );
+
+
+                    const {
+                        error: uploadError
+                    } =
+                        await supabaseClient
+                            .storage
+                            .from(
+                                STORAGE_BUCKET
+                            )
+                            .upload(
+                                newFilePath,
+                                newFile,
+                                {
+                                    upsert: false
+                                }
+                            );
+
+
+                    if (uploadError) {
+
+                        console.error(
+                            uploadError
+                        );
+
+                        showError(
+                            "Replacement file could not be uploaded: " +
+                            uploadError.message
+                        );
+
+                        return;
+
+                    }
+
+
+                    const {
+                        data: publicData
+                    } =
+                        supabaseClient
+                            .storage
+                            .from(
+                                STORAGE_BUCKET
+                            )
+                            .getPublicUrl(
+                                newFilePath
+                            );
+
+
+                    updateData.file_url =
+                        publicData.publicUrl;
+
+
+                    updateData.file_path =
+                        newFilePath;
+
+
+                    /*
+                    Delete the old file.
+                    */
+
+                    if (oldFilePath) {
+
+                        await supabaseClient
+                            .storage
+                            .from(
+                                STORAGE_BUCKET
+                            )
+                            .remove([
+                                oldFilePath
+                            ]);
+
+                    }
+
+                }
+
+
+                /*
+                Update database record.
+                */
+
+                const {
+                    error: updateError
+                } =
+                    await supabaseClient
+                        .from(
+                            DOCUMENTS_TABLE
+                        )
+                        .update(
+                            updateData
+                        )
+                        .eq(
+                            "id",
+                            id
+                        );
+
+
+                if (updateError) {
+
+                    console.error(
+                        updateError
+                    );
+
+                    showError(
+                        "Document could not be updated: " +
+                        updateError.message
+                    );
+
+                    return;
+
+                }
+
+
+                document.getElementById(
+                    "editForm"
+                ).style.display = "none";
+
+
+                showSuccess(
+                    "Document updated successfully."
+                );
+
+
+                await loadDocuments();
+
+            } catch (error) {
+
+                console.error(
+                    "Edit error:",
+                    error
+                );
+
+
+                showError(
+                    "An unexpected error occurred while editing the document."
+                );
+
+            }
+
+        }
+
+
+        /* ========================================================
+           UPLOAD
+        ======================================================== */
 
         async function uploadDocument() {
 
             if (
-                !currentRole ||
-                currentRole.toLowerCase() !== "master"
+                currentRole !== "master"
             ) {
 
                 showError(
@@ -826,7 +1313,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
             if (!file) {
 
                 showError(
-                    "Please select a document to upload."
+                    "Please select a document."
                 );
 
                 return;
@@ -841,11 +1328,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 );
 
 
-                /*
-                Create a unique file name
-                */
-
-                const fileName =
+                const filePath =
                     Date.now() +
                     "_" +
                     file.name.replace(
@@ -854,34 +1337,27 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                     );
 
 
-                const filePath =
-                    fileName;
-
-
-                /*
-                Upload file to Supabase Storage
-                */
-
                 const {
                     error: uploadError
-                } = await supabaseClient
-                    .storage
-                    .from(STORAGE_BUCKET)
-                    .upload(
-                        filePath,
-                        file,
-                        {
-                            upsert: false
-                        }
-                    );
+                } =
+                    await supabaseClient
+                        .storage
+                        .from(
+                            STORAGE_BUCKET
+                        )
+                        .upload(
+                            filePath,
+                            file,
+                            {
+                                upsert: false
+                            }
+                        );
 
 
                 if (uploadError) {
 
-                    console.error(uploadError);
-
                     showError(
-                        "File upload failed: " +
+                        "Upload failed: " +
                         uploadError.message
                     );
 
@@ -890,57 +1366,50 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 }
 
 
-                /*
-                Get public URL
-                */
-
                 const {
                     data: publicData
-                } = supabaseClient
-                    .storage
-                    .from(STORAGE_BUCKET)
-                    .getPublicUrl(filePath);
+                } =
+                    supabaseClient
+                        .storage
+                        .from(
+                            STORAGE_BUCKET
+                        )
+                        .getPublicUrl(
+                            filePath
+                        );
 
 
                 const fileUrl =
                     publicData.publicUrl;
 
 
-                /*
-                Save document details
-                */
-
                 const {
                     error: databaseError
-                } = await supabaseClient
-                    .from(DOCUMENTS_TABLE)
-                    .insert([{
+                } =
+                    await supabaseClient
+                        .from(
+                            DOCUMENTS_TABLE
+                        )
+                        .insert([{
 
-                        title: title,
+                            title: title,
 
-                        description: description,
+                            description: description,
 
-                        file_url: fileUrl,
+                            file_url: fileUrl,
 
-                        file_path: filePath
+                            file_path: filePath
 
-                    }]);
+                        }]);
 
 
                 if (databaseError) {
 
-                    console.error(databaseError);
-
-
-                    /*
-                    If database insertion fails,
-                    remove the uploaded file so we don't
-                    leave an orphaned file in Storage.
-                    */
-
                     await supabaseClient
                         .storage
-                        .from(STORAGE_BUCKET)
+                        .from(
+                            STORAGE_BUCKET
+                        )
                         .remove([
                             filePath
                         ]);
@@ -956,10 +1425,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 }
 
 
-                /*
-                Clear form
-                */
-
                 document.getElementById(
                     "documentTitle"
                 ).value = "";
@@ -970,7 +1435,9 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 ).value = "";
 
 
-                fileInput.value = "";
+                document.getElementById(
+                    "documentFile"
+                ).value = "";
 
 
                 document.getElementById(
@@ -985,13 +1452,15 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
                 await loadDocuments();
 
-
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    error
+                );
+
 
                 showError(
-                    "An unexpected error occurred while uploading."
+                    "An unexpected error occurred during upload."
                 );
 
             }
@@ -999,20 +1468,17 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
         }
 
 
-        /*
-        ============================================================
-        DELETE DOCUMENT
-        ============================================================
-        */
+        /* ========================================================
+           DELETE
+        ======================================================== */
 
         async function deleteDocument(
-            documentId,
+            id,
             filePath
         ) {
 
             if (
-                !currentRole ||
-                currentRole.toLowerCase() !== "master"
+                currentRole !== "master"
             ) {
 
                 showError(
@@ -1043,19 +1509,57 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
 
                 /*
-                Delete file from Storage
+                Delete database record first.
+                */
+
+                const {
+                    error: databaseError
+                } =
+                    await supabaseClient
+                        .from(
+                            DOCUMENTS_TABLE
+                        )
+                        .delete()
+                        .eq(
+                            "id",
+                            id
+                        );
+
+
+                if (databaseError) {
+
+                    console.error(
+                        databaseError
+                    );
+
+
+                    showError(
+                        "Document could not be deleted: " +
+                        databaseError.message
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                Delete stored file.
                 */
 
                 if (filePath) {
 
                     const {
                         error: storageError
-                    } = await supabaseClient
-                        .storage
-                        .from(STORAGE_BUCKET)
-                        .remove([
-                            filePath
-                        ]);
+                    } =
+                        await supabaseClient
+                            .storage
+                            .from(
+                                STORAGE_BUCKET
+                            )
+                            .remove([
+                                filePath
+                            ]);
 
 
                     if (storageError) {
@@ -1070,37 +1574,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 }
 
 
-                /*
-                Delete database record
-                */
-
-                const {
-                    error: databaseError
-                } = await supabaseClient
-                    .from(DOCUMENTS_TABLE)
-                    .delete()
-                    .eq(
-                        "id",
-                        documentId
-                    );
-
-
-                if (databaseError) {
-
-                    console.error(
-                        databaseError
-                    );
-
-                    showError(
-                        "The document could not be deleted: " +
-                        databaseError.message
-                    );
-
-                    return;
-
-                }
-
-
                 showSuccess(
                     "Document deleted successfully."
                 );
@@ -1111,7 +1584,10 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    error
+                );
+
 
                 showError(
                     "An unexpected error occurred while deleting."
@@ -1122,11 +1598,9 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
         }
 
 
-        /*
-        ============================================================
-        SHOW / HIDE ADD FORM
-        ============================================================
-        */
+        /* ========================================================
+           ADD FORM
+        ======================================================== */
 
         function toggleAddForm() {
 
@@ -1146,16 +1620,18 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
                 form.style.display = "block";
 
+                document.getElementById(
+                    "editForm"
+                ).style.display = "none";
+
             }
 
         }
 
 
-        /*
-        ============================================================
-        BACK BUTTON
-        ============================================================
-        */
+        /* ========================================================
+           BACK
+        ======================================================== */
 
         function goBack() {
 
@@ -1165,11 +1641,9 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
         }
 
 
-        /*
-        ============================================================
-        STATUS MESSAGES
-        ============================================================
-        */
+        /* ========================================================
+           MESSAGES
+        ======================================================== */
 
         function showError(message) {
 
@@ -1185,14 +1659,6 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
 
             status.textContent =
                 message;
-
-
-            setTimeout(function () {
-
-                status.className =
-                    "status";
-
-            }, 6000);
 
         }
 
@@ -1213,30 +1679,46 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
                 message;
 
 
-            setTimeout(function () {
+            setTimeout(
+                function () {
 
-                status.className =
-                    "status";
+                    status.className =
+                        "status";
 
-            }, 5000);
+                },
+                5000
+            );
 
         }
 
 
-        /*
-        ============================================================
-        HTML SAFETY
-        ============================================================
-        */
+        /* ========================================================
+           HTML SAFETY
+        ======================================================== */
 
         function escapeHtml(value) {
 
             return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
 
         }
 
@@ -1244,13 +1726,20 @@ const SUPABASE_ANON_KEY = "sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1";
         function escapeAttribute(value) {
 
             return String(value)
-                .replace(/\\/g, "\\\\")
-                .replace(/'/g, "\\'");
+                .replace(
+                    /\\/g,
+                    "\\\\"
+                )
+                .replace(
+                    /'/g,
+                    "\\'"
+                );
 
         }
 
     </script>
 
 </body>
+
 </html>
 ```
