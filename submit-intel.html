@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Submit SCU Intelligence</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #080c11;
+            color: #e8edf2;
+        }
+
+        .header {
+            background: #111821;
+            border-bottom: 1px solid #293542;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 21px;
+            letter-spacing: 1.5px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #7f8c99;
+            font-size: 11px;
+        }
+
+        .back-button {
+            background: #202c38;
+            color: white;
+            border: 1px solid #354554;
+            padding: 9px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #2b3a48;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .intro {
+            margin-bottom: 25px;
+        }
+
+        .intro h2 {
+            margin: 0 0 6px;
+        }
+
+        .intro p {
+            color: #7f8c99;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .form-panel {
+            background: #111821;
+            border: 1px solid #293542;
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #aeb8c2;
+            margin-bottom: 7px;
+        }
+
+        .required {
+            color: #f87171;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            background: #080c11;
+            color: white;
+            border: 1px solid #354554;
+            border-radius: 5px;
+            padding: 11px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #1d4ed8;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .small-text {
+            color: #6f7c88;
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .submit-button {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .submit-button:hover {
+            background: #2563eb;
+        }
+
+        .submit-button:disabled {
+            background: #263746;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+    <div>
+
+        <h1>SUBMIT SCU INTELLIGENCE</h1>
+
+        <p>
+            STREET CRIMES UNIT • INTERNAL INTELLIGENCE
+        </p>
+
+    </div>
+
+
+    <button
+        class="back-button"
+        onclick="window.location.href='dashboard.html'"
+    >
+        BACK TO DASHBOARD
+    </button>
+
+</header>
+
+
+<main class="container">
+
+
+    <section class="intro">
+
+        <h2>
+            Submit Intelligence Finding
+        </h2>
+
+        <p>
+            Use this form to pass information or findings directly to the relevant SCU agent.
+            This submission does not create a case.
+        </p>
+
+    </section>
+
+
+    <section class="form-panel">
+
+
+        <!-- RECIPIENT -->
+
+        <div class="form-group">
+
+            <label for="recipient">
+                SCU Agent <span class="required">*</span>
+            </label>
+
+            <select id="recipient">
+
+                <option value="">
+                    Loading SCU agents...
+                </option>
+
+            </select>
+
+            <div class="small-text">
+                Select the SCU agent who should receive this intelligence.
+            </div>
+
+        </div>
+
+
+        <!-- INTEL TYPE -->
+
+        <div class="form-group">
+
+            <label for="intelType">
+                Intel Type <span class="required">*</span>
+            </label>
+
+            <select id="intelType">
+
+                <option value="">
+                    Select intel type
+                </option>
+
+                <option value="Drugs">
+                    Drugs
+                </option>
+
+                <option value="Weapons">
+                    Weapons
+                </option>
+
+                <option value="Organised Crime">
+                    Organised Crime
+                </option>
+
+                <option value="Violence">
+                    Violence
+                </option>
+
+                <option value="County Lines">
+                    County Lines
+                </option>
+
+                <option value="Vehicles">
+                    Vehicles
+                </option>
+
+                <option value="Persons">
+                    Persons
+                </option>
+
+                <option value="Locations">
+                    Locations
+                </option>
+
+                <option value="General Intelligence">
+                    General Intelligence
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- SUBJECT -->
+
+        <div class="form-group">
+
+            <label for="subject">
+                Subject / Brief Title <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="subject"
+                placeholder="e.g. Suspected weapon storage location"
+            >
+
+        </div>
+
+
+        <!-- FINDING -->
+
+        <div class="form-group">
+
+            <label for="finding">
+                Finding / Intelligence <span class="required">*</span>
+            </label>
+
+            <textarea
+                id="finding"
+                placeholder="Enter the information or intelligence you have obtained..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="form-group">
+
+            <label for="location">
+                Location
+            </label>
+
+            <input
+                type="text"
+                id="location"
+                placeholder="Optional"
+            >
+
+        </div>
+
+
+        <!-- SOURCE -->
+
+        <div class="form-group">
+
+            <label for="source">
+                Source / Context
+            </label>
+
+            <textarea
+                id="source"
+                style="min-height: 100px;"
+                placeholder="Optional information about the source or circumstances surrounding the finding..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- EVIDENCE LINK -->
+
+        <div class="form-group">
+
+            <label for="evidenceLink">
+                Evidence / Document Link
+            </label>
+
+            <input
+                type="url"
+                id="evidenceLink"
+                placeholder="https://..."
+            >
+
+            <div class="small-text">
+                Optional link to supporting evidence or a document.
+            </div>
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <button
+            class="submit-button"
+            id="submitButton"
+            onclick="submitIntel()"
+        >
+            SUBMIT INTELLIGENCE
+        </button>
+
+
+        <div
+            class="message"
+            id="message"
+        ></div>
+
+
+    </section>
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+const SUPABASE_URL =
+    'https://mtlozyseibrefhxnocvb.supabase.co';
+
+
+const SUPABASE_KEY =
+    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+let currentUser = null;
+
+
+// ======================================================
+// CHECK LOGIN
+// ======================================================
+
+async function checkLogin() {
+
+
+    const {
+        data: {
+            session
+        }
+    } = await supabaseClient.auth.getSession();
+
+
+    if (!session) {
+
+        window.location.href = 'index.html';
+
+        return;
+
+    }
+
+
+    currentUser =
+        session.user;
+
+
+    loadAgents();
+
+}
+
+
+// ======================================================
+// LOAD SCU AGENTS
+// ======================================================
+
+async function loadAgents() {
+
+
+    const recipient =
+        document.getElementById('recipient');
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+
+        .from('officers')
+
+      .select('id, full_name, rank, callsign, active')
+
+        .eq('is_scu_agent', true)
+
+        .eq('active', true);
+
+
+    if (error) {
+
+        console.error(
+            'Load SCU agents error:',
+            error
+        );
+
+
+        recipient.innerHTML = `
+
+            <option value="">
+                Unable to load SCU agents
+            </option>
+
+        `;
+
+        return;
+
+    }
+
+
+    recipient.innerHTML = `
+
+        <option value="">
+            Select SCU agent
+        </option>
+
+    `;
+
+
+    if (!data || data.length === 0) {
+
+        recipient.innerHTML = `
+
+            <option value="">
+                No SCU agents available
+            </option>
+
+        `;
+
+        return;
+
+    }
+
+
+    data.forEach(
+    agent => {
+
+        const option =
+            document.createElement('option');
+
+        option.value =
+            agent.id;
+
+        option.textContent =
+            `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim();
+
+        recipient.appendChild(
+            option
+        );
+
+    }
+);
+
+}
+
+
+// ======================================================
+// SUBMIT INTELLIGENCE
+// ======================================================
+
+async function submitIntel() {
+
+
+    const recipientId =
+        document
+            .getElementById('recipient')
+            .value;
+
+
+    const intelType =
+        document
+            .getElementById('intelType')
+            .value;
+
+
+    const subject =
+        document
+            .getElementById('subject')
+            .value
+            .trim();
+
+
+    const finding =
+        document
+            .getElementById('finding')
+            .value
+            .trim();
+
+
+    const location =
+        document
+            .getElementById('location')
+            .value
+            .trim();
+
+
+    const source =
+        document
+            .getElementById('source')
+            .value
+            .trim();
+
+
+    const evidenceLink =
+        document
+            .getElementById('evidenceLink')
+            .value
+            .trim();
+
+
+    const message =
+        document
+            .getElementById('message');
+
+
+    const submitButton =
+        document
+            .getElementById('submitButton');
+
+
+    message.className =
+        'message';
+
+
+    message.textContent =
+        '';
+
+
+    // Validation
+
+    if (!recipientId) {
+
+        message.classList.add('error');
+
+        message.textContent =
+            'Please select an SCU agent.';
+
+        return;
+
+    }
+
+
+    if (!intelType) {
+
+        message.classList.add('error');
+
+        message.textContent =
+            'Please select an intel type.';
+
+        return;
+
+    }
+
+
+    if (!subject) {
+
+        message.classList.add('error');
+
+        message.textContent =
+            'Please enter a subject.';
+
+        return;
+
+    }
+
+
+    if (!finding) {
+
+        message.classList.add('error');
+
+        message.textContent =
+            'Please enter the intelligence finding.';
+
+        return;
+
+    }
+
+
+    submitButton.disabled =
+        true;
+
+    submitButton.textContent =
+        'SUBMITTING...';
+
+
+    const {
+        error
+    } = await supabaseClient
+
+        .from('intel_submissions')
+
+        .insert({
+
+            sender_id:
+                currentUser.id,
+
+            recipient_id:
+                recipientId,
+
+            intel_type:
+                intelType,
+
+            subject:
+                subject,
+
+            finding:
+                finding,
+
+            location:
+                location || null,
+
+            source:
+                source || null,
+
+            evidence_link:
+                evidenceLink || null
+
+        });
+
+
+    if (error) {
+
+        console.error(
+            'Submit intel error:',
+            error
+        );
+
+
+        message.classList.add('error');
+
+        message.textContent =
+            'Unable to submit intelligence: ' +
+            error.message;
+
+
+        submitButton.disabled =
+            false;
+
+        submitButton.textContent =
+            'SUBMIT INTELLIGENCE';
+
+        return;
+
+    }
+
+
+    message.classList.add('success');
+
+    message.textContent =
+        'Intelligence submitted successfully.';
+
+
+    // Clear form
+
+    document
+        .getElementById('recipient')
+        .value = '';
+
+
+    document
+        .getElementById('intelType')
+        .value = '';
+
+
+    document
+        .getElementById('subject')
+        .value = '';
+
+
+    document
+        .getElementById('finding')
+        .value = '';
+
+
+    document
+        .getElementById('location')
+        .value = '';
+
+
+    document
+        .getElementById('source')
+        .value = '';
+
+
+    document
+        .getElementById('evidenceLink')
+        .value = '';
+
+
+    submitButton.disabled =
+        false;
+
+    submitButton.textContent =
+        'SUBMIT INTELLIGENCE';
+
+}
+
+
+// ======================================================
+// START
+// ======================================================
+
+checkLogin();
+
+
+</script>
+
+
+</body>
+
+</html>
