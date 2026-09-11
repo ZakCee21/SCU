@@ -284,6 +284,7 @@ const supabaseClient =
 
 
 let currentUser = null;
+let currentUserRole = null;
 
 
 // ======================================================
@@ -310,11 +311,46 @@ async function checkLogin() {
     }
 
 
-    currentUser =
-        session.user;
+   currentUser =
+    session.user;
 
 
-    loadIntel();
+// Get the logged-in officer's role
+
+const {
+    data: officer,
+    error: officerError
+} = await supabaseClient
+
+    .from('officers')
+
+    .select('role')
+
+    .eq(
+        'id',
+        currentUser.id
+    )
+
+    .single();
+
+
+if (officerError) {
+
+    console.error(
+        'Load officer role error:',
+        officerError
+    );
+
+    return;
+
+}
+
+
+currentUserRole =
+    officer.role;
+
+
+loadIntel();
 
 }
 
@@ -332,26 +368,37 @@ async function loadIntel() {
         );
 
 
-    const {
-        data,
-        error
-    } = await supabaseClient
-
+   let query =
+    supabaseClient
         .from('intel_submissions')
+        .select('*');
 
-        .select('*')
 
-        .eq(
+// Masters can see ALL intelligence.
+// Everyone else only sees intelligence sent to them.
+
+if (currentUserRole !== 'master') {
+
+    query =
+        query.eq(
             'recipient_id',
             currentUser.id
-        )
-
-        .order(
-            'created_at',
-            {
-                ascending: false
-            }
         );
+
+}
+
+
+const {
+    data,
+    error
+} = await query
+
+    .order(
+        'created_at',
+        {
+            ascending: false
+        }
+    );
 
 
     if (error) {
