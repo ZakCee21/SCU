@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,6 +62,10 @@
 
         .profile-button:hover {
             background: #32495c;
+        }
+
+        .logout:hover {
+            background: #2b3a48;
         }
 
         .container {
@@ -165,6 +170,20 @@
             color: #4ade80;
         }
 
+        .open-intel-card {
+            cursor: pointer;
+            transition: border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .open-intel-card:hover {
+            border-color: #3b82f6;
+            background: #141b27;
+        }
+
+        .open-intel-card .number {
+            color: #60a5fa;
+        }
+
         .panel {
             background: #111821;
             border: 1px solid #293542;
@@ -205,6 +224,26 @@
             color: #6f7c88;
             text-align: center;
             padding: 30px;
+        }
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 17px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .case-row {
+                gap: 15px;
+            }
+
         }
 
     </style>
@@ -300,6 +339,8 @@
     <section class="cards">
 
 
+        <!-- ACTIVE CASES -->
+
         <div class="card">
 
             <div class="card-title">
@@ -316,6 +357,8 @@
         </div>
 
 
+        <!-- MY CASES -->
+
         <div class="card">
 
             <div class="card-title">
@@ -331,6 +374,8 @@
 
         </div>
 
+
+        <!-- EVIDENCE -->
 
         <div class="card">
 
@@ -362,6 +407,27 @@
             <div
                 class="number"
                 id="newIntel"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <!-- OPEN INTEL -->
+
+        <div
+            class="card open-intel-card"
+            onclick="window.location.href='intel.html'"
+        >
+
+            <div class="card-title">
+                Open Intel
+            </div>
+
+            <div
+                class="number"
+                id="openIntel"
             >
                 0
             </div>
@@ -439,15 +505,21 @@ async function checkLogin() {
     }
 
 
+    const userId =
+        session.user.id;
+
+
     // Load existing cases
 
-    loadCases();
+    loadCases(
+        userId
+    );
 
 
-    // Load new intelligence count
+    // Load Intel counters
 
-    loadNewIntel(
-        session.user.id
+    loadIntelCounts(
+        userId
     );
 
 }
@@ -457,7 +529,9 @@ async function checkLogin() {
 // LOAD AUTHORISED CASES
 // ======================================================
 
-async function loadCases() {
+async function loadCases(
+    userId
+) {
 
 
     const {
@@ -505,6 +579,39 @@ async function loadCases() {
             ).length;
 
 
+    // --------------------------------------------------
+    // My Cases
+    // --------------------------------------------------
+
+    const myCaseCount =
+        data.filter(
+            c =>
+                c.created_by === userId ||
+                c.owner_id === userId
+        ).length;
+
+
+    document
+        .getElementById('myCases')
+        .textContent =
+            myCaseCount;
+
+
+    // --------------------------------------------------
+    // Evidence
+    // --------------------------------------------------
+    //
+    // Keep the existing dashboard value at 0 for now.
+    // This can be connected to the evidence system later.
+    //
+    // --------------------------------------------------
+
+    document
+        .getElementById('evidenceCount')
+        .textContent =
+            0;
+
+
     if (!data.length) {
 
         list.innerHTML =
@@ -523,7 +630,9 @@ async function loadCases() {
 
 
             const row =
-                document.createElement('div');
+                document.createElement(
+                    'div'
+                );
 
 
             row.className =
@@ -549,13 +658,17 @@ async function loadCases() {
 
                     <div class="case-name">
 
-                        ${caseFile.case_name}
+                        ${escapeHtml(
+                            caseFile.case_name
+                        )}
 
                     </div>
 
                     <div class="case-number">
 
-                        ${caseFile.case_number}
+                        ${escapeHtml(
+                            caseFile.case_number
+                        )}
 
                     </div>
 
@@ -564,7 +677,9 @@ async function loadCases() {
 
                 <div class="status">
 
-                    ${caseFile.status}
+                    ${escapeHtml(
+                        caseFile.status
+                    )}
 
                 </div>
 
@@ -582,42 +697,124 @@ async function loadCases() {
 
 
 // ======================================================
-// LOAD NEW INTELLIGENCE
+// LOAD INTEL COUNTS
+// ======================================================
+//
+// NEW INTEL
+// = Intel without a view record for this user.
+//
+// OPEN INTEL
+// = Intel with a view record for this user.
+//
+// For Masters:
+// = All Intel in the system.
+//
+// For normal officers:
+// = Only Intel sent to that officer.
+//
 // ======================================================
 
-async function loadNewIntel(userId) {
+async function loadIntelCounts(
+    userId
+) {
 
+
+    // --------------------------------------------------
+    // Get officer role
+    // --------------------------------------------------
 
     const {
-        count,
-        error
+        data: officer,
+        error: officerError
     } = await supabaseClient
 
-        .from('intel_submissions')
+        .from('officers')
 
         .select(
-            'id',
-            {
-                count: 'exact',
-                head: true
-            }
+            'role, active'
         )
 
         .eq(
-            'recipient_id',
+            'id',
             userId
-        );
+        )
+
+        .single();
 
 
-    if (error) {
+    if (officerError) {
 
         console.error(
-            'Load intel count error:',
-            error
+            'Load officer role error:',
+            officerError
+        );
+
+        return;
+
+    }
+
+
+    const role =
+        String(
+            officer.role || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const isMaster =
+        role === 'master';
+
+
+    // --------------------------------------------------
+    // Load Intel
+    // --------------------------------------------------
+
+    let intelQuery =
+        supabaseClient
+
+            .from(
+                'intel_submissions'
+            )
+
+            .select(
+                'id'
+            );
+
+
+    // Normal officers only receive their own Intel.
+
+    if (!isMaster) {
+
+        intelQuery =
+            intelQuery.eq(
+                'recipient_id',
+                userId
+            );
+
+    }
+
+
+    const {
+        data: intelData,
+        error: intelError
+    } = await intelQuery;
+
+
+    if (intelError) {
+
+        console.error(
+            'Load Intel records error:',
+            intelError
         );
 
         document
             .getElementById('newIntel')
+            .textContent =
+                '0';
+
+        document
+            .getElementById('openIntel')
             .textContent =
                 '0';
 
@@ -626,10 +823,198 @@ async function loadNewIntel(userId) {
     }
 
 
+    const intel =
+        intelData || [];
+
+
+    // --------------------------------------------------
+    // No Intel
+    // --------------------------------------------------
+
+    if (
+        intel.length === 0
+    ) {
+
+        document
+            .getElementById('newIntel')
+            .textContent =
+                '0';
+
+        document
+            .getElementById('openIntel')
+            .textContent =
+                '0';
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------
+    // Get this user's viewed Intel
+    // --------------------------------------------------
+
+    const intelIds =
+        intel.map(
+            item =>
+                item.id
+        );
+
+
+    const {
+        data: viewData,
+        error: viewError
+    } = await supabaseClient
+
+        .from('intel_views')
+
+        .select(
+            'intel_id'
+        )
+
+        .eq(
+            'user_id',
+            userId
+        )
+
+        .in(
+            'intel_id',
+            intelIds
+        );
+
+
+    if (viewError) {
+
+        console.error(
+            'Load Intel views error:',
+            viewError
+        );
+
+        return;
+
+    }
+
+
+    const viewedIds =
+        new Set(
+            (viewData || [])
+                .map(
+                    view =>
+                        view.intel_id
+                )
+        );
+
+
+    // --------------------------------------------------
+    // Calculate counts
+    // --------------------------------------------------
+
+    let newCount = 0;
+    let openCount = 0;
+
+
+    intel.forEach(
+        item => {
+
+            if (
+                viewedIds.has(
+                    item.id
+                )
+            ) {
+
+                openCount++;
+
+            } else {
+
+                newCount++;
+
+            }
+
+        }
+    );
+
+
+    // --------------------------------------------------
+    // Display counts
+    // --------------------------------------------------
+
     document
         .getElementById('newIntel')
         .textContent =
-            count || 0;
+            newCount;
+
+
+    document
+        .getElementById('openIntel')
+        .textContent =
+            openCount;
+
+
+    console.log(
+        'Intel counts:',
+        {
+            newIntel:
+                newCount,
+
+            openIntel:
+                openCount,
+
+            total:
+                intel.length,
+
+            master:
+                isMaster
+        }
+    );
+
+}
+
+
+// ======================================================
+// HTML SECURITY
+// ======================================================
+
+function escapeHtml(
+    value
+) {
+
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
+        return '';
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+
+        .replace(
+            /</g,
+            '&lt;'
+        )
+
+        .replace(
+            />/g,
+            '&gt;'
+        )
+
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+
+        .replace(
+            /'/g,
+            '&#039;'
+        );
 
 }
 
@@ -663,3 +1048,4 @@ checkLogin();
 </body>
 
 </html>
+```
