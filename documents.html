@@ -240,25 +240,25 @@ async function loadDocuments() {
     documentList.innerHTML = '';
 
 
-    data.forEach(document => {
+   data.forEach(documentItem => {
 
-        const card =
-            document.createElement('div');
+    const card =
+        document.createElement('div');
 
         card.className = 'document-card';
 
 
         card.innerHTML = `
 
-            <h3>${document.title}</h3>
+            <h3>${documentItem.title}</h3>
 
             <p>
-                ${document.description || ''}
+                ${documentItem.description || ''}
             </p>
 
             <a
                 class="open-button"
-                href="${document.url}"
+            href="${documentItem.url}"
                 target="_blank"
                 rel="noopener noreferrer"
             >
