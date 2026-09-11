@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -85,10 +86,19 @@
             border: 1px solid #293542;
             border-radius: 8px;
             padding: 22px;
+            transition: border-color 0.2s, opacity 0.2s;
         }
 
         .intel-card:hover {
             border-color: #3c4d5d;
+        }
+
+        .intel-card.unread {
+            border-left: 4px solid #22c55e;
+        }
+
+        .intel-card.read {
+            border-left: 4px solid #3b82f6;
         }
 
         .intel-header {
@@ -118,6 +128,26 @@
             font-size: 11px;
             font-weight: bold;
             white-space: nowrap;
+        }
+
+        .status-badge {
+            display: inline-block;
+            margin-top: 9px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-new {
+            background: #14532d;
+            color: #86efac;
+        }
+
+        .status-open {
+            background: #172554;
+            color: #93c5fd;
         }
 
         .section {
@@ -198,6 +228,32 @@
             color: #f87171;
             text-align: center;
             padding: 30px;
+        }
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 16px;
+                gap: 15px;
+            }
+
+            .header h1 {
+                font-size: 17px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .intel-header {
+                flex-direction: column;
+            }
+
+            .intel-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
         }
 
     </style>
@@ -293,7 +349,6 @@ let currentUserRole = null;
 
 async function checkLogin() {
 
-
     const {
         data: {
             session
@@ -368,18 +423,6 @@ async function checkLogin() {
         .toLowerCase();
 
 
-    console.log(
-        'Logged in officer role:',
-        currentUserRole
-    );
-
-
-    console.log(
-        'Logged in officer active:',
-        officer.active
-    );
-
-
     // --------------------------------------------------
     // Change page heading for Masters
     // --------------------------------------------------
@@ -413,16 +456,11 @@ async function checkLogin() {
 
 async function loadIntel() {
 
-
     const intelList =
         document.getElementById(
             'intelList'
         );
 
-
-    // --------------------------------------------------
-    // Start query
-    // --------------------------------------------------
 
     let query =
         supabaseClient
@@ -436,15 +474,6 @@ async function loadIntel() {
 
     // --------------------------------------------------
     // MASTER ACCESS
-    // --------------------------------------------------
-    //
-    // Masters see ALL intelligence.
-    //
-    // Normal officers only see intelligence
-    // specifically sent to them.
-    //
-    // Supabase RLS still controls the actual
-    // security of the data.
     // --------------------------------------------------
 
     if (
@@ -511,12 +540,6 @@ async function loadIntel() {
         return;
 
     }
-
-
-    console.log(
-        'Intel records loaded:',
-        data
-    );
 
 
     // --------------------------------------------------
@@ -604,7 +627,79 @@ async function loadIntel() {
 
 
     // --------------------------------------------------
-    // Clear loading message
+    // Get this user's viewed records
+    // --------------------------------------------------
+    //
+    // IMPORTANT:
+    //
+    // intel_views belongs to the USER.
+    //
+    // Therefore:
+    //
+    // Master viewing an Intel only marks it as
+    // viewed for that Master.
+    //
+    // It does NOT mark it viewed for the recipient.
+    //
+    // --------------------------------------------------
+
+    const intelIds =
+        data.map(
+            intel =>
+                intel.id
+        );
+
+
+    let viewedIds = [];
+
+
+    if (
+        intelIds.length > 0
+    ) {
+
+        const {
+            data: viewData,
+            error: viewError
+        } = await supabaseClient
+
+            .from('intel_views')
+
+            .select('intel_id')
+
+            .eq(
+                'user_id',
+                currentUser.id
+            )
+
+            .in(
+                'intel_id',
+                intelIds
+            );
+
+
+        if (viewError) {
+
+            console.error(
+                'Load intel views error:',
+                viewError
+            );
+
+        } else {
+
+            viewedIds =
+                (viewData || [])
+                    .map(
+                        view =>
+                            view.intel_id
+                    );
+
+        }
+
+    }
+
+
+    // --------------------------------------------------
+    // Clear loading
     // --------------------------------------------------
 
     intelList.innerHTML = '';
@@ -616,7 +711,6 @@ async function loadIntel() {
 
     data.forEach(
         intel => {
-
 
             const sender =
                 senders.find(
@@ -632,6 +726,12 @@ async function loadIntel() {
                     : 'Unknown Officer';
 
 
+            const hasBeenViewed =
+                viewedIds.includes(
+                    intel.id
+                );
+
+
             const card =
                 document.createElement(
                     'article'
@@ -639,7 +739,9 @@ async function loadIntel() {
 
 
             card.className =
-                'intel-card';
+                hasBeenViewed
+                    ? 'intel-card read'
+                    : 'intel-card unread';
 
 
             const createdDate =
@@ -682,6 +784,21 @@ async function loadIntel() {
                             ${escapeHtml(
                                 senderName
                             )}
+
+                        </div>
+
+
+                        <div class="status-badge ${
+                            hasBeenViewed
+                                ? 'status-open'
+                                : 'status-new'
+                        }">
+
+                            ${
+                                hasBeenViewed
+                                    ? 'OPEN'
+                                    : 'NEW'
+                            }
 
                         </div>
 
@@ -836,8 +953,84 @@ async function loadIntel() {
                 card
             );
 
+
+            // --------------------------------------------------
+            // Automatically mark as viewed
+            // --------------------------------------------------
+            //
+            // We do this AFTER displaying the card.
+            //
+            // This means opening the Intel page counts it
+            // as viewed.
+            //
+            // The view is stored against the logged-in user's
+            // ID, not the recipient ID.
+            //
+            // --------------------------------------------------
+
+            if (
+                !hasBeenViewed
+            ) {
+
+                markIntelAsViewed(
+                    intel.id
+                );
+
+            }
+
         }
     );
+
+}
+
+
+// ======================================================
+// MARK INTEL AS VIEWED
+// ======================================================
+
+async function markIntelAsViewed(
+    intelId
+) {
+
+    if (
+        !currentUser
+    ) {
+
+        return;
+
+    }
+
+
+    const {
+        error
+    } = await supabaseClient
+
+        .from('intel_views')
+
+        .upsert(
+            {
+                intel_id:
+                    intelId,
+
+                user_id:
+                    currentUser.id
+
+            },
+            {
+                onConflict:
+                    'intel_id,user_id'
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            'Mark intel as viewed error:',
+            error
+        );
+
+    }
 
 }
 
@@ -849,7 +1042,6 @@ async function loadIntel() {
 async function deleteIntel(
     intelId
 ) {
-
 
     const confirmed =
         confirm(
@@ -910,7 +1102,6 @@ async function deleteIntel(
 function escapeHtml(
     value
 ) {
-
 
     if (
         value === null ||
@@ -976,3 +1167,4 @@ checkLogin();
 </body>
 
 </html>
+```
