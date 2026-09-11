@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SCU Documents & Templates</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #080c11;
+            color: #e8edf2;
+        }
+
+        .header {
+            background: #111821;
+            border-bottom: 1px solid #293542;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 21px;
+            letter-spacing: 1.5px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #7f8c99;
+            font-size: 11px;
+        }
+
+        .back-button {
+            background: #202c38;
+            color: white;
+            border: 1px solid #354554;
+            padding: 9px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background: #2b3a48;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            margin: 0 0 6px;
+        }
+
+        .welcome p {
+            color: #7f8c99;
+            margin: 0;
+        }
+
+        .documents {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .document-card {
+            background: #111821;
+            border: 1px solid #293542;
+            border-radius: 8px;
+            padding: 22px;
+        }
+
+        .document-card h3 {
+            margin: 0 0 10px;
+            font-size: 17px;
+        }
+
+        .document-card p {
+            color: #8996a3;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .open-button {
+            display: inline-block;
+            background: #1d4ed8;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .open-button:hover {
+            background: #2563eb;
+        }
+
+        .empty {
+            background: #111821;
+            border: 1px solid #293542;
+            border-radius: 8px;
+            padding: 35px;
+            text-align: center;
+            color: #6f7c88;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div>
+        <h1>SCU DOCUMENTS & TEMPLATES</h1>
+        <p>STREET CRIMES UNIT • OFFICIAL DOCUMENTS</p>
+    </div>
+
+    <button
+        class="back-button"
+        onclick="window.location.href='dashboard.html'"
+    >
+        BACK TO DASHBOARD
+    </button>
+
+</header>
+
+
+<main class="container">
+
+    <section class="welcome">
+
+        <h2>Documents & Templates</h2>
+
+        <p>
+            Official SCU documents, forms and operational templates.
+        </p>
+
+    </section>
+
+
+    <section class="documents">
+
+        <div class="empty">
+            No documents or templates have been added yet.
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>
