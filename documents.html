@@ -1,128 +1,245 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SCU Documents & Templates</title>
+```
+<title>SCU Documents & Templates</title>
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #080c11;
-            color: #e8edf2;
-        }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #080c11;
+        color: #e8edf2;
+    }
 
-        .header {
-            background: #111821;
-            border-bottom: 1px solid #293542;
-            padding: 18px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .header {
+        background: #111821;
+        border-bottom: 1px solid #293542;
+        padding: 18px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 21px;
-            letter-spacing: 1.5px;
-        }
+    .header h1 {
+        margin: 0;
+        font-size: 21px;
+        letter-spacing: 1.5px;
+    }
 
-        .header p {
-            margin: 5px 0 0;
-            color: #7f8c99;
-            font-size: 11px;
-        }
+    .header p {
+        margin: 5px 0 0;
+        color: #7f8c99;
+        font-size: 11px;
+    }
 
-        .back-button {
-            background: #202c38;
-            color: white;
-            border: 1px solid #354554;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .back-button {
+        background: #202c38;
+        color: white;
+        border: 1px solid #354554;
+        padding: 9px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .back-button:hover {
-            background: #2b3a48;
-        }
+    .back-button:hover {
+        background: #2b3a48;
+    }
 
-        .container {
-            max-width: 1400px;
-            margin: auto;
-            padding: 30px;
-        }
+    .container {
+        max-width: 1400px;
+        margin: auto;
+        padding: 30px;
+    }
 
-        .welcome {
-            margin-bottom: 25px;
-        }
+    .welcome {
+        margin-bottom: 25px;
+    }
 
-        .welcome h2 {
-            margin: 0 0 6px;
-        }
+    .welcome h2 {
+        margin: 0 0 6px;
+    }
 
-        .welcome p {
-            color: #7f8c99;
-            margin: 0;
-        }
+    .welcome p {
+        color: #7f8c99;
+        margin: 0;
+    }
 
-        .documents {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 18px;
-        }
+    .admin-controls {
+        margin-bottom: 25px;
+    }
 
-        .document-card {
-            background: #111821;
-            border: 1px solid #293542;
-            border-radius: 8px;
-            padding: 22px;
-        }
+    .add-button {
+        background: #166534;
+        color: white;
+        border: 1px solid #22c55e;
+        padding: 11px 17px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+    }
 
-        .document-card h3 {
-            margin: 0 0 10px;
-            font-size: 17px;
-        }
+    .add-button:hover {
+        background: #15803d;
+    }
 
-        .document-card p {
-            color: #8996a3;
-            font-size: 13px;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
+    .add-form {
+        display: none;
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 22px;
+        margin-top: 15px;
+        max-width: 700px;
+    }
 
-        .open-button {
-            display: inline-block;
-            background: #1d4ed8;
-            color: white;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: bold;
-        }
+    .add-form h3 {
+        margin: 0 0 18px;
+    }
 
-        .open-button:hover {
-            background: #2563eb;
-        }
+    .form-group {
+        margin-bottom: 15px;
+    }
 
-        .empty {
-            background: #111821;
-            border: 1px solid #293542;
-            border-radius: 8px;
-            padding: 35px;
-            text-align: center;
-            color: #6f7c88;
-        }
+    .form-group label {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 6px;
+        color: #aeb8c2;
+    }
 
-    </style>
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        background: #080c11;
+        color: white;
+        border: 1px solid #354554;
+        border-radius: 5px;
+        padding: 10px;
+        font-family: Arial, sans-serif;
+    }
+
+    .form-group textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .save-button {
+        background: #1d4ed8;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .save-button:hover {
+        background: #2563eb;
+    }
+
+    .cancel-button {
+        background: #202c38;
+        color: white;
+        border: 1px solid #354554;
+        padding: 10px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .documents {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 18px;
+    }
+
+    .document-card {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 22px;
+    }
+
+    .document-card h3 {
+        margin: 0 0 10px;
+        font-size: 17px;
+    }
+
+    .document-card p {
+        color: #8996a3;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .document-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .open-button {
+        display: inline-block;
+        background: #1d4ed8;
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .open-button:hover {
+        background: #2563eb;
+    }
+
+    .delete-button {
+        background: #7f1d1d;
+        color: white;
+        border: 1px solid #991b1b;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .delete-button:hover {
+        background: #991b1b;
+    }
+
+    .empty {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 35px;
+        text-align: center;
+        color: #6f7c88;
+    }
+
+    .message {
+        margin-top: 12px;
+        font-size: 12px;
+    }
+
+</style>
+```
 
 </head>
 
@@ -130,155 +247,95 @@
 
 <header class="header">
 
-    <div>
-        <h1>SCU DOCUMENTS & TEMPLATES</h1>
-        <p>STREET CRIMES UNIT • OFFICIAL DOCUMENTS</p>
-    </div>
+```
+<div>
+    <h1>SCU DOCUMENTS & TEMPLATES</h1>
+    <p>STREET CRIMES UNIT • OFFICIAL DOCUMENTS</p>
+</div>
 
-    <button
-        class="back-button"
-        onclick="window.location.href='dashboard.html'"
-    >
-        BACK TO DASHBOARD
-    </button>
+<button
+    class="back-button"
+    onclick="window.location.href='dashboard.html'"
+>
+    BACK TO DASHBOARD
+</button>
+```
 
 </header>
 
-
 <main class="container">
 
-    <section class="welcome">
+```
+<section class="welcome">
 
-        <h2>Documents & Templates</h2>
+    <h2>Documents & Templates</h2>
 
-        <p>
-            Official SCU documents, forms and operational templates.
-        </p>
+    <p>
+        Official SCU documents, forms and operational templates.
+    </p>
 
-    </section>
+</section>
 
 
-    <section class="documents">
+<!-- MASTER CONTROLS -->
 
-        <div class="empty">
-            No documents or templates have been added yet.
+<section
+    class="admin-controls"
+    id="adminControls"
+    style="display: none;"
+>
+
+    <button
+        class="add-button"
+        onclick="toggleAddForm()"
+    >
+        + ADD DOCUMENT
+    </button>
+
+
+    <div
+        class="add-form"
+        id="addForm"
+    >
+
+        <h3>Add Document</h3>
+
+
+        <div class="form-group">
+
+            <label for="documentTitle">
+                Document Title
+            </label>
+
+            <input
+                type="text"
+                id="documentTitle"
+                placeholder="e.g. Intel Report Template"
+            >
+
         </div>
 
-    </section>
 
-</main>
+        <div class="form-group">
 
+            <label for="documentDescription">
+                Description
+            </label>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+            <textarea
+                id="documentDescription"
+                placeholder="Brief description of the document..."
+            ></textarea>
 
-<script>
-
-const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
-
-const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+        </div>
 
 
-// Check that the officer is logged in
-async function checkLogin() {
+        <div class="form-group">
 
-    const { data: { session } } =
-        await supabaseClient.auth.getSession();
+            <label for="documentUrl">
+                Document Link
+            </label>
 
-    if (!session) {
-        window.location.href = 'index.html';
-        return;
-    }
-
-    loadDocuments();
-}
-
-
-// Load documents from Supabase
-async function loadDocuments() {
-
-    const { data, error } = await supabaseClient
-        .from('documents')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-
-    if (error) {
-
-        console.error(error);
-
-        document.querySelector('.documents').innerHTML = `
-            <div class="empty">
-                Unable to load documents.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    const documentList =
-        document.querySelector('.documents');
-
-
-    if (!data.length) {
-
-        documentList.innerHTML = `
-            <div class="empty">
-                No documents or templates have been added yet.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    documentList.innerHTML = '';
-
-
-   data.forEach(documentItem => {
-
-    const card =
-        document.createElement('div');
-
-        card.className = 'document-card';
-
-
-        card.innerHTML = `
-
-            <h3>${documentItem.title}</h3>
-
-            <p>
-                ${documentItem.description || ''}
-            </p>
-
-            <a
-                class="open-button"
-            href="${documentItem.url}"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                OPEN DOCUMENT
-            </a>
-
-        `;
-
-
-        documentList.appendChild(card);
-
-    });
-
-}
-
-
-checkLogin();
-
-</script>
-
-</body>
-
-</html>
+            <input
+                type="u
+```
