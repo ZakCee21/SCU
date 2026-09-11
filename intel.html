@@ -236,11 +236,11 @@
 
     <section class="intro">
 
-        <h2>
+        <h2 id="pageTitle">
             Intelligence Received
         </h2>
 
-        <p>
+        <p id="pageDescription">
             Intelligence submissions sent directly to you by authorised officers.
         </p>
 
@@ -311,46 +311,98 @@ async function checkLogin() {
     }
 
 
-   currentUser =
-    session.user;
+    currentUser =
+        session.user;
 
 
-// Get the logged-in officer's role
+    // --------------------------------------------------
+    // Get logged-in officer's role
+    // --------------------------------------------------
 
-const {
-    data: officer,
-    error: officerError
-} = await supabaseClient
+    const {
+        data: officer,
+        error: officerError
+    } = await supabaseClient
 
-    .from('officers')
+        .from('officers')
 
-    .select('role')
+        .select('role, active')
 
-    .eq(
-        'id',
-        currentUser.id
-    )
+        .eq(
+            'id',
+            currentUser.id
+        )
 
-    .single();
+        .single();
 
 
-if (officerError) {
+    if (officerError) {
 
-    console.error(
-        'Load officer role error:',
-        officerError
+        console.error(
+            'Load officer role error:',
+            officerError
+        );
+
+        document
+            .getElementById('intelList')
+            .innerHTML = `
+
+                <div class="error">
+
+                    Unable to verify officer access.
+
+                </div>
+
+            `;
+
+        return;
+
+    }
+
+
+    currentUserRole =
+        String(
+            officer.role || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    console.log(
+        'Logged in officer role:',
+        currentUserRole
     );
 
-    return;
 
-}
-
-
-currentUserRole =
-    officer.role;
+    console.log(
+        'Logged in officer active:',
+        officer.active
+    );
 
 
-loadIntel();
+    // --------------------------------------------------
+    // Change page heading for Masters
+    // --------------------------------------------------
+
+    if (
+        currentUserRole === 'master'
+    ) {
+
+        document
+            .getElementById('pageTitle')
+            .textContent =
+                'All SCU Intelligence';
+
+
+        document
+            .getElementById('pageDescription')
+            .textContent =
+                'All intelligence submissions across the SCU system.';
+
+    }
+
+
+    loadIntel();
 
 }
 
@@ -368,37 +420,68 @@ async function loadIntel() {
         );
 
 
-   let query =
-    supabaseClient
-        .from('intel_submissions')
-        .select('*');
+    // --------------------------------------------------
+    // Start query
+    // --------------------------------------------------
+
+    let query =
+        supabaseClient
+
+            .from(
+                'intel_submissions'
+            )
+
+            .select('*');
 
 
-// Masters can see ALL intelligence.
-// Everyone else only sees intelligence sent to them.
+    // --------------------------------------------------
+    // MASTER ACCESS
+    // --------------------------------------------------
+    //
+    // Masters see ALL intelligence.
+    //
+    // Normal officers only see intelligence
+    // specifically sent to them.
+    //
+    // Supabase RLS still controls the actual
+    // security of the data.
+    // --------------------------------------------------
 
-if (currentUserRole !== 'master') {
+    if (
+        currentUserRole === 'master'
+    ) {
 
-    query =
-        query.eq(
-            'recipient_id',
-            currentUser.id
+        console.log(
+            'MASTER ACCESS: Loading ALL intelligence'
         );
 
-}
+    } else {
+
+        console.log(
+            'STANDARD ACCESS: Loading received intelligence only'
+        );
 
 
-const {
-    data,
-    error
-} = await query
+        query =
+            query.eq(
+                'recipient_id',
+                currentUser.id
+            );
 
-    .order(
-        'created_at',
-        {
-            ascending: false
-        }
-    );
+    }
+
+
+    const {
+        data,
+        error
+    } = await query
+
+        .order(
+            'created_at',
+            {
+                ascending: false
+            }
+        );
 
 
     if (error) {
@@ -415,6 +498,12 @@ const {
 
                 Unable to load intelligence.
 
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>
 
         `;
@@ -424,17 +513,30 @@ const {
     }
 
 
-    if (!data || data.length === 0) {
+    console.log(
+        'Intel records loaded:',
+        data
+    );
+
+
+    // --------------------------------------------------
+    // Nothing found
+    // --------------------------------------------------
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         intelList.innerHTML = `
 
             <div class="empty">
 
-                <strong>No intelligence received.</strong>
+                <strong>No intelligence available.</strong>
 
                 <br><br>
 
-                There are currently no intelligence submissions assigned to you.
+                There are currently no intelligence submissions available to you.
 
             </div>
 
@@ -453,7 +555,8 @@ const {
         [
             ...new Set(
                 data.map(
-                    intel => intel.sender_id
+                    intel =>
+                        intel.sender_id
                 )
             )
         ];
@@ -462,7 +565,9 @@ const {
     let senders = [];
 
 
-    if (senderIds.length > 0) {
+    if (
+        senderIds.length > 0
+    ) {
 
         const {
             data: senderData,
@@ -498,8 +603,16 @@ const {
     }
 
 
+    // --------------------------------------------------
+    // Clear loading message
+    // --------------------------------------------------
+
     intelList.innerHTML = '';
 
+
+    // --------------------------------------------------
+    // Display intelligence
+    // --------------------------------------------------
 
     data.forEach(
         intel => {
@@ -508,7 +621,8 @@ const {
             const sender =
                 senders.find(
                     officer =>
-                        officer.id === intel.sender_id
+                        officer.id ===
+                        intel.sender_id
                 );
 
 
@@ -519,7 +633,9 @@ const {
 
 
             const card =
-                document.createElement('article');
+                document.createElement(
+                    'article'
+                );
 
 
             card.className =
@@ -559,6 +675,7 @@ const {
 
                         </div>
 
+
                         <div class="intel-meta">
 
                             From:
@@ -590,6 +707,7 @@ const {
 
                     </div>
 
+
                     <div class="section-content">
 
                         ${escapeHtml(
@@ -612,6 +730,7 @@ const {
                                 Location
 
                             </div>
+
 
                             <div class="section-content">
 
@@ -640,6 +759,7 @@ const {
 
                             </div>
 
+
                             <div class="section-content">
 
                                 ${escapeHtml(
@@ -667,11 +787,14 @@ const {
 
                             </div>
 
+
                             <div class="section-content">
 
                                 <a
                                     class="evidence-link"
-                                    href="${escapeAttribute(intel.evidence_link)}"
+                                    href="${escapeAttribute(
+                                        intel.evidence_link
+                                    )}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -745,7 +868,9 @@ async function deleteIntel(
         error
     } = await supabaseClient
 
-        .from('intel_submissions')
+        .from(
+            'intel_submissions'
+        )
 
         .delete()
 
@@ -787,7 +912,10 @@ function escapeHtml(
 ) {
 
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
 
         return '';
 
@@ -827,7 +955,6 @@ function escapeHtml(
 function escapeAttribute(
     value
 ) {
-
 
     return escapeHtml(
         value
