@@ -598,11 +598,79 @@ document.getElementById('saveCase')
 async function loadCaseOfficers() {
 
     const {
+        data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    const list =
+        document.getElementById('caseOfficerList');
+
+    const saveAccessButton =
+        document.getElementById('saveAccess');
+
+
+    if (!user) {
+
+        list.innerHTML =
+            'You must be logged in to view officer access.';
+
+        saveAccessButton.style.display = 'none';
+
+        return;
+    }
+
+
+    // Get the current user's role
+    const {
+        data: currentOfficer,
+        error: currentOfficerError
+    } = await supabaseClient
+        .from('officers')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+
+    if (currentOfficerError || !currentOfficer) {
+
+        console.error(currentOfficerError);
+
+        list.innerHTML =
+            'Unable to determine your permissions.';
+
+        saveAccessButton.style.display = 'none';
+
+        return;
+    }
+
+
+    const canManageAccess =
+        ['master', 'case lead'].includes(
+            currentOfficer.role
+        );
+
+
+    // Officers can view the access list,
+    // but only Masters and Case Leads can change it.
+    if (!canManageAccess) {
+
+        saveAccessButton.style.display = 'none';
+
+    } else {
+
+        saveAccessButton.style.display = 'inline-block';
+
+    }
+
+
+    const {
         data: officers,
         error: officersError
     } = await supabaseClient
         .from('officers')
-        .select('id, callsign, full_name, rank, role')
+        .select(
+            'id, callsign, full_name, rank, role'
+        )
+        .eq('active', true)
         .order('callsign');
 
 
@@ -611,12 +679,10 @@ async function loadCaseOfficers() {
         error: accessError
     } = await supabaseClient
         .from('case_access')
-        .select('officer_id, permission')
+        .select(
+            'officer_id, permission'
+        )
         .eq('case_id', caseId);
-
-
-    const list =
-        document.getElementById('caseOfficerList');
 
 
     if (officersError || accessError) {
@@ -641,11 +707,19 @@ async function loadCaseOfficers() {
 
 
     list.innerHTML = officers
-        .filter(officer => officer.role !== 'master')
+
+        .filter(
+            officer =>
+                officer.role !== 'master'
+        )
+
         .map(officer => {
 
             const hasAccess =
-                accessMap.has(officer.id);
+                accessMap.has(
+                    officer.id
+                );
+
 
             return `
 
@@ -655,7 +729,8 @@ async function loadCaseOfficers() {
                     gap:12px;
                     padding:12px;
                     border-bottom:1px solid #1f2937;
-                    cursor:pointer;
+                    cursor:${canManageAccess ? 'pointer' : 'default'};
+                    opacity:${canManageAccess ? '1' : '0.8'};
                 ">
 
                     <input
@@ -663,6 +738,7 @@ async function loadCaseOfficers() {
                         class="case-officer-checkbox"
                         value="${officer.id}"
                         ${hasAccess ? 'checked' : ''}
+                        ${canManageAccess ? '' : 'disabled'}
                     >
 
                     <div>
@@ -686,7 +762,7 @@ async function loadCaseOfficers() {
                             )}
 
                             —
-                            
+
                             ${escapeHtml(
                                 officer.rank ||
                                 'Officer'
@@ -701,10 +777,10 @@ async function loadCaseOfficers() {
             `;
 
         })
+
         .join('');
 
 }
-
 
 document
     .getElementById('saveAccess')
@@ -1162,11 +1238,13 @@ document
         return;
     }
 
-    if (!officer || officer.role !== 'master') {
-        deleteButton.style.display = 'none';
-        return;
-    }
-
+   if (
+    !officer ||
+    !['master', 'case lead'].includes(officer.role)
+) {
+    deleteButton.style.display = 'none';
+    return;
+}
     deleteButton.addEventListener('click', async function() {
 
         const confirmed = confirm(
