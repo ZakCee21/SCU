@@ -46,6 +46,18 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .profile-button {
+    background: #263746;
+    color: white;
+    border: 1px solid #354554;
+    padding: 9px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-button:hover {
+    background: #32495c;
+}
 
         .container {
             max-width: 1400px;
@@ -146,7 +158,20 @@
         <p>STREET CRIMES UNIT • SECURE OPERATIONS</p>
     </div>
 
-    <button class="logout" onclick="logout()">LOG OUT</button>
+    <div style="display: flex; gap: 10px;">
+
+    <button
+        class="profile-button"
+        onclick="window.location.href='profile.html'"
+    >
+        PROFILE
+    </button>
+
+    <button class="logout" onclick="logout()">
+        LOG OUT
+    </button>
+
+</div>
 
 </header>
 
