@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -154,6 +153,12 @@
             border-left: 4px solid #f59e0b;
         }
 
+        /* NEW - NON SCU */
+
+        .intel-card.non-scu {
+            border-left: 4px solid #a855f7;
+        }
+
         .intel-header {
             padding: 15px 18px;
             border-bottom: 1px solid #293542;
@@ -200,6 +205,13 @@
         .status-unassigned {
             background: #451a03;
             color: #fbbf24;
+        }
+
+        /* NEW - NON SCU */
+
+        .status-non-scu {
+            background: #3b0764;
+            color: #d8b4fe;
         }
 
         .intel-body {
@@ -287,7 +299,41 @@
         }
 
         /* -------------------------------------------------- */
-        /* ASSIGNED INFO */
+        /* NON-SCU REPORTER */
+        /* -------------------------------------------------- */
+
+        .non-scu-reporter {
+            background: #160d20;
+            border: 1px solid #6b21a8;
+            border-radius: 5px;
+            padding: 13px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .non-scu-reporter-title {
+            color: #c084fc;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+            text-align: left;
+        }
+
+        .non-scu-reporter-name {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .non-scu-reporter-callsign {
+            color: #a78bfa;
+            font-size: 12px;
+        }
+
+        /* -------------------------------------------------- */
+        /* SECTIONS */
         /* -------------------------------------------------- */
 
         .assigned-panel {
@@ -345,6 +391,17 @@
             margin: 0 0 12px 0;
             padding: 0;
             text-align: left;
+        }
+
+        /* NON-SCU TRIAGE */
+
+        .non-scu-triage {
+            background: #160d20;
+            border-color: #6b21a8;
+        }
+
+        .non-scu-triage .triage-title {
+            color: #c084fc;
         }
 
         /* -------------------------------------------------- */
@@ -436,6 +493,16 @@
         .send-button:disabled {
             background: #263746;
             cursor: not-allowed;
+        }
+
+        /* NON-SCU SEND BUTTON */
+
+        .non-scu-send-button {
+            background: #7e22ce;
+        }
+
+        .non-scu-send-button:hover {
+            background: #9333ea;
         }
 
         /* -------------------------------------------------- */
@@ -661,6 +728,8 @@
         let currentOfficer = null;
         let currentRole = null;
         let scaAgents = [];
+
+        let nonScuReports = [];
 
 
         /* ================================================== */
@@ -912,6 +981,182 @@
 
 
         /* ================================================== */
+        /* LOAD NON-SCU MEMBER REPORTS */
+        /* ================================================== */
+
+        async function loadNonScuReports() {
+
+            nonScuReports = [];
+
+
+            /*
+             * IMPORTANT:
+             *
+             * This is completely separate from intel_submissions.
+             *
+             * Existing SCU intelligence is NOT changed here.
+             *
+             * Only senior/full-access users can see these reports.
+             */
+
+            if (
+                !hasFullIntelAccess()
+            ) {
+
+                return;
+
+            }
+
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+
+                .from('non_scu_intel_submissions')
+
+                .select(`
+                    id,
+                    reporter_name,
+                    reporter_callsign,
+                    intel_type,
+                    finding,
+                    location,
+                    source,
+                    evidence,
+                    created_at,
+                    status
+                `)
+
+                .eq(
+                    'status',
+                    'unassigned'
+                )
+
+                .order(
+                    'created_at',
+                    {
+                        ascending: false
+                    }
+                );
+
+
+            if (error) {
+
+                console.error(
+                    'NON-SCU intelligence loading error:',
+                    error
+                );
+
+                return;
+
+            }
+
+
+            nonScuReports =
+                data || [];
+
+        }
+
+
+        /* ================================================== */
+        /* BUILD SCU AGENT LIST */
+        /* ================================================== */
+
+        function buildAgentList(
+            reportId,
+            selectedRecipientId = null
+        ) {
+
+            const agentsPerColumn = 8;
+
+
+            const numberOfColumns =
+                Math.ceil(
+                    scaAgents.length /
+                    agentsPerColumn
+                );
+
+
+            const columns = [];
+
+
+            for (
+                let i = 0;
+                i < numberOfColumns;
+                i++
+            ) {
+
+                columns.push([]);
+
+            }
+
+
+            scaAgents.forEach(
+                (agent, index) => {
+
+                    const columnIndex =
+                        Math.floor(
+                            index /
+                            agentsPerColumn
+                        );
+
+
+                    columns[
+                        columnIndex
+                    ].push(
+                        agent
+                    );
+
+                }
+            );
+
+
+            return columns
+                .map(
+                    column => `
+
+                        <div class="agent-column">
+
+                            ${
+                                column
+                                    .map(
+                                        agent => `
+
+                                            <label class="agent-option">
+
+                                                <input
+                                                    type="checkbox"
+                                                    class="reassign-checkbox"
+                                                    value="${escapeAttribute(agent.id)}"
+                                                    data-intel-id="${escapeAttribute(reportId)}"
+                                                    ${
+                                                        selectedRecipientId === agent.id
+                                                            ? 'checked'
+                                                            : ''
+                                                    }
+                                                    onchange="handleReassignSelection('${escapeAttribute(reportId)}', this)"
+                                                >
+
+                                                <span class="agent-name">${escapeHtml(`${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim())}</span>
+
+                                            </label>
+
+                                        `
+                                    )
+                                    .join('')
+                            }
+
+                        </div>
+
+                    `
+                )
+                .join('');
+
+        }
+
+
+        /* ================================================== */
         /* LOAD INTELLIGENCE */
         /* ================================================== */
 
@@ -927,6 +1172,13 @@
                 <div class="loading">Loading intelligence...</div>
             `;
 
+
+            /*
+             * EXISTING SCU INTEL QUERY
+             *
+             * This is deliberately left as the existing
+             * intel_submissions query.
+             */
 
             let query =
                 supabaseClient
@@ -977,7 +1229,25 @@
             }
 
 
-            if (!data || data.length === 0) {
+            /*
+             * ONLY SENIOR USERS RECEIVE NON-SCU REPORTS.
+             */
+
+            await loadNonScuReports();
+
+
+            const scuIntel =
+                data || [];
+
+
+            /*
+             * If neither system has anything to display.
+             */
+
+            if (
+                scuIntel.length === 0 &&
+                nonScuReports.length === 0
+            ) {
 
                 intelList.innerHTML = `
                     <div class="empty">No intelligence available.</div>
@@ -989,12 +1259,12 @@
 
 
             /* ================================================== */
-            /* LOAD OFFICER INFORMATION */
+            /* LOAD OFFICER INFORMATION FOR EXISTING SCU INTEL */
             /* ================================================== */
 
             const senderIds = [
                 ...new Set(
-                    data
+                    scuIntel
                         .map(
                             intel =>
                                 intel.sender_id
@@ -1006,7 +1276,7 @@
 
             const recipientIds = [
                 ...new Set(
-                    data
+                    scuIntel
                         .map(
                             intel =>
                                 intel.recipient_id
@@ -1067,11 +1337,11 @@
 
 
             /* ================================================== */
-            /* VIEWED STATE */
+            /* VIEWED STATE - EXISTING SCU INTEL ONLY */
             /* ================================================== */
 
             const intelIds =
-                data.map(
+                scuIntel.map(
                     intel =>
                         intel.id
                 );
@@ -1127,10 +1397,32 @@
 
 
             /* ================================================== */
-            /* RENDER INTEL */
+            /* RENDER NON-SCU REPORTS FIRST */
             /* ================================================== */
 
-            data.forEach(
+            if (
+                hasFullIntelAccess()
+            ) {
+
+                nonScuReports.forEach(
+                    report => {
+
+                        renderNonScuReport(
+                            report,
+                            intelList
+                        );
+
+                    }
+                );
+
+            }
+
+
+            /* ================================================== */
+            /* RENDER EXISTING SCU INTEL */
+            /* ================================================== */
+
+            scuIntel.forEach(
                 intel => {
 
                     const sender =
@@ -1303,91 +1595,11 @@
                         hasFullIntelAccess()
                     ) {
 
-                        const agentsPerColumn = 8;
-
-
-                        const numberOfColumns =
-                            Math.ceil(
-                                scaAgents.length /
-                                agentsPerColumn
-                            );
-
-
-                        const columns = [];
-
-
-                        for (
-                            let i = 0;
-                            i < numberOfColumns;
-                            i++
-                        ) {
-
-                            columns.push([]);
-
-                        }
-
-
-                        scaAgents.forEach(
-                            (agent, index) => {
-
-                                const columnIndex =
-                                    Math.floor(
-                                        index /
-                                        agentsPerColumn
-                                    );
-
-
-                                columns[
-                                    columnIndex
-                                ].push(
-                                    agent
-                                );
-
-                            }
-                        );
-
-
                         const agentColumnsHtml =
-                            columns
-                                .map(
-                                    column => `
-
-                                        <div class="agent-column">
-
-                                            ${
-                                                column
-                                                    .map(
-                                                        agent => `
-
-                                                            <label class="agent-option">
-
-                                                                <input
-                                                                    type="checkbox"
-                                                                    class="reassign-checkbox"
-                                                                    value="${escapeAttribute(agent.id)}"
-                                                                    data-intel-id="${escapeAttribute(intel.id)}"
-                                                                    ${
-                                                                        intel.recipient_id === agent.id
-                                                                            ? 'checked'
-                                                                            : ''
-                                                                    }
-                                                                    onchange="handleReassignSelection('${escapeAttribute(intel.id)}', this)"
-                                                                >
-
-                                                                <span class="agent-name">${escapeHtml(`${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim())}</span>
-
-                                                            </label>
-
-                                                        `
-                                                    )
-                                                    .join('')
-                                            }
-
-                                        </div>
-
-                                    `
-                                )
-                                .join('');
+                            buildAgentList(
+                                intel.id,
+                                intel.recipient_id
+                            );
 
 
                         triageHtml = `
@@ -1581,7 +1793,7 @@
 
 
                     /* ================================================== */
-                    /* CREATE CARD */
+                    /* CREATE EXISTING SCU CARD */
                     /* ================================================== */
 
                     const card =
@@ -1692,6 +1904,287 @@
 
 
         /* ================================================== */
+        /* RENDER NON-SCU REPORT */
+        /* ================================================== */
+
+        function renderNonScuReport(
+            report,
+            intelList
+        ) {
+
+            const createdDate =
+                report.created_at
+                    ? new Date(
+                        report.created_at
+                    ).toLocaleString(
+                        'en-GB',
+                        {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }
+                    )
+                    : 'Unknown';
+
+
+            const reporterName =
+                (report.reporter_name || '').trim()
+                || 'Unknown';
+
+
+            const reporterCallsign =
+                (report.reporter_callsign || '').trim()
+                || 'No call sign provided';
+
+
+            const agentColumnsHtml =
+                buildAgentList(
+                    `public-${report.id}`
+                );
+
+
+            let locationHtml = '';
+
+
+            if (
+                report.location
+            ) {
+
+                locationHtml = `
+
+                    <div class="section">
+
+                        <div class="section-title">Location</div>
+
+                        <div class="section-content">${escapeHtml(report.location)}</div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            let sourceHtml = '';
+
+
+            if (
+                report.source
+            ) {
+
+                sourceHtml = `
+
+                    <div class="section">
+
+                        <div class="section-title">Source / Context</div>
+
+                        <div class="section-content">${escapeHtml(report.source)}</div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            let evidenceHtml = '';
+
+
+            if (
+                report.evidence
+            ) {
+
+                evidenceHtml = `
+
+                    <div class="section">
+
+                        <div class="section-title">Evidence</div>
+
+                        <div class="section-content">${escapeHtml(report.evidence)}</div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            const card =
+                document.createElement(
+                    'div'
+                );
+
+
+            card.className =
+                'intel-card non-scu';
+
+
+            card.innerHTML = `
+
+                <div class="intel-header">
+
+                    <div>
+
+                        <div class="intel-subject">
+                            NON-SCU MEMBER INTELLIGENCE
+                        </div>
+
+                        <div class="intel-meta">
+                            Submitted ${escapeHtml(createdDate)}
+                        </div>
+
+                    </div>
+
+                    <span class="status-badge status-non-scu">
+                        NON-SCU REPORT
+                    </span>
+
+                </div>
+
+
+                <div class="intel-body">
+
+                    <div class="non-scu-reporter">
+
+                        <div class="non-scu-reporter-title">
+                            REPORTER DETAILS
+                        </div>
+
+                        <div class="non-scu-reporter-name">
+                            ${escapeHtml(reporterName)}
+                        </div>
+
+                        <div class="non-scu-reporter-callsign">
+                            Call Sign: ${escapeHtml(reporterCallsign)}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Intel Type
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(report.intel_type || 'Not specified')}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Submitted By
+                            </div>
+
+                            <div class="info-value">
+                                NON-SCU MEMBER
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Recipient
+                            </div>
+
+                            <div class="info-value">
+                                UNASSIGNED
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Received
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(createdDate)}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Finding
+                        </div>
+
+                        <div class="section-content">
+                            ${escapeHtml(report.finding || 'No finding provided.')}
+                        </div>
+
+                    </div>
+
+
+                    ${locationHtml}
+
+                    ${sourceHtml}
+
+                    ${evidenceHtml}
+
+
+                    <div class="triage-panel non-scu-triage">
+
+                        <div class="triage-title">
+                            ⚠ NON-SCU MEMBER REPORT
+                        </div>
+
+                        <div class="triage-description">
+                            This intelligence was submitted by a person outside the SCU. Select the appropriate SCU officer below. Once sent, it will be converted into a normal SCU intelligence submission and delivered through the officer's existing New Intel system.
+                        </div>
+
+
+                        <div
+                            class="agent-list"
+                            id="agent-list-public-${escapeAttribute(report.id)}"
+                        >
+                            ${agentColumnsHtml}
+                        </div>
+
+
+                        <div class="reassign-button-container">
+
+                            <button
+                                class="send-button non-scu-send-button"
+                                id="send-public-${escapeAttribute(report.id)}"
+                                onclick="assignNonScuIntel('${escapeAttribute(report.id)}')"
+                            >
+                                SEND INTEL
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            intelList.appendChild(
+                card
+            );
+
+        }
+
+
+        /* ================================================== */
         /* HANDLE REASSIGN CHECKBOX */
         /* ================================================== */
 
@@ -1725,12 +2218,18 @@
 
 
         /* ================================================== */
-        /* ASSIGN / REASSIGN INTEL */
+        /* ASSIGN / REASSIGN EXISTING SCU INTEL */
         /* ================================================== */
 
         async function assignIntel(
             intelId
         ) {
+
+            /*
+             * EXISTING SCU INTEL FUNCTION.
+             *
+             * This remains separate from NON-SCU assignment.
+             */
 
             if (
                 !hasFullIntelAccess()
@@ -1852,6 +2351,263 @@
 
             }
 
+
+            await loadIntel();
+
+        }
+
+
+        /* ================================================== */
+        /* ASSIGN NON-SCU MEMBER INTEL */
+        /* ================================================== */
+
+        async function assignNonScuIntel(
+            reportId
+        ) {
+
+            if (
+                !hasFullIntelAccess()
+            ) {
+
+                alert(
+                    'You do not have permission to assign intelligence.'
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Find the original NON-SCU report.
+             */
+
+            const report =
+                nonScuReports.find(
+                    item =>
+                        item.id === reportId
+                );
+
+
+            if (!report) {
+
+                alert(
+                    'Unable to find this NON-SCU intelligence report.'
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Find selected SCU officer.
+             */
+
+            const selectedCheckbox =
+                document.querySelector(
+                    `.reassign-checkbox[data-intel-id="public-${reportId}"]:checked`
+                );
+
+
+            if (!selectedCheckbox) {
+
+                alert(
+                    'Please select an SCU officer.'
+                );
+
+                return;
+
+            }
+
+
+            const recipientId =
+                selectedCheckbox.value;
+
+
+            const selectedAgent =
+                scaAgents.find(
+                    agent =>
+                        agent.id === recipientId
+                );
+
+
+            const recipientName =
+                selectedAgent
+                    ? `${selectedAgent.rank || ''} ${selectedAgent.full_name || 'SCU Agent'}`.trim()
+                    : 'the selected officer';
+
+
+            const confirmed =
+                confirm(
+                    `Send this NON-SCU intelligence to ${recipientName}?`
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            const button =
+                document.getElementById(
+                    `send-public-${reportId}`
+                );
+
+
+            if (button) {
+
+                button.disabled = true;
+
+                button.textContent =
+                    'SENDING...';
+
+            }
+
+
+            /*
+             * ==================================================
+             * CONVERT NON-SCU REPORT INTO NORMAL INTEL
+             * ==================================================
+             *
+             * We DO NOT alter the existing SCU reporting process.
+             *
+             * Instead we create a brand-new normal
+             * intel_submissions record using the information
+             * from the NON-SCU report.
+             */
+
+            const {
+                data: newIntel,
+                error: insertError
+            } = await supabaseClient
+
+                .from('intel_submissions')
+
+                .insert({
+
+                    sender_id:
+                        null,
+
+                    recipient_id:
+                        recipientId,
+
+                    subject:
+                        'NON-SCU MEMBER INTELLIGENCE',
+
+                    intel_type:
+                        report.intel_type || 'NON-SCU MEMBER REPORT',
+
+                    finding:
+                        report.finding || '',
+
+                    location:
+                        report.location || null,
+
+                    source:
+                        report.source
+                            ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
+                            : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`,
+
+                    evidence:
+                        report.evidence || null
+
+                })
+
+                .select()
+                .single();
+
+
+            if (
+                insertError
+            ) {
+
+                console.error(
+                    'NON-SCU conversion error:',
+                    insertError
+                );
+
+
+                alert(
+                    `Unable to send NON-SCU intelligence.\n\n${insertError.message || insertError}`
+                );
+
+
+                if (button) {
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        'SEND INTEL';
+
+                }
+
+
+                return;
+
+            }
+
+
+            /*
+             * The normal intel record now exists.
+             *
+             * Mark the original public report as assigned so
+             * it disappears from the UNASSIGNED queue and cannot
+             * be converted twice.
+             */
+
+            const {
+                error: statusError
+            } = await supabaseClient
+
+                .from('non_scu_intel_submissions')
+
+                .update({
+                    status:
+                        'assigned'
+                })
+
+                .eq(
+                    'id',
+                    reportId
+                );
+
+
+            if (
+                statusError
+            ) {
+
+                console.error(
+                    'NON-SCU status update error:',
+                    statusError
+                );
+
+
+                /*
+                 * The normal intel record has already been
+                 * created, so do NOT create another one.
+                 *
+                 * The error is reported but the assignment
+                 * itself has succeeded.
+                 */
+
+                alert(
+                    'The intelligence was sent successfully, but the original NON-SCU report could not be marked as assigned. Please refresh the page and check the queue.'
+                );
+
+
+                await loadIntel();
+
+                return;
+
+            }
+
+
+            /*
+             * Successful conversion.
+             */
 
             await loadIntel();
 
@@ -2003,7 +2759,7 @@
                 document.getElementById(
                     'page-description'
                 ).textContent =
-                    'All intelligence submissions across the SCU system. Unassigned intelligence requires triage and assigned intelligence can be reassigned.';
+                    'All intelligence submissions across the SCU system. NON-SCU member reports appear here for triage and assignment.';
 
             }
 
@@ -2020,4 +2776,3 @@
 </body>
 
 </html>
-
