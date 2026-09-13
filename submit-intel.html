@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -128,6 +129,18 @@
             color: #6f7c88;
             font-size: 11px;
             margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .triage-note {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: #17202a;
+            border: 1px solid #354554;
+            border-radius: 5px;
+            color: #9aa8b5;
+            font-size: 11px;
+            line-height: 1.4;
         }
 
         .submit-button {
@@ -219,7 +232,7 @@
         <div class="form-group">
 
             <label for="recipient">
-                SCU Agent <span class="required">*</span>
+                SCU Agent
             </label>
 
             <select id="recipient">
@@ -231,7 +244,17 @@
             </select>
 
             <div class="small-text">
-                Select the SCU agent who should receive this intelligence.
+                If you know who should receive this intelligence, select them.
+                If you are unsure, select the SCU Head / Triage option.
+            </div>
+
+            <div class="triage-note">
+
+                <strong>Don't know who to send it to?</strong><br>
+
+                Leave the intelligence for SCU triage. A senior SCU member will review it
+                and send it to the appropriate officer.
+
             </div>
 
         </div>
@@ -447,7 +470,8 @@ async function checkLogin() {
 
     if (!session) {
 
-        window.location.href = 'index.html';
+        window.location.href =
+            'index.html';
 
         return;
 
@@ -471,7 +495,9 @@ async function loadAgents() {
 
 
     const recipient =
-        document.getElementById('recipient');
+        document.getElementById(
+            'recipient'
+        );
 
 
     const {
@@ -481,11 +507,19 @@ async function loadAgents() {
 
         .from('officers')
 
-      .select('id, full_name, rank, callsign, active')
+        .select(
+            'id, full_name, rank, callsign, active'
+        )
 
-        .eq('is_scu_agent', true)
+        .eq(
+            'is_scu_agent',
+            true
+        )
 
-        .eq('active', true);
+        .eq(
+            'active',
+            true
+        );
 
 
     if (error) {
@@ -499,7 +533,7 @@ async function loadAgents() {
         recipient.innerHTML = `
 
             <option value="">
-                Unable to load SCU agents
+                SCU Head / Triage
             </option>
 
         `;
@@ -512,21 +546,19 @@ async function loadAgents() {
     recipient.innerHTML = `
 
         <option value="">
-            Select SCU agent
+
+            SCU Head / Triage
+            — I don't know who should receive this
+
         </option>
 
     `;
 
 
-    if (!data || data.length === 0) {
-
-        recipient.innerHTML = `
-
-            <option value="">
-                No SCU agents available
-            </option>
-
-        `;
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         return;
 
@@ -534,23 +566,28 @@ async function loadAgents() {
 
 
     data.forEach(
-    agent => {
+        agent => {
 
-        const option =
-            document.createElement('option');
+            const option =
+                document.createElement(
+                    'option'
+                );
 
-        option.value =
-            agent.id;
 
-        option.textContent =
-            `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim();
+            option.value =
+                agent.id;
 
-        recipient.appendChild(
-            option
-        );
 
-    }
-);
+            option.textContent =
+                `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim();
+
+
+            recipient.appendChild(
+                option
+            );
+
+        }
+    );
 
 }
 
@@ -627,23 +664,15 @@ async function submitIntel() {
         '';
 
 
+    // --------------------------------------------------
     // Validation
-
-    if (!recipientId) {
-
-        message.classList.add('error');
-
-        message.textContent =
-            'Please select an SCU agent.';
-
-        return;
-
-    }
-
+    // --------------------------------------------------
 
     if (!intelType) {
 
-        message.classList.add('error');
+        message.classList.add(
+            'error'
+        );
 
         message.textContent =
             'Please select an intel type.';
@@ -655,7 +684,9 @@ async function submitIntel() {
 
     if (!subject) {
 
-        message.classList.add('error');
+        message.classList.add(
+            'error'
+        );
 
         message.textContent =
             'Please enter a subject.';
@@ -667,7 +698,9 @@ async function submitIntel() {
 
     if (!finding) {
 
-        message.classList.add('error');
+        message.classList.add(
+            'error'
+        );
 
         message.textContent =
             'Please enter the intelligence finding.';
@@ -680,6 +713,7 @@ async function submitIntel() {
     submitButton.disabled =
         true;
 
+
     submitButton.textContent =
         'SUBMITTING...';
 
@@ -688,15 +722,19 @@ async function submitIntel() {
         error
     } = await supabaseClient
 
-        .from('intel_submissions')
+        .from(
+            'intel_submissions'
+        )
 
         .insert({
 
             sender_id:
                 currentUser.id,
 
+            // NULL means this Intel requires SCU triage.
+
             recipient_id:
-                recipientId,
+                recipientId || null,
 
             intel_type:
                 intelType,
@@ -727,7 +765,10 @@ async function submitIntel() {
         );
 
 
-        message.classList.add('error');
+        message.classList.add(
+            'error'
+        );
+
 
         message.textContent =
             'Unable to submit intelligence: ' +
@@ -737,21 +778,37 @@ async function submitIntel() {
         submitButton.disabled =
             false;
 
+
         submitButton.textContent =
             'SUBMIT INTELLIGENCE';
+
 
         return;
 
     }
 
 
-    message.classList.add('success');
+    message.classList.add(
+        'success'
+    );
 
-    message.textContent =
-        'Intelligence submitted successfully.';
+
+    if (recipientId) {
+
+        message.textContent =
+            'Intelligence submitted successfully to the selected SCU agent.';
+
+    } else {
+
+        message.textContent =
+            'Intelligence submitted successfully and sent to SCU Head / Triage.';
+
+    }
 
 
+    // --------------------------------------------------
     // Clear form
+    // --------------------------------------------------
 
     document
         .getElementById('recipient')
@@ -791,6 +848,7 @@ async function submitIntel() {
     submitButton.disabled =
         false;
 
+
     submitButton.textContent =
         'SUBMIT INTELLIGENCE';
 
@@ -810,3 +868,4 @@ checkLogin();
 </body>
 
 </html>
+```
