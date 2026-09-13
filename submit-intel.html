@@ -1,9 +1,9 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
 
 <head>
-
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,17 +145,10 @@
     }
 
     .agent-list {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0 20px;
         background: #080c11;
         border: 1px solid #354554;
         border-radius: 5px;
         overflow: hidden;
-    }
-
-    .agent-column {
-        min-width: 0;
     }
 
     .agent-option {
@@ -169,6 +162,10 @@
         color: #e8edf2;
         font-size: 13px;
         font-weight: normal;
+    }
+
+    .agent-option:last-child {
+        border-bottom: none;
     }
 
     .agent-option:hover {
@@ -187,11 +184,9 @@
 
     .agent-name {
         flex: 1;
-        min-width: 0;
     }
 
     .triage-option {
-        grid-column: 1 / -1;
         border-bottom: 1px solid #354554;
         background: #17202a;
     }
@@ -201,7 +196,6 @@
     }
 
     .agent-loading {
-        grid-column: 1 / -1;
         padding: 12px;
         color: #6f7c88;
         font-size: 12px;
@@ -240,21 +234,7 @@
         color: #f87171;
     }
 
-    @media (max-width: 650px) {
-
-        .agent-list {
-            grid-template-columns: 1fr;
-        }
-
-        .triage-option,
-        .agent-loading {
-            grid-column: 1;
-        }
-
-    }
-
 </style>
-```
 
 </head>
 
@@ -262,7 +242,6 @@
 
 <header class="header">
 
-```
 <div>
 
     <h1>SUBMIT SCU INTELLIGENCE</h1>
@@ -280,13 +259,11 @@
 >
     BACK TO DASHBOARD
 </button>
-```
 
 </header>
 
 <main class="container">
 
-```
 <section class="intro">
 
     <h2>
@@ -507,7 +484,6 @@
 
 
 </section>
-```
 
 </main>
 
@@ -623,22 +599,81 @@ async function loadAgents() {
     }
 
 
-    // ==================================================
-    // SORT AGENTS ALPHABETICALLY
-    // ==================================================
+    /*
+     * RANK ORDER
+     *
+     * Only these five ranks are allowed
+     * to appear in the recipient list.
+     *
+     * Any High Command or GOV records
+     * are excluded completely.
+     */
 
-    data.sort(
+    const rankOrder = {
+
+        'Head of SCU': 1,
+
+        'Assistant Head of SCU': 2,
+
+        'Head of Weapons': 3,
+
+        'Head of Drugs': 4,
+
+        'Detective': 5
+
+    };
+
+
+    const filteredAgents =
+        (data || []).filter(
+            agent =>
+                Object.prototype.hasOwnProperty.call(
+                    rankOrder,
+                    (agent.rank || '').trim()
+                )
+        );
+
+
+    /*
+     * Sort by rank first.
+     *
+     * If two officers have the same rank,
+     * sort them alphabetically by full name.
+     */
+
+    filteredAgents.sort(
         (a, b) => {
+
+            const rankA =
+                (a.rank || '').trim();
+
+            const rankB =
+                (b.rank || '').trim();
+
+
+            const rankDifference =
+                rankOrder[rankA] -
+                rankOrder[rankB];
+
+
+            if (rankDifference !== 0) {
+
+                return rankDifference;
+
+            }
+
 
             const nameA =
                 (a.full_name || '')
                     .trim()
                     .toLowerCase();
 
+
             const nameB =
                 (b.full_name || '')
                     .trim()
                     .toLowerCase();
+
 
             return nameA.localeCompare(
                 nameB
@@ -647,10 +682,6 @@ async function loadAgents() {
         }
     );
 
-
-    // ==================================================
-    // SEND TO SCU LEADS
-    // ==================================================
 
     agentList.innerHTML = `
 
@@ -673,8 +704,7 @@ async function loadAgents() {
 
 
     if (
-        !data ||
-        data.length === 0
+        filteredAgents.length === 0
     ) {
 
         return;
@@ -682,74 +712,8 @@ async function loadAgents() {
     }
 
 
-    // ==================================================
-    // CREATE COLUMNS
-    // 8 AGENTS PER COLUMN
-    // ==================================================
-
-    const agentsPerColumn =
-        8;
-
-
-    const numberOfColumns =
-        Math.ceil(
-            data.length /
-            agentsPerColumn
-        );
-
-
-    const columns =
-        [];
-
-
-    for (
-        let i = 0;
-        i < numberOfColumns;
-        i++
-    ) {
-
-        const column =
-            document.createElement(
-                'div'
-            );
-
-
-        column.className =
-            'agent-column';
-
-
-        columns.push(
-            column
-        );
-
-
-        agentList.appendChild(
-            column
-        );
-
-    }
-
-
-    // ==================================================
-    // ADD AGENTS TO COLUMNS
-    // ==================================================
-
-    data.forEach(
-        (agent, index) => {
-
-
-            const columnIndex =
-                Math.floor(
-                    index /
-                    agentsPerColumn
-                );
-
-
-            const column =
-                columns[
-                    columnIndex
-                ];
-
+    filteredAgents.forEach(
+        agent => {
 
             const label =
                 document.createElement(
@@ -803,7 +767,7 @@ async function loadAgents() {
             );
 
 
-            column.appendChild(
+            agentList.appendChild(
                 label
             );
 
@@ -939,7 +903,7 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // VALIDATION
+    // Validation
     // --------------------------------------------------
 
     if (!intelType) {
@@ -1010,14 +974,13 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // PREPARE SUBMISSIONS
+    // Prepare submissions
     // --------------------------------------------------
 
-    const submissions =
-        [];
+    const submissions = [];
 
 
-    // Create one Intel record for each selected agent.
+    // Send one copy to each selected agent.
 
     selectedAgents.forEach(
         agentId => {
@@ -1054,7 +1017,7 @@ async function submitIntel() {
     );
 
 
-    // Create one unassigned Intel record for SCU Leads.
+    // Send one unassigned copy to SCU Leads.
 
     if (sendToTriage) {
 
@@ -1090,7 +1053,7 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // INSERT SUBMISSIONS
+    // Insert submissions
     // --------------------------------------------------
 
     const {
@@ -1137,10 +1100,6 @@ async function submitIntel() {
     }
 
 
-    // --------------------------------------------------
-    // SUCCESS MESSAGE
-    // --------------------------------------------------
-
     message.classList.add(
         'success'
     );
@@ -1154,9 +1113,7 @@ async function submitIntel() {
         message.textContent =
             `Intelligence submitted successfully to ${selectedAgents.length} SCU agent${selectedAgents.length === 1 ? '' : 's'} and sent to SCU Leads.`;
 
-    } else if (
-        sendToTriage
-    ) {
+    } else if (sendToTriage) {
 
         message.textContent =
             'Intelligence submitted successfully and sent to SCU Leads.';
@@ -1170,7 +1127,7 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // CLEAR FORM
+    // Clear form
     // --------------------------------------------------
 
     document
@@ -1247,3 +1204,4 @@ checkLogin();
 </body>
 
 </html>
+
