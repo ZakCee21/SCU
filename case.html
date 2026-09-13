@@ -805,7 +805,7 @@ async function loadCase() {
         await supabaseClient
             .from('cases')
             .select(
-                'id, case_name, case_number, status, classification, description, created_at, created_by, owner_id'
+                'id, case_name, case_number, status, classification, description, created_at, created_by'
             )
             .eq(
                 'id',
