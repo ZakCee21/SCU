@@ -422,6 +422,12 @@ async function checkLogin() {
         .toLowerCase();
 
 
+    console.log(
+        'Current user role:',
+        currentUserRole
+    );
+
+
     // --------------------------------------------------
     // Change page heading for Masters
     // --------------------------------------------------
@@ -444,7 +450,7 @@ async function checkLogin() {
     }
 
 
-    loadIntel();
+    await loadIntel();
 
 }
 
@@ -473,18 +479,20 @@ async function loadIntel() {
 
     // --------------------------------------------------
     // FULL INTELLIGENCE ACCESS
+    // Master
+    // Head of Drugs = investigator
+    // Head of Weapons = case_lead
     // --------------------------------------------------
 
     if (
-    if (
-    [
-        'master',
-        'investigator',
-        'case_lead'
-    ].includes(
-        currentUserRole
-    )
-) {
+        [
+            'master',
+            'investigator',
+            'case_lead'
+        ].includes(
+            currentUserRole
+        )
+    ) {
 
         console.log(
             'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
