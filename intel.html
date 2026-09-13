@@ -199,47 +199,47 @@
             text-align: left;
         }
 
-       .info-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 17px;
-    align-items: stretch;
-}
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 17px;
+            align-items: stretch;
+        }
 
-.info-box {
-    background: #0b1117;
-    border: 1px solid #293542;
-    border-radius: 4px;
-    padding: 10px;
-    text-align: left;
-    display: block;
-    min-height: 0;
-}
+        .info-box {
+            background: #0b1117;
+            border: 1px solid #293542;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: left;
+            display: block;
+            min-height: 0;
+        }
 
-.info-label {
-    color: #667381;
-    font-size: 9px;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin: 0 0 5px 0;
-    letter-spacing: .5px;
-    text-align: left;
-    width: 100%;
-    display: block;
-}
+        .info-label {
+            color: #667381;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0 0 5px 0;
+            letter-spacing: .5px;
+            text-align: left;
+            width: 100%;
+            display: block;
+        }
 
-.info-value {
-    color: #dbe1e7;
-    font-size: 12px;
-    line-height: 1.4;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    width: 100%;
-    display: block;
-    white-space: normal;
-}
+        .info-value {
+            color: #dbe1e7;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            width: 100%;
+            display: block;
+            white-space: normal;
+        }
 
         .section {
             margin-bottom: 15px;
@@ -1620,19 +1620,10 @@
                     ) {
 
                         locationHtml = `
-
                             <div class="section">
-
-                                <div class="section-title">
-                                    Location
-                                </div>
-
-                                <div class="section-content">
-                                    ${escapeHtml(intel.location)}
-                                </div>
-
+                                <div class="section-title">Location</div>
+                                <div class="section-content">${escapeHtml(intel.location)}</div>
                             </div>
-
                         `;
 
                     }
@@ -1647,23 +1638,14 @@
                     ) {
 
                         sourceHtml = `
-
                             <div class="section">
-
-                                <div class="section-title">
-                                    Source / Context
-                                </div>
-
-                                <div class="section-content">
-                                    ${escapeHtml(
-                                        intel.source ||
-                                        intel.context ||
-                                        ''
-                                    )}
-                                </div>
-
+                                <div class="section-title">Source / Context</div>
+                                <div class="section-content">${escapeHtml(
+                                    intel.source ||
+                                    intel.context ||
+                                    ''
+                                )}</div>
                             </div>
-
                         `;
 
                     }
@@ -1677,19 +1659,10 @@
                     ) {
 
                         evidenceHtml = `
-
                             <div class="section">
-
-                                <div class="section-title">
-                                    Evidence
-                                </div>
-
-                                <div class="section-content">
-                                    ${escapeHtml(intel.evidence)}
-                                </div>
-
+                                <div class="section-title">Evidence</div>
+                                <div class="section-content">${escapeHtml(intel.evidence)}</div>
                             </div>
-
                         `;
 
                     }
@@ -1796,13 +1769,11 @@
                                     Finding
                                 </div>
 
-                                <div class="section-content">
-                                    ${escapeHtml(
-                                        intel.finding ||
-                                        intel.description ||
-                                        'No finding provided.'
-                                    )}
-                                </div>
+                                <div class="section-content">${escapeHtml(
+                                    intel.finding ||
+                                    intel.description ||
+                                    'No finding provided.'
+                                )}</div>
 
                             </div>
 
@@ -1885,19 +1856,10 @@
             ) {
 
                 locationHtml = `
-
                     <div class="section">
-
-                        <div class="section-title">
-                            Location
-                        </div>
-
-                        <div class="section-content">
-                            ${escapeHtml(report.location)}
-                        </div>
-
+                        <div class="section-title">Location</div>
+                        <div class="section-content">${escapeHtml(report.location)}</div>
                     </div>
-
                 `;
 
             }
@@ -1911,19 +1873,10 @@
             ) {
 
                 sourceHtml = `
-
                     <div class="section">
-
-                        <div class="section-title">
-                            Source / Context
-                        </div>
-
-                        <div class="section-content">
-                            ${escapeHtml(report.source)}
-                        </div>
-
+                        <div class="section-title">Source / Context</div>
+                        <div class="section-content">${escapeHtml(report.source)}</div>
                     </div>
-
                 `;
 
             }
@@ -1937,19 +1890,10 @@
             ) {
 
                 evidenceHtml = `
-
                     <div class="section">
-
-                        <div class="section-title">
-                            Evidence
-                        </div>
-
-                        <div class="section-content">
-                            ${escapeHtml(report.evidence)}
-                        </div>
-
+                        <div class="section-title">Evidence</div>
+                        <div class="section-content">${escapeHtml(report.evidence)}</div>
                     </div>
-
                 `;
 
             }
@@ -2072,12 +2016,10 @@
                             Finding
                         </div>
 
-                        <div class="section-content">
-                            ${escapeHtml(
-                                report.finding ||
-                                'No finding provided.'
-                            )}
-                        </div>
+                        <div class="section-content">${escapeHtml(
+                            report.finding ||
+                            'No finding provided.'
+                        )}</div>
 
                     </div>
 
@@ -2321,18 +2263,6 @@
             }
 
 
-            /*
-             * IMPORTANT:
-             *
-             * The NON-SCU report is being converted into a
-             * normal intel_submissions record.
-             *
-             * sender_id is NOT nullable.
-             *
-             * We therefore use the authenticated SCU officer's
-             * loaded officers.id as the sender.
-             */
-
             if (
                 !currentOfficer ||
                 !currentOfficer.id
@@ -2440,14 +2370,6 @@
             }
 
 
-            /*
-             * Build the sender ID from the loaded officer record.
-             *
-             * This is guaranteed to be the authenticated officer
-             * because loadCurrentUser() obtained this row using
-             * auth.uid().
-             */
-
             const senderId =
                 currentOfficer.id;
 
@@ -2461,10 +2383,6 @@
                 }
             );
 
-
-            /*
-             * Create the normal SCU intelligence record.
-             */
 
             const {
                 data: insertedIntel,
@@ -2549,11 +2467,6 @@
                 insertedIntel
             );
 
-
-            /*
-             * Only after the normal SCU intel has successfully
-             * been created do we mark the original report assigned.
-             */
 
             const {
                 error: statusError
