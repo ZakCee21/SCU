@@ -476,14 +476,15 @@ async function loadIntel() {
     // --------------------------------------------------
 
     if (
-        [
-            'master',
-            'investigator',
-            'case lead'
-        ].includes(
-            currentUserRole
-        )
-    ) {
+    if (
+    [
+        'master',
+        'investigator',
+        'case_lead'
+    ].includes(
+        currentUserRole
+    )
+) {
 
         console.log(
             'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
