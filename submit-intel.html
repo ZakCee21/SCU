@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 
 <html lang="en">
@@ -23,6 +23,10 @@
         color: #e8edf2;
     }
 
+    /* ==================================================
+       HEADER
+       ================================================== */
+
     .header {
         background: #111821;
         border-bottom: 1px solid #293542;
@@ -30,6 +34,21 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .header-logo {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        flex-shrink: 0;
     }
 
     .header h1 {
@@ -44,6 +63,37 @@
         font-size: 11px;
     }
 
+
+    /* ==================================================
+       BACKGROUND LOGOS
+       ================================================== */
+
+    .background-logo {
+        position: fixed;
+        top: 50%;
+        width: 275px;
+        height: 275px;
+        object-fit: contain;
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .background-logo-left {
+        left: 80px;
+        transform: translateY(-50%);
+    }
+
+    .background-logo-right {
+        right: 80px;
+        transform: translateY(-50%);
+    }
+
+
+    /* ==================================================
+       BACK BUTTON
+       ================================================== */
+
     .back-button {
         background: #202c38;
         color: white;
@@ -51,17 +101,30 @@
         padding: 9px 15px;
         border-radius: 5px;
         cursor: pointer;
+        font-size: 12px;
     }
 
     .back-button:hover {
         background: #2b3a48;
     }
 
+
+    /* ==================================================
+       MAIN CONTAINER
+       ================================================== */
+
     .container {
         max-width: 900px;
         margin: auto;
         padding: 30px;
+        position: relative;
+        z-index: 1;
     }
+
+
+    /* ==================================================
+       INTRO
+       ================================================== */
 
     .intro {
         margin-bottom: 25px;
@@ -76,6 +139,11 @@
         margin: 0;
         line-height: 1.5;
     }
+
+
+    /* ==================================================
+       FORM PANEL
+       ================================================== */
 
     .form-panel {
         background: #111821;
@@ -144,9 +212,10 @@
         line-height: 1.4;
     }
 
-    /* ================================================
+
+    /* ==================================================
        AGENT LIST
-       ================================================ */
+       ================================================== */
 
     .agent-list {
         display: grid;
@@ -211,6 +280,11 @@
         font-size: 12px;
     }
 
+
+    /* ==================================================
+       SUBMIT BUTTON
+       ================================================== */
+
     .submit-button {
         background: #1d4ed8;
         color: white;
@@ -231,6 +305,11 @@
         cursor: not-allowed;
     }
 
+
+    /* ==================================================
+       MESSAGE
+       ================================================== */
+
     .message {
         margin-top: 15px;
         font-size: 12px;
@@ -244,7 +323,42 @@
         color: #f87171;
     }
 
+
+    /* ==================================================
+       MOBILE
+       ================================================== */
+
     @media (max-width: 650px) {
+
+        .header {
+            padding: 14px 18px;
+        }
+
+        .header-logo {
+            width: 42px;
+            height: 42px;
+        }
+
+        .header-brand {
+            gap: 10px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+        }
+
+        .header p {
+            font-size: 9px;
+        }
+
+        .back-button {
+            padding: 8px 10px;
+            font-size: 10px;
+        }
+
+        .container {
+            padding: 20px;
+        }
 
         .agent-list {
             grid-template-columns: 1fr;
@@ -255,6 +369,20 @@
             grid-column: 1;
         }
 
+        .background-logo {
+            width: 130px;
+            height: 130px;
+            opacity: 0.25;
+        }
+
+        .background-logo-left {
+            left: -45px;
+        }
+
+        .background-logo-right {
+            right: -45px;
+        }
+
     }
 
 </style>
@@ -263,29 +391,67 @@
 
 <body>
 
+
+<!-- ==================================================
+     BACKGROUND LOGOS
+     ================================================== -->
+
+<img
+    class="background-logo background-logo-left"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
+
+<img
+    class="background-logo background-logo-right"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
+
+
+<!-- ==================================================
+     HEADER
+     ================================================== -->
+
 <header class="header">
 
-<div>
+    <div class="header-brand">
 
-    <h1>SUBMIT SCU INTELLIGENCE</h1>
+        <img
+            class="header-logo"
+            src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+            alt="SCU Logo"
+        >
 
-    <p>
-        STREET CRIMES UNIT • INTERNAL INTELLIGENCE
-    </p>
+        <div>
 
-</div>
+            <h1>SUBMIT SCU INTELLIGENCE</h1>
+
+            <p>
+                STREET CRIMES UNIT • INTERNAL INTELLIGENCE
+            </p>
+
+        </div>
+
+    </div>
 
 
-<button
-    class="back-button"
-    onclick="window.location.href='dashboard.html'"
->
-    BACK TO DASHBOARD
-</button>
+    <button
+        class="back-button"
+        onclick="window.location.href='dashboard.html'"
+    >
+        BACK TO DASHBOARD
+    </button>
 
 </header>
 
+
+<!-- ==================================================
+     MAIN
+     ================================================== -->
+
 <main class="container">
+
 
 <section class="intro">
 
@@ -509,6 +675,11 @@
 </section>
 
 </main>
+
+
+<!-- ==================================================
+     SUPABASE
+     ================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1299,4 +1470,6 @@ checkLogin();
 </body>
 
 </html>
+```
 
+This is ready to replace the entire current `submit-intel.html`. I have **not changed your Supabase logic or the intel workflow**.
