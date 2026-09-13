@@ -600,11 +600,6 @@ async function loadCases(
     // --------------------------------------------------
     // Evidence
     // --------------------------------------------------
-    //
-    // Keep the existing dashboard value at 0 for now.
-    // This can be connected to the evidence system later.
-    //
-    // --------------------------------------------------
 
     document
         .getElementById('evidenceCount')
@@ -699,20 +694,6 @@ async function loadCases(
 // ======================================================
 // LOAD INTEL COUNTS
 // ======================================================
-//
-// NEW INTEL
-// = Intel without a view record for this user.
-//
-// OPEN INTEL
-// = Intel with a view record for this user.
-//
-// For Master, Head of Drugs and Head of Weapons:
-// = All Intel in the system.
-//
-// For normal officers:
-// = Only Intel sent to that officer.
-//
-// ======================================================
 
 async function loadIntelCounts(
     userId
@@ -763,7 +744,7 @@ async function loadIntelCounts(
 
 
     // --------------------------------------------------
-    // Roles with full Intel access
+    // Full Intel access roles
     // --------------------------------------------------
 
     const fullIntelAccessRoles = [
@@ -795,7 +776,7 @@ async function loadIntelCounts(
             );
 
 
-    // Normal officers only receive their own Intel.
+    // Normal officers only receive Intel sent to them.
 
     if (
         !hasFullIntelAccess
@@ -1064,11 +1045,3 @@ checkLogin();
 
 </html>
 ```
-
-This now uses the actual database roles you have:
-
-* `master`
-* `investigator` → Head of Drugs
-* `case_lead` → Head of Weapons
-
-So once you promote someone, their Dashboard Intel counters automatically change based on their **current role**.
