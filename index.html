@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCU Case Management</title>
 
-```
+
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
     * {
         box-sizing: border-box;
     }
@@ -25,9 +26,34 @@
         font-family: Arial, sans-serif;
         background: #080c11;
         color: #e8edf2;
+        position: relative;
+        overflow: hidden;
     }
 
+    /* =========================
+       SCU BACKGROUND LOGO
+    ========================= */
+
+    .background-logo {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 520px;
+        max-width: 85vw;
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* =========================
+       LOGIN BOX
+    ========================= */
+
     .login-box {
+        position: relative;
+        z-index: 2;
+
         width: 400px;
         max-width: 90%;
         background: #111821;
@@ -105,14 +131,25 @@
         color: #596673;
         font-size: 11px;
     }
+
 </style>
-```
+
 
 </head>
 
 <body>
 
-```
+
+<!-- SCU LOGO BEHIND LOGIN BOX -->
+
+<img
+    class="background-logo"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
+
+<!-- LOGIN BOX -->
+
 <div class="login-box">
 
     <div class="logo">
@@ -387,7 +424,8 @@
     );
 
 </script>
-```
+
 
 </body>
+
 </html>
