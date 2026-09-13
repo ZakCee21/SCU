@@ -1,467 +1,507 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SCU Dashboard</title>
+<title>SCU Dashboard</title>
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #080c11;
-            color: #e8edf2;
-        }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #080c11;
+        color: #e8edf2;
+    }
+
+    .header {
+        background: #111821;
+        border-bottom: 1px solid #293542;
+        padding: 18px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 21px;
+        letter-spacing: 1.5px;
+    }
+
+    .header p {
+        margin: 5px 0 0;
+        color: #7f8c99;
+        font-size: 11px;
+    }
+
+    .officer-info {
+        text-align: right;
+        margin-right: 5px;
+    }
+
+    .officer-name {
+        font-size: 13px;
+        font-weight: bold;
+        color: #e8edf2;
+    }
+
+    .officer-rank {
+        margin-top: 3px;
+        font-size: 11px;
+        color: #7f8c99;
+    }
+
+    .logout {
+        background: #202c38;
+        color: white;
+        border: 1px solid #354554;
+        padding: 9px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .profile-button {
+        background: #263746;
+        color: white;
+        border: 1px solid #354554;
+        padding: 9px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .profile-button:hover {
+        background: #32495c;
+    }
+
+    .logout:hover {
+        background: #2b3a48;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: auto;
+        padding: 30px;
+    }
+
+    .welcome {
+        margin-bottom: 25px;
+    }
+
+    .welcome h2 {
+        margin: 0 0 6px;
+    }
+
+    .welcome p {
+        color: #7f8c99;
+        margin: 0;
+    }
+
+    .dashboard-buttons {
+        margin-bottom: 25px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-button {
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .create-case-button {
+        background: #1d4ed8;
+        border: none;
+    }
+
+    .create-case-button:hover {
+        background: #2563eb;
+    }
+
+    .documents-button {
+        background: #263746;
+        border: 1px solid #354554;
+    }
+
+    .documents-button:hover {
+        background: #32495c;
+    }
+
+    .intel-button {
+        background: #166534;
+        border: 1px solid #22c55e;
+    }
+
+    .intel-button:hover {
+        background: #15803d;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .card-title {
+        color: #8996a3;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .number {
+        font-size: 30px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    .intel-card {
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .intel-card:hover {
+        border-color: #22c55e;
+        background: #141f1a;
+    }
+
+    .intel-card .number {
+        color: #4ade80;
+    }
+
+    .open-intel-card {
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .open-intel-card:hover {
+        border-color: #3b82f6;
+        background: #141b27;
+    }
+
+    .open-intel-card .number {
+        color: #60a5fa;
+    }
+
+    .panel {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 22px;
+    }
+
+    .panel h2 {
+        margin-top: 0;
+    }
+
+    .case-row {
+        border-top: 1px solid #293542;
+        padding: 16px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .case-name {
+        font-weight: bold;
+    }
+
+    .case-number {
+        color: #7f8c99;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .status {
+        padding: 5px 9px;
+        background: #1c2935;
+        border-radius: 4px;
+        font-size: 11px;
+    }
+
+    .empty {
+        color: #6f7c88;
+        text-align: center;
+        padding: 30px;
+    }
+
+    @media (max-width: 700px) {
 
         .header {
-            background: #111821;
-            border-bottom: 1px solid #293542;
-            padding: 18px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 16px;
         }
 
         .header h1 {
-            margin: 0;
-            font-size: 21px;
-            letter-spacing: 1.5px;
-        }
-
-        .header p {
-            margin: 5px 0 0;
-            color: #7f8c99;
-            font-size: 11px;
-        }
-
-        .logout {
-            background: #202c38;
-            color: white;
-            border: 1px solid #354554;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .profile-button {
-            background: #263746;
-            color: white;
-            border: 1px solid #354554;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .profile-button:hover {
-            background: #32495c;
-        }
-
-        .logout:hover {
-            background: #2b3a48;
+            font-size: 17px;
         }
 
         .container {
-            max-width: 1400px;
-            margin: auto;
-            padding: 30px;
-        }
-
-        .welcome {
-            margin-bottom: 25px;
-        }
-
-        .welcome h2 {
-            margin: 0 0 6px;
-        }
-
-        .welcome p {
-            color: #7f8c99;
-            margin: 0;
-        }
-
-        .dashboard-buttons {
-            margin-bottom: 25px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .dashboard-button {
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .create-case-button {
-            background: #1d4ed8;
-            border: none;
-        }
-
-        .create-case-button:hover {
-            background: #2563eb;
-        }
-
-        .documents-button {
-            background: #263746;
-            border: 1px solid #354554;
-        }
-
-        .documents-button:hover {
-            background: #32495c;
-        }
-
-        .intel-button {
-            background: #166534;
-            border: 1px solid #22c55e;
-        }
-
-        .intel-button:hover {
-            background: #15803d;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: #111821;
-            border: 1px solid #293542;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .card-title {
-            color: #8996a3;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .number {
-            font-size: 30px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .intel-card {
-            cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease;
-        }
-
-        .intel-card:hover {
-            border-color: #22c55e;
-            background: #141f1a;
-        }
-
-        .intel-card .number {
-            color: #4ade80;
-        }
-
-        .open-intel-card {
-            cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease;
-        }
-
-        .open-intel-card:hover {
-            border-color: #3b82f6;
-            background: #141b27;
-        }
-
-        .open-intel-card .number {
-            color: #60a5fa;
-        }
-
-        .panel {
-            background: #111821;
-            border: 1px solid #293542;
-            border-radius: 8px;
-            padding: 22px;
-        }
-
-        .panel h2 {
-            margin-top: 0;
+            padding: 20px 15px;
         }
 
         .case-row {
-            border-top: 1px solid #293542;
-            padding: 16px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 15px;
         }
 
-        .case-name {
-            font-weight: bold;
+        .officer-info {
+            display: none;
         }
 
-        .case-number {
-            color: #7f8c99;
-            font-size: 12px;
-            margin-top: 5px;
-        }
+    }
 
-        .status {
-            padding: 5px 9px;
-            background: #1c2935;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-
-        .empty {
-            color: #6f7c88;
-            text-align: center;
-            padding: 30px;
-        }
-
-        @media (max-width: 700px) {
-
-            .header {
-                padding: 16px;
-            }
-
-            .header h1 {
-                font-size: 17px;
-            }
-
-            .container {
-                padding: 20px 15px;
-            }
-
-            .case-row {
-                gap: 15px;
-            }
-
-        }
-
-    </style>
+</style>
+```
 
 </head>
 
-
 <body>
-
 
 <header class="header">
 
-    <div>
+```
+<div>
 
-        <h1>SCU CASE MANAGEMENT</h1>
+    <h1>SCU CASE MANAGEMENT</h1>
 
-        <p>
-            STREET CRIMES UNIT • SECURE OPERATIONS
-        </p>
+    <p>
+        STREET CRIMES UNIT • SECURE OPERATIONS
+    </p>
+
+</div>
+
+
+<div style="display: flex; gap: 10px; align-items: center;">
+
+    <div class="officer-info">
+
+        <div
+            class="officer-name"
+            id="officerName"
+        >
+            Loading...
+        </div>
+
+        <div
+            class="officer-rank"
+            id="officerRank"
+        >
+            Loading...
+        </div>
 
     </div>
 
 
-    <div style="display: flex; gap: 10px;">
+    <button
+        class="profile-button"
+        onclick="window.location.href='profile.html'"
+    >
+        PROFILE
+    </button>
 
-        <button
-            class="profile-button"
-            onclick="window.location.href='profile.html'"
-        >
-            PROFILE
-        </button>
 
-        <button
-            class="logout"
-            onclick="logout()"
-        >
-            LOG OUT
-        </button>
+    <button
+        class="logout"
+        onclick="logout()"
+    >
+        LOG OUT
+    </button>
 
-    </div>
+</div>
+```
 
 </header>
 
-
 <main class="container">
 
+```
+<section class="welcome">
 
-    <section class="welcome">
+    <h2>
+        SCU Dashboard
+    </h2>
 
-        <h2>
-            SCU Dashboard
-        </h2>
+    <p>
+        Authorised officer access.
+    </p>
 
-        <p>
-            Authorised officer access.
-        </p>
-
-    </section>
+</section>
 
 
-    <!-- DASHBOARD ACTIONS -->
+<!-- DASHBOARD ACTIONS -->
 
-    <div class="dashboard-buttons">
+<div class="dashboard-buttons">
 
-        <button
-            class="dashboard-button create-case-button"
-            onclick="window.location.href='create-case.html'"
+    <button
+        class="dashboard-button create-case-button"
+        onclick="window.location.href='create-case.html'"
+    >
+        + CREATE NEW CASE
+    </button>
+
+
+    <button
+        class="dashboard-button documents-button"
+        onclick="window.location.href='documents.html'"
+    >
+        DOCUMENTS & TEMPLATES
+    </button>
+
+
+    <button
+        class="dashboard-button intel-button"
+        onclick="window.location.href='submit-intel.html'"
+    >
+        SUBMIT SCU INTEL
+    </button>
+
+</div>
+
+
+<!-- DASHBOARD CARDS -->
+
+<section class="cards">
+
+
+    <!-- ACTIVE CASES -->
+
+    <div class="card">
+
+        <div class="card-title">
+            Active Cases
+        </div>
+
+        <div
+            class="number"
+            id="activeCases"
         >
-            + CREATE NEW CASE
-        </button>
-
-
-        <button
-            class="dashboard-button documents-button"
-            onclick="window.location.href='documents.html'"
-        >
-            DOCUMENTS & TEMPLATES
-        </button>
-
-
-        <button
-            class="dashboard-button intel-button"
-            onclick="window.location.href='submit-intel.html'"
-        >
-            SUBMIT SCU INTEL
-        </button>
+            0
+        </div>
 
     </div>
 
 
-    <!-- DASHBOARD CARDS -->
+    <!-- MY CASES -->
 
-    <section class="cards">
+    <div class="card">
 
-
-        <!-- ACTIVE CASES -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Active Cases
-            </div>
-
-            <div
-                class="number"
-                id="activeCases"
-            >
-                0
-            </div>
-
+        <div class="card-title">
+            My Cases
         </div>
-
-
-        <!-- MY CASES -->
-
-        <div class="card">
-
-            <div class="card-title">
-                My Cases
-            </div>
-
-            <div
-                class="number"
-                id="myCases"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- EVIDENCE -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Evidence
-            </div>
-
-            <div
-                class="number"
-                id="evidenceCount"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- NEW INTEL -->
 
         <div
-            class="card intel-card"
-            onclick="window.location.href='intel.html'"
+            class="number"
+            id="myCases"
         >
-
-            <div class="card-title">
-                New Intel
-            </div>
-
-            <div
-                class="number"
-                id="newIntel"
-            >
-                0
-            </div>
-
+            0
         </div>
 
+    </div>
 
-        <!-- OPEN INTEL -->
+
+    <!-- EVIDENCE -->
+
+    <div class="card">
+
+        <div class="card-title">
+            Evidence
+        </div>
 
         <div
-            class="card open-intel-card"
-            onclick="window.location.href='intel.html'"
+            class="number"
+            id="evidenceCount"
         >
-
-            <div class="card-title">
-                Open Intel
-            </div>
-
-            <div
-                class="number"
-                id="openIntel"
-            >
-                0
-            </div>
-
+            0
         </div>
 
+    </div>
 
-    </section>
 
+    <!-- NEW INTEL -->
 
-    <!-- CASE FILES -->
+    <div
+        class="card intel-card"
+        onclick="window.location.href='intel.html'"
+    >
 
-    <section class="panel">
-
-        <h2>
-            Accessible Case Files
-        </h2>
-
-        <div id="caseList">
-
-            <div class="empty">
-                Loading case files...
-            </div>
-
+        <div class="card-title">
+            New Intel
         </div>
 
-    </section>
+        <div
+            class="number"
+            id="newIntel"
+        >
+            0
+        </div>
 
+    </div>
+
+
+    <!-- OPEN INTEL -->
+
+    <div
+        class="card open-intel-card"
+        onclick="window.location.href='intel.html'"
+    >
+
+        <div class="card-title">
+            Open Intel
+        </div>
+
+        <div
+            class="number"
+            id="openIntel"
+        >
+            0
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- CASE FILES -->
+
+<section class="panel">
+
+    <h2>
+        Accessible Case Files
+    </h2>
+
+    <div id="caseList">
+
+        <div class="empty">
+            Loading case files...
+        </div>
+
+    </div>
+
+</section>
+```
 
 </main>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
 <script>
 
@@ -509,6 +549,13 @@ async function checkLogin() {
         session.user.id;
 
 
+    // Load logged-in officer details
+
+    loadOfficerDetails(
+        userId
+    );
+
+
     // Load existing cases
 
     loadCases(
@@ -521,6 +568,69 @@ async function checkLogin() {
     loadIntelCounts(
         userId
     );
+
+}
+
+
+// ======================================================
+// LOAD LOGGED-IN OFFICER DETAILS
+// ======================================================
+
+async function loadOfficerDetails(
+    userId
+) {
+
+    const {
+        data: officer,
+        error
+    } = await supabaseClient
+
+        .from('officers')
+
+        .select(
+            'name, rank'
+        )
+
+        .eq(
+            'id',
+            userId
+        )
+
+        .single();
+
+
+    if (error) {
+
+        console.error(
+            'Load officer details error:',
+            error
+        );
+
+        document
+            .getElementById('officerName')
+            .textContent =
+                'Unknown Officer';
+
+        document
+            .getElementById('officerRank')
+            .textContent =
+                '';
+
+        return;
+
+    }
+
+
+    document
+        .getElementById('officerName')
+        .textContent =
+            officer.name || 'Unknown Officer';
+
+
+    document
+        .getElementById('officerRank')
+        .textContent =
+            officer.rank || '';
 
 }
 
@@ -1040,8 +1150,6 @@ checkLogin();
 
 </script>
 
-
 </body>
 
 </html>
-
