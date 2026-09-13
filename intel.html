@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -217,39 +218,40 @@
             margin-bottom: 17px;
         }
 
-       .info-box {
-    background: #0b1117;
-    border: 1px solid #293542;
-    border-radius: 4px;
-    padding: 10px;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
+        .info-box {
+            background: #0b1117;
+            border: 1px solid #293542;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
 
-.info-label {
-    color: #667381;
-    font-size: 9px;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin: 0 0 5px 0;
-    padding: 0;
-    letter-spacing: .5px;
-    text-align: left;
-    width: 100%;
-}
+        .info-label {
+            color: #667381;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0 0 5px 0;
+            padding: 0;
+            letter-spacing: .5px;
+            text-align: left;
+            width: 100%;
+        }
 
-.info-value {
-    color: #dbe1e7;
-    font-size: 12px;
-    line-height: 1.4;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    width: 100%;
-}
+        .info-value {
+            color: #dbe1e7;
+            font-size: 12px;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            width: 100%;
+            white-space: normal;
+        }
 
         /* -------------------------------------------------- */
         /* SECTIONS */
@@ -270,19 +272,19 @@
             text-align: left;
         }
 
-      .section-content {
-    background: #0b1117;
-    border: 1px solid #293542;
-    border-radius: 4px;
-    padding: 12px;
-    color: #d5dbe1;
-    font-size: 13px;
-    line-height: 1.55;
-    white-space: pre-wrap;
-    text-align: left;
-    margin: 0;
-    min-height: 42px;
-}
+        .section-content {
+            background: #0b1117;
+            border: 1px solid #293542;
+            border-radius: 4px;
+            padding: 12px;
+            color: #d5dbe1;
+            font-size: 13px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            text-align: left;
+            margin: 0;
+            min-height: 42px;
+        }
 
         /* -------------------------------------------------- */
         /* ASSIGNED INFO */
@@ -310,6 +312,8 @@
             color: #8b98a5;
             font-size: 12px;
             text-align: left;
+            margin: 0;
+            padding: 0;
         }
 
         /* -------------------------------------------------- */
@@ -338,13 +342,13 @@
             color: #a8a29e;
             font-size: 12px;
             line-height: 1.5;
-            margin-bottom: 12px;
+            margin: 0 0 12px 0;
+            padding: 0;
             text-align: left;
         }
 
         /* -------------------------------------------------- */
         /* REASSIGN AGENT LIST */
-        /* Same styling as Submit SCU Intelligence */
         /* -------------------------------------------------- */
 
         .agent-list {
@@ -395,6 +399,8 @@
             flex: 1;
             min-width: 0;
             text-align: left;
+            margin: 0;
+            padding: 0;
         }
 
         .agent-loading {
@@ -552,9 +558,7 @@
 
 <body>
 
-    <!-- ================================================== -->
     <!-- BACKGROUND LOGOS -->
-    <!-- ================================================== -->
 
     <img
         class="background-logo background-logo-left"
@@ -569,9 +573,7 @@
     >
 
 
-    <!-- ================================================== -->
     <!-- HEADER -->
-    <!-- ================================================== -->
 
     <header class="header">
 
@@ -604,9 +606,7 @@
     </header>
 
 
-    <!-- ================================================== -->
     <!-- PAGE -->
-    <!-- ================================================== -->
 
     <main class="container">
 
@@ -770,13 +770,7 @@
                 document.getElementById(
                     'intel-list'
                 ).innerHTML = `
-
-                    <div class="empty">
-
-                        Unable to load your officer profile.
-
-                    </div>
-
+                    <div class="empty">Unable to load your officer profile.</div>
                 `;
 
                 return false;
@@ -836,10 +830,6 @@
             }
 
 
-            /* ================================================== */
-            /* SAME RANK ORDER AS SUBMIT SCU INTELLIGENCE */
-            /* ================================================== */
-
             const rankOrder = {
 
                 'Head of SCU': 1,
@@ -854,12 +844,6 @@
 
             };
 
-
-            /*
-             * Remove High Command, GOV and any other
-             * ranks which should not appear in the
-             * recipient/reassignment list.
-             */
 
             const filteredAgents =
                 (data || []).filter(
@@ -876,10 +860,6 @@
                     }
                 );
 
-
-            /* ================================================== */
-            /* SORT BY RANK THEN NAME */
-            /* ================================================== */
 
             filteredAgents.sort(
                 (a, b) => {
@@ -944,13 +924,7 @@
 
 
             intelList.innerHTML = `
-
-                <div class="loading">
-
-                    Loading intelligence...
-
-                </div>
-
+                <div class="loading">Loading intelligence...</div>
             `;
 
 
@@ -968,23 +942,6 @@
                         }
                     );
 
-
-            /*
-             * FULL ACCESS
-             *
-             * Head of SCU
-             * Assistant Head of SCU
-             * Head of Drugs
-             * Head of Weapons
-             * High Command
-             * GOV
-             *
-             * All use the backend roles:
-             *
-             * master
-             * investigator
-             * case_lead
-             */
 
             if (
                 !hasFullIntelAccess()
@@ -1012,13 +969,7 @@
                 );
 
                 intelList.innerHTML = `
-
-                    <div class="empty">
-
-                        Unable to load intelligence.
-
-                    </div>
-
+                    <div class="empty">Unable to load intelligence.</div>
                 `;
 
                 return;
@@ -1029,13 +980,7 @@
             if (!data || data.length === 0) {
 
                 intelList.innerHTML = `
-
-                    <div class="empty">
-
-                        No intelligence available.
-
-                    </div>
-
+                    <div class="empty">No intelligence available.</div>
                 `;
 
                 return;
@@ -1210,10 +1155,6 @@
                         );
 
 
-                    /*
-                     * Mark as viewed.
-                     */
-
                     if (!isViewed) {
 
                         supabaseClient
@@ -1264,13 +1205,7 @@
 
                     let statusBadge =
                         `
-
-                            <span class="status-badge status-read">
-
-                                OPEN
-
-                            </span>
-
+                            <span class="status-badge status-read">OPEN</span>
                         `;
 
 
@@ -1284,13 +1219,7 @@
 
                         statusBadge =
                             `
-
-                                <span class="status-badge status-unassigned">
-
-                                    UNASSIGNED
-
-                                </span>
-
+                                <span class="status-badge status-unassigned">UNASSIGNED</span>
                             `;
 
                     }
@@ -1304,13 +1233,7 @@
 
                         statusBadge =
                             `
-
-                                <span class="status-badge status-new">
-
-                                    NEW
-
-                                </span>
-
+                                <span class="status-badge status-new">NEW</span>
                             `;
 
                     }
@@ -1376,20 +1299,9 @@
                     let triageHtml = '';
 
 
-                    /*
-                     * Only full-access senior roles can
-                     * assign or reassign intelligence.
-                     */
-
                     if (
                         hasFullIntelAccess()
                     ) {
-
-                        /*
-                         * Build the same two-column,
-                         * 8-per-column checkbox layout
-                         * used by Submit SCU Intelligence.
-                         */
 
                         const agentsPerColumn = 8;
 
@@ -1462,13 +1374,7 @@
                                                                     onchange="handleReassignSelection('${escapeAttribute(intel.id)}', this)"
                                                                 >
 
-                                                                <span class="agent-name">
-
-                                                                    ${escapeHtml(
-                                                                        `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
-                                                                    )}
-
-                                                                </span>
+                                                                <span class="agent-name">${escapeHtml(`${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim())}</span>
 
                                                             </label>
 
@@ -1488,39 +1394,22 @@
 
                             <div class="triage-panel">
 
-                                <div class="triage-title">
+                                <div class="triage-title">${
+                                    isUnassigned
+                                        ? '⚠ UNASSIGNED INTELLIGENCE'
+                                        : '↻ REASSIGN INTELLIGENCE'
+                                }</div>
 
-                                    ${
-                                        isUnassigned
-                                            ? '⚠ UNASSIGNED INTELLIGENCE'
-                                            : '↻ REASSIGN INTELLIGENCE'
-                                    }
-
-                                </div>
-
-
-                                <div class="triage-description">
-
-                                    ${
-                                        isUnassigned
-                                            ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
-                                            : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
-                                    }
-
-                                </div>
-
+                                <div class="triage-description">${
+                                    isUnassigned
+                                        ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
+                                        : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
+                                }</div>
 
                                 <div
                                     class="agent-list"
                                     id="agent-list-${escapeAttribute(intel.id)}"
-                                >
-
-                                    ${
-                                        agentColumnsHtml
-                                    }
-
-                                </div>
-
+                                >${agentColumnsHtml}</div>
 
                                 <div class="reassign-button-container">
 
@@ -1528,15 +1417,11 @@
                                         class="send-button"
                                         id="send-${escapeAttribute(intel.id)}"
                                         onclick="assignIntel('${escapeAttribute(intel.id)}')"
-                                    >
-
-                                        ${
-                                            isUnassigned
-                                                ? 'SEND INTEL'
-                                                : 'REASSIGN INTEL'
-                                        }
-
-                                    </button>
+                                    >${
+                                        isUnassigned
+                                            ? 'SEND INTEL'
+                                            : 'REASSIGN INTEL'
+                                    }</button>
 
                                 </div>
 
@@ -1563,19 +1448,9 @@
 
                             <div class="assigned-panel">
 
-                                <div class="assigned-title">
+                                <div class="assigned-title">CURRENT RECIPIENT</div>
 
-                                    CURRENT RECIPIENT
-
-                                </div>
-
-                                <div class="assigned-description">
-
-                                    ${escapeHtml(
-                                        recipientDisplay
-                                    )}
-
-                                </div>
+                                <div class="assigned-description">${escapeHtml(recipientDisplay)}</div>
 
                             </div>
 
@@ -1616,11 +1491,7 @@
                                 <button
                                     class="delete-button"
                                     onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                                >
-
-                                    DELETE INTEL
-
-                                </button>
+                                >DELETE INTEL</button>
 
                             </div>
 
@@ -1644,19 +1515,9 @@
 
                             <div class="section">
 
-                                <div class="section-title">
+                                <div class="section-title">Location</div>
 
-                                    Location
-
-                                </div>
-
-                                <div class="section-content">
-
-                                    ${escapeHtml(
-                                        intel.location
-                                    )}
-
-                                </div>
+                                <div class="section-content">${escapeHtml(intel.location)}</div>
 
                             </div>
 
@@ -1682,23 +1543,9 @@
 
                             <div class="section">
 
-                                <div class="section-title">
+                                <div class="section-title">Source / Context</div>
 
-                                    Source / Context
-
-                                </div>
-
-                                <div class="section-content">
-
-                                    ${escapeHtml(
-                                        intel.source
-                                        ||
-                                        intel.context
-                                        ||
-                                        ''
-                                    )}
-
-                                </div>
+                                <div class="section-content">${escapeHtml(intel.source || intel.context || '')}</div>
 
                             </div>
 
@@ -1722,19 +1569,9 @@
 
                             <div class="section">
 
-                                <div class="section-title">
+                                <div class="section-title">Evidence</div>
 
-                                    Evidence
-
-                                </div>
-
-                                <div class="section-content">
-
-                                    ${escapeHtml(
-                                        intel.evidence
-                                    )}
-
-                                </div>
+                                <div class="section-content">${escapeHtml(intel.evidence)}</div>
 
                             </div>
 
@@ -1763,23 +1600,9 @@
 
                             <div>
 
-                                <div class="intel-subject">
+                                <div class="intel-subject">${escapeHtml(intel.subject || 'Untitled Intelligence')}</div>
 
-                                    ${escapeHtml(
-                                        intel.subject
-                                        ||
-                                        'Untitled Intelligence'
-                                    )}
-
-                                </div>
-
-                                <div class="intel-meta">
-
-                                    Submitted ${escapeHtml(
-                                        createdDate
-                                    )}
-
-                                </div>
+                                <div class="intel-meta">Submitted ${escapeHtml(createdDate)}</div>
 
                             </div>
 
@@ -1791,110 +1614,51 @@
 
                         <div class="intel-body">
 
-
                             <div class="info-grid">
 
-
                                 <div class="info-box">
 
-                                    <div class="info-label">
+                                    <div class="info-label">Intel Type</div>
 
-                                        Intel Type
-
-                                    </div>
-
-                                    <div class="info-value">
-
-                                        ${escapeHtml(
-                                            intel.intel_type
-                                            ||
-                                            'Not specified'
-                                        )}
-
-                                    </div>
+                                    <div class="info-value">${escapeHtml(intel.intel_type || 'Not specified')}</div>
 
                                 </div>
 
 
                                 <div class="info-box">
 
-                                    <div class="info-label">
+                                    <div class="info-label">Submitted By</div>
 
-                                        Submitted By
-
-                                    </div>
-
-                                    <div class="info-value">
-
-                                        ${escapeHtml(
-                                            senderDisplay
-                                        )}
-
-                                    </div>
+                                    <div class="info-value">${escapeHtml(senderDisplay)}</div>
 
                                 </div>
 
 
                                 <div class="info-box">
 
-                                    <div class="info-label">
+                                    <div class="info-label">Recipient</div>
 
-                                        Recipient
-
-                                    </div>
-
-                                    <div class="info-value">
-
-                                        ${escapeHtml(
-                                            recipientDisplay
-                                        )}
-
-                                    </div>
+                                    <div class="info-value">${escapeHtml(recipientDisplay)}</div>
 
                                 </div>
 
 
                                 <div class="info-box">
 
-                                    <div class="info-label">
+                                    <div class="info-label">Received</div>
 
-                                        Received
-
-                                    </div>
-
-                                    <div class="info-value">
-
-                                        ${escapeHtml(
-                                            createdDate
-                                        )}
-
-                                    </div>
+                                    <div class="info-value">${escapeHtml(createdDate)}</div>
 
                                 </div>
-
 
                             </div>
 
 
                             <div class="section">
 
-                                <div class="section-title">
+                                <div class="section-title">Finding</div>
 
-                                    Finding
-
-                                </div>
-
-                                <div class="section-content">
-
-                                    ${escapeHtml(
-                                        intel.finding
-                                        ||
-                                        intel.description
-                                        ||
-                                        'No finding provided.'
-                                    )}
-
-                                </div>
+                                <div class="section-content">${escapeHtml(intel.finding || intel.description || 'No finding provided.')}</div>
 
                             </div>
 
@@ -1908,7 +1672,6 @@
                             ${assignedHtml}
 
                             ${triageHtml}
-
 
                         </div>
 
@@ -2103,11 +1866,6 @@
             intelId
         ) {
 
-            /*
-             * First retrieve the Intel record so we can
-             * verify who it is assigned to.
-             */
-
             const {
                 data: intelRecord,
                 error: intelCheckError
@@ -2147,13 +1905,6 @@
 
             }
 
-
-            /*
-             * Senior roles can delete any Intel.
-             *
-             * Normal officers can only delete Intel
-             * assigned to themselves.
-             */
 
             const canDelete =
                 hasFullIntelAccess()
@@ -2269,3 +2020,4 @@
 </body>
 
 </html>
+
