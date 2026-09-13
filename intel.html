@@ -217,32 +217,39 @@
             margin-bottom: 17px;
         }
 
-        .info-box {
-            background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 10px;
-            text-align: left;
-            vertical-align: top;
-        }
+       .info-box {
+    background: #0b1117;
+    border: 1px solid #293542;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
 
-        .info-label {
-            color: #667381;
-            font-size: 9px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-            letter-spacing: .5px;
-            text-align: left;
-        }
+.info-label {
+    color: #667381;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 0 5px 0;
+    padding: 0;
+    letter-spacing: .5px;
+    text-align: left;
+    width: 100%;
+}
 
-        .info-value {
-            color: #dbe1e7;
-            font-size: 12px;
-            line-height: 1.4;
-            text-align: left;
-            vertical-align: top;
-        }
+.info-value {
+    color: #dbe1e7;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+}
 
         /* -------------------------------------------------- */
         /* SECTIONS */
@@ -263,19 +270,19 @@
             text-align: left;
         }
 
-        .section-content {
-            background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 12px;
-            color: #d5dbe1;
-            font-size: 13px;
-            line-height: 1.55;
-            white-space: pre-wrap;
-            text-align: left;
-            vertical-align: top;
-            min-height: 42px;
-        }
+      .section-content {
+    background: #0b1117;
+    border: 1px solid #293542;
+    border-radius: 4px;
+    padding: 12px;
+    color: #d5dbe1;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    text-align: left;
+    margin: 0;
+    min-height: 42px;
+}
 
         /* -------------------------------------------------- */
         /* ASSIGNED INFO */
