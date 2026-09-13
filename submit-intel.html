@@ -4,7 +4,6 @@
 
 <head>
 
-```
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -144,6 +143,63 @@
         line-height: 1.4;
     }
 
+    .agent-list {
+        background: #080c11;
+        border: 1px solid #354554;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .agent-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 12px;
+        margin: 0;
+        border-bottom: 1px solid #202b36;
+        cursor: pointer;
+        color: #e8edf2;
+        font-size: 13px;
+        font-weight: normal;
+    }
+
+    .agent-option:last-child {
+        border-bottom: none;
+    }
+
+    .agent-option:hover {
+        background: #111a23;
+    }
+
+    .agent-option input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        padding: 0;
+        flex-shrink: 0;
+        accent-color: #1d4ed8;
+        cursor: pointer;
+    }
+
+    .agent-name {
+        flex: 1;
+    }
+
+    .triage-option {
+        border-bottom: 1px solid #354554;
+        background: #17202a;
+    }
+
+    .triage-option:hover {
+        background: #1d2934;
+    }
+
+    .agent-loading {
+        padding: 12px;
+        color: #6f7c88;
+        font-size: 12px;
+    }
+
     .submit-button {
         background: #1d4ed8;
         color: white;
@@ -232,22 +288,27 @@
 
     <div class="form-group">
 
-        <label for="recipient">
-            SCU Agent
+        <label>
+            Select SCU Agent to Receive This Intel
         </label>
 
-        <select id="recipient">
 
-            <option value="">
+        <div
+            class="agent-list"
+            id="agentList"
+        >
+
+            <div class="agent-loading">
                 Loading SCU agents...
-            </option>
+            </div>
 
-        </select>
+        </div>
+
 
         <div class="small-text">
-            If you know who should receive this intelligence, select them.
-            If you are unsure, select Send to SCU Leads.
+            Select one or more SCU agents if this intelligence needs to be sent to multiple people.
         </div>
+
 
         <div class="triage-note">
 
@@ -493,9 +554,9 @@ async function checkLogin() {
 async function loadAgents() {
 
 
-    const recipient =
+    const agentList =
         document.getElementById(
-            'recipient'
+            'agentList'
         );
 
 
@@ -529,19 +590,11 @@ async function loadAgents() {
         );
 
 
-        recipient.innerHTML = `
+        agentList.innerHTML = `
 
-            <option value="">
-
-                -- Select Agent To Receive This Intel --
-
-            </option>
-
-            <option value="triage">
-
-                Send to SCU Leads
-
-            </option>
+            <div class="agent-loading">
+                Unable to load SCU agents.
+            </div>
 
         `;
 
@@ -550,19 +603,22 @@ async function loadAgents() {
     }
 
 
-    recipient.innerHTML = `
+    agentList.innerHTML = `
 
-        <option value="">
+        <label class="agent-option triage-option">
 
-            -- Select Agent To Receive This Intel --
+            <input
+                type="checkbox"
+                value="triage"
+                id="triageCheckbox"
+                onchange="handleTriageSelection()"
+            >
 
-        </option>
+            <span class="agent-name">
+                Send to SCU Leads
+            </span>
 
-        <option value="triage">
-
-            Send to SCU Leads
-
-        </option>
+        </label>
 
     `;
 
@@ -580,26 +636,102 @@ async function loadAgents() {
     data.forEach(
         agent => {
 
-            const option =
+            const label =
                 document.createElement(
-                    'option'
+                    'label'
                 );
 
 
-            option.value =
+            label.className =
+                'agent-option';
+
+
+            const checkbox =
+                document.createElement(
+                    'input'
+                );
+
+
+            checkbox.type =
+                'checkbox';
+
+
+            checkbox.className =
+                'agent-checkbox';
+
+
+            checkbox.value =
                 agent.id;
 
 
-            option.textContent =
+            const name =
+                document.createElement(
+                    'span'
+                );
+
+
+            name.className =
+                'agent-name';
+
+
+            name.textContent =
                 `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim();
 
 
-            recipient.appendChild(
-                option
+            label.appendChild(
+                checkbox
+            );
+
+
+            label.appendChild(
+                name
+            );
+
+
+            agentList.appendChild(
+                label
             );
 
         }
     );
+
+}
+
+
+// ======================================================
+// HANDLE TRIAGE SELECTION
+// ======================================================
+
+function handleTriageSelection() {
+
+
+    const triageCheckbox =
+        document.getElementById(
+            'triageCheckbox'
+        );
+
+
+    const agentCheckboxes =
+        document.querySelectorAll(
+            '.agent-checkbox'
+        );
+
+
+    if (
+        triageCheckbox &&
+        triageCheckbox.checked
+    ) {
+
+        agentCheckboxes.forEach(
+            checkbox => {
+
+                checkbox.checked =
+                    false;
+
+            }
+        );
+
+    }
 
 }
 
@@ -611,10 +743,25 @@ async function loadAgents() {
 async function submitIntel() {
 
 
-    const recipientId =
-        document
-            .getElementById('recipient')
-            .value;
+    const selectedAgents =
+        Array.from(
+            document.querySelectorAll(
+                '.agent-checkbox:checked'
+            )
+        ).map(
+            checkbox => checkbox.value
+        );
+
+
+    const triageCheckbox =
+        document.getElementById(
+            'triageCheckbox'
+        );
+
+
+    const sendToTriage =
+        triageCheckbox &&
+        triageCheckbox.checked;
 
 
     const intelType =
@@ -722,6 +869,23 @@ async function submitIntel() {
     }
 
 
+    if (
+        selectedAgents.length === 0 &&
+        !sendToTriage
+    ) {
+
+        message.classList.add(
+            'error'
+        );
+
+        message.textContent =
+            'Please select at least one SCU agent, or select Send to SCU Leads.';
+
+        return;
+
+    }
+
+
     submitButton.disabled =
         true;
 
@@ -730,26 +894,61 @@ async function submitIntel() {
         'SUBMITTING...';
 
 
-    const {
-        error
-    } = await supabaseClient
+    // --------------------------------------------------
+    // Prepare submissions
+    // --------------------------------------------------
 
-        .from(
-            'intel_submissions'
-        )
+    const submissions = [];
 
-        .insert({
+
+    // Send one copy to each selected agent.
+
+    selectedAgents.forEach(
+        agentId => {
+
+            submissions.push({
+
+                sender_id:
+                    currentUser.id,
+
+                recipient_id:
+                    agentId,
+
+                intel_type:
+                    intelType,
+
+                subject:
+                    subject,
+
+                finding:
+                    finding,
+
+                location:
+                    location || null,
+
+                source:
+                    source || null,
+
+                evidence_link:
+                    evidenceLink || null
+
+            });
+
+        }
+    );
+
+
+    // Send one unassigned copy to SCU Leads.
+
+    if (sendToTriage) {
+
+        submissions.push({
 
             sender_id:
                 currentUser.id,
 
-            // NULL means this Intel requires SCU triage.
-
             recipient_id:
-                recipientId &&
-                recipientId !== 'triage'
-                    ? recipientId
-                    : null,
+                null,
 
             intel_type:
                 intelType,
@@ -770,6 +969,25 @@ async function submitIntel() {
                 evidenceLink || null
 
         });
+
+    }
+
+
+    // --------------------------------------------------
+    // Insert submissions
+    // --------------------------------------------------
+
+    const {
+        error
+    } = await supabaseClient
+
+        .from(
+            'intel_submissions'
+        )
+
+        .insert(
+            submissions
+        );
 
 
     if (error) {
@@ -809,17 +1027,22 @@ async function submitIntel() {
 
 
     if (
-        recipientId &&
-        recipientId !== 'triage'
+        sendToTriage &&
+        selectedAgents.length > 0
     ) {
 
         message.textContent =
-            'Intelligence submitted successfully to the selected SCU agent.';
+            `Intelligence submitted successfully to ${selectedAgents.length} SCU agent${selectedAgents.length === 1 ? '' : 's'} and sent to SCU Leads.`;
+
+    } else if (sendToTriage) {
+
+        message.textContent =
+            'Intelligence submitted successfully and sent to SCU Leads.';
 
     } else {
 
         message.textContent =
-            'Intelligence submitted successfully and sent to SCU Leads.';
+            `Intelligence submitted successfully to ${selectedAgents.length} SCU agent${selectedAgents.length === 1 ? '' : 's'}.`;
 
     }
 
@@ -829,8 +1052,25 @@ async function submitIntel() {
     // --------------------------------------------------
 
     document
-        .getElementById('recipient')
-        .value = '';
+        .querySelectorAll(
+            '.agent-checkbox'
+        )
+        .forEach(
+            checkbox => {
+
+                checkbox.checked =
+                    false;
+
+            }
+        );
+
+
+    if (triageCheckbox) {
+
+        triageCheckbox.checked =
+            false;
+
+    }
 
 
     document
