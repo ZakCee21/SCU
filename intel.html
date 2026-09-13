@@ -692,8 +692,11 @@
              * High Command
              * GOV
              *
-             * All use the backend role:
-             * master / investigator / case_lead
+             * All use the backend roles:
+             *
+             * master
+             * investigator
+             * case_lead
              */
 
             if (
@@ -753,9 +756,9 @@
             }
 
 
-            /*
-             * Get sender IDs
-             */
+            /* ================================================== */
+            /* LOAD OFFICER INFORMATION */
+            /* ================================================== */
 
             const senderIds = [
                 ...new Set(
@@ -768,10 +771,6 @@
                 )
             ];
 
-
-            /*
-             * Get recipient IDs
-             */
 
             const recipientIds = [
                 ...new Set(
@@ -820,30 +819,34 @@
                 if (!officersError) {
 
                     (officers || [])
-                        .forEach(officer => {
+                        .forEach(
+                            officer => {
 
-                            officersMap[
-                                officer.id
-                            ] = officer;
+                                officersMap[
+                                    officer.id
+                                ] = officer;
 
-                        });
+                            }
+                        );
 
                 }
 
             }
 
 
-            /*
-             * Load viewed state
-             */
+            /* ================================================== */
+            /* VIEWED STATE */
+            /* ================================================== */
 
             const intelIds =
                 data.map(
-                    intel => intel.id
+                    intel =>
+                        intel.id
                 );
 
 
-            let viewedIds = new Set();
+            let viewedIds =
+                new Set();
 
 
             if (
@@ -891,583 +894,330 @@
             intelList.innerHTML = '';
 
 
-            data.forEach(intel => {
+            /* ================================================== */
+            /* RENDER INTEL */
+            /* ================================================== */
 
-                const sender =
-                    officersMap[
-                        intel.sender_id
-                    ] || null;
+            data.forEach(
+                intel => {
 
-
-                const recipient =
-                    officersMap[
-                        intel.recipient_id
-                    ] || null;
-
-
-                const isUnassigned =
-                    !intel.recipient_id;
+                    const sender =
+                        officersMap[
+                            intel.sender_id
+                        ] || null;
 
 
-                const isViewed =
-                    viewedIds.has(
-                        intel.id
-                    );
+                    const recipient =
+                        officersMap[
+                            intel.recipient_id
+                        ] || null;
 
 
-                /*
-                 * Mark as viewed for the current user.
-                 */
-
-                if (!isViewed) {
-
-                    supabaseClient
-
-                        .from('intel_views')
-
-                        .upsert(
-                            {
-                                intel_id:
-                                    intel.id,
-
-                                user_id:
-                                    currentUser.id
-                            },
-                            {
-                                onConflict:
-                                    'intel_id,user_id'
-                            }
-                        )
-
-                        .then(result => {
-
-                            if (result.error) {
-
-                                console.error(
-                                    'View tracking error:',
-                                    result.error
-                                );
-
-                            }
-
-                        });
-
-                }
+                    const isUnassigned =
+                        !intel.recipient_id;
 
 
-                /* ================================================== */
-                /* CARD STATUS */
-                /* ================================================== */
-
-                let cardClass =
-                    'read';
-
-                let statusBadge =
-                    `
-
-                        <span class="status-badge status-read">
-
-                            OPEN
-
-                        </span>
-
-                    `;
+                    const isViewed =
+                        viewedIds.has(
+                            intel.id
+                        );
 
 
-                if (isUnassigned) {
+                    /*
+                     * Mark as viewed.
+                     */
 
-                    cardClass =
-                        'unassigned';
+                    if (!isViewed) {
 
-                    statusBadge =
+                        supabaseClient
+
+                            .from('intel_views')
+
+                            .upsert(
+                                {
+                                    intel_id:
+                                        intel.id,
+
+                                    user_id:
+                                        currentUser.id
+                                },
+                                {
+                                    onConflict:
+                                        'intel_id,user_id'
+                                }
+                            )
+
+                            .then(
+                                result => {
+
+                                    if (
+                                        result.error
+                                    ) {
+
+                                        console.error(
+                                            'View tracking error:',
+                                            result.error
+                                        );
+
+                                    }
+
+                                }
+                            );
+
+                    }
+
+
+                    /* ================================================== */
+                    /* CARD STATUS */
+                    /* ================================================== */
+
+                    let cardClass =
+                        'read';
+
+
+                    let statusBadge =
                         `
 
-                            <span class="status-badge status-unassigned">
+                            <span class="status-badge status-read">
 
-                                UNASSIGNED
+                                OPEN
 
                             </span>
 
                         `;
 
-                }
-                else if (!isViewed) {
 
-                    cardClass =
-                        'unread';
+                    if (
+                        isUnassigned
+                    ) {
 
-                    statusBadge =
-                        `
-
-                            <span class="status-badge status-new">
-
-                                NEW
-
-                            </span>
-
-                        `;
-
-                }
+                        cardClass =
+                            'unassigned';
 
 
-                /* ================================================== */
-                /* DATE */
-                /* ================================================== */
+                        statusBadge =
+                            `
 
-                const createdDate =
-                    intel.created_at
-                        ? new Date(
-                            intel.created_at
-                        ).toLocaleString(
-                            'en-GB',
-                            {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            }
-                        )
-                        : 'Unknown';
+                                <span class="status-badge status-unassigned">
 
+                                    UNASSIGNED
 
-                /* ================================================== */
-                /* SENDER */
-                /* ================================================== */
+                                </span>
 
-                const senderName =
-                    sender
-                        ? `${sender.rank || ''} ${sender.full_name || ''}`.trim()
-                        : 'Unknown';
+                            `;
+
+                    }
+                    else if (
+                        !isViewed
+                    ) {
+
+                        cardClass =
+                            'unread';
 
 
-                const senderDisplay =
-                    sender
-                        ? `${senderName}${sender.callsign ? ' — ' + sender.callsign : ''}`
-                        : 'Unknown';
+                        statusBadge =
+                            `
+
+                                <span class="status-badge status-new">
+
+                                    NEW
+
+                                </span>
+
+                            `;
+
+                    }
 
 
-                /* ================================================== */
-                /* RECIPIENT */
-                /* ================================================== */
+                    /* ================================================== */
+                    /* DATE */
+                    /* ================================================== */
 
-                const recipientName =
-                    recipient
-                        ? `${recipient.rank || ''} ${recipient.full_name || ''}`.trim()
-                        : 'UNASSIGNED';
-
-
-                const recipientDisplay =
-                    recipient
-                        ? `${recipientName}${recipient.callsign ? ' — ' + recipient.callsign : ''}`
-                        : 'No recipient assigned';
-
-
-                /* ================================================== */
-                /* TRIAGE / REASSIGN PANEL */
-                /* ================================================== */
-
-                let triageHtml = '';
-
-
-                /*
-                 * IMPORTANT:
-                 *
-                 * Full-access users can now assign BOTH:
-                 *
-                 * 1. Unassigned intelligence
-                 * 2. Already assigned intelligence
-                 *
-                 * This means incorrect recipient selections
-                 * can be corrected.
-                 */
-
-                if (
-                    hasFullIntelAccess()
-                ) {
-
-                    triageHtml = `
-
-                        <div class="triage-panel">
-
-                            <div class="triage-title">
-
-                                ${
-                                    isUnassigned
-                                        ? '⚠ UNASSIGNED INTELLIGENCE'
-                                        : '↻ REASSIGN INTELLIGENCE'
+                    const createdDate =
+                        intel.created_at
+                            ? new Date(
+                                intel.created_at
+                            ).toLocaleString(
+                                'en-GB',
+                                {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
                                 }
-
-                            </div>
-
-
-                            <div class="triage-description">
-
-                                ${
-                                    isUnassigned
-                                        ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
-                                        : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
-                                }
-
-                            </div>
+                            )
+                            : 'Unknown';
 
 
-                            <div class="triage-controls">
+                    /* ================================================== */
+                    /* SENDER */
+                    /* ================================================== */
 
-                                <select
-                                    class="triage-select"
-                                    id="recipient-${escapeAttribute(intel.id)}"
-                                >
+                    const senderName =
+                        sender
+                            ? `${sender.rank || ''} ${sender.full_name || ''}`.trim()
+                            : 'Unknown';
+
+
+                    const senderDisplay =
+                        sender
+                            ? `${senderName}${sender.callsign ? ' — ' + sender.callsign : ''}`
+                            : 'Unknown';
+
+
+                    /* ================================================== */
+                    /* RECIPIENT */
+                    /* ================================================== */
+
+                    const recipientName =
+                        recipient
+                            ? `${recipient.rank || ''} ${recipient.full_name || ''}`.trim()
+                            : 'UNASSIGNED';
+
+
+                    const recipientDisplay =
+                        recipient
+                            ? `${recipientName}${recipient.callsign ? ' — ' + recipient.callsign : ''}`
+                            : 'No recipient assigned';
+
+
+                    /* ================================================== */
+                    /* TRIAGE / REASSIGN */
+                    /* ================================================== */
+
+                    let triageHtml = '';
+
+
+                    /*
+                     * Only full-access senior roles can
+                     * assign or reassign intelligence.
+                     */
+
+                    if (
+                        hasFullIntelAccess()
+                    ) {
+
+                        triageHtml = `
+
+                            <div class="triage-panel">
+
+                                <div class="triage-title">
 
                                     ${
                                         isUnassigned
-                                            ? `
-                                                <option value="">
-
-                                                    Select officer...
-
-                                                </option>
-                                            `
-                                            : ''
+                                            ? '⚠ UNASSIGNED INTELLIGENCE'
+                                            : '↻ REASSIGN INTELLIGENCE'
                                     }
 
+                                </div>
+
+
+                                <div class="triage-description">
 
                                     ${
-                                        scaAgents
+                                        isUnassigned
+                                            ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
+                                            : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
+                                    }
 
-                                            .map(
-                                                agent => `
+                                </div>
 
-                                                    <option
-                                                        value="${escapeAttribute(agent.id)}"
-                                                        ${
-                                                            intel.recipient_id === agent.id
-                                                                ? 'selected'
-                                                                : ''
-                                                        }
-                                                    >
 
-                                                        ${escapeHtml(
-                                                            `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
-                                                        )}
+                                <div class="triage-controls">
+
+                                    <select
+                                        class="triage-select"
+                                        id="recipient-${escapeAttribute(intel.id)}"
+                                    >
+
+                                        ${
+                                            isUnassigned
+                                                ? `
+                                                    <option value="">
+
+                                                        Select officer...
 
                                                     </option>
-
                                                 `
-                                            )
-
-                                            .join('')
-                                    }
-
-                                </select>
-
-
-                                <button
-                                    class="send-button"
-                                    id="send-${escapeAttribute(intel.id)}"
-                                    onclick="assignIntel('${escapeAttribute(intel.id)}')"
-                                >
-
-                                    ${
-                                        isUnassigned
-                                            ? 'SEND INTEL'
-                                            : 'REASSIGN INTEL'
-                                    }
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                /* ================================================== */
-                /* ASSIGNED INFORMATION */
-                /* ================================================== */
-
-                let assignedHtml = '';
-
-
-                if (
-                    !isUnassigned &&
-                    hasFullIntelAccess()
-                ) {
-
-                    assignedHtml = `
-
-                        <div class="assigned-panel">
-
-                            <div class="assigned-title">
-
-                                CURRENT RECIPIENT
-
-                            </div>
-
-                            <div class="assigned-description">
-
-                                ${escapeHtml(
-                                    recipientDisplay
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                /* ================================================== */
-                /* DELETE BUTTON */
-                /* ================================================== */
-
-                let deleteHtml = '';
-
-
-                if (
-                    hasFullIntelAccess()
-                ) {
-
-                    deleteHtml = `
-
-                        <div class="intel-footer">
-
-                            <button
-                                class="delete-button"
-                                onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                            >
-
-                                DELETE INTEL
-
-                            </button>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                /* ================================================== */
-                /* OPTIONAL LOCATION */
-                /* ================================================== */
-
-                let locationHtml = '';
-
-
-                if (
-                    intel.location
-                ) {
-
-                    locationHtml = `
-
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Location
-
-                            </div>
-
-                            <div class="section-content">
-
-                                ${escapeHtml(
-                                    intel.location
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                /* ================================================== */
-                /* OPTIONAL SOURCE / CONTEXT */
-                /* ================================================== */
-
-                let sourceHtml = '';
-
-
-                if (
-                    intel.source
-                    ||
-                    intel.context
-                ) {
-
-                    sourceHtml = `
-
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Source / Context
-
-                            </div>
-
-                            <div class="section-content">
-
-                                ${escapeHtml(
-                                    intel.source
-                                    ||
-                                    intel.context
-                                    ||
-                                    ''
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                /* ================================================== */
-                /* EVIDENCE */
-                /* ================================================== */
-
-                let evidenceHtml = '';
-
-
-                if (
-                    intel.evidence
-                ) {
-
-                    evidenceHtml = `
-
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Evidence
-
-                            </div>
-
-                            <div class="section-content">
-
-                                ${escapeHtml(
-                                    intel.evidence
-                                )}
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-
-
-                /* ================================================== */
-                /* CREATE CARD */
-                /* ================================================== */
-
-                const card =
-                    document.createElement(
-                        'div'
-                    );
-
-
-                card.className =
-                    `intel-card ${cardClass}`;
-
-
-                card.innerHTML = `
-
-                    <div class="intel-header">
-
-                        <div>
-
-                            <div class="intel-subject">
-
-                                ${escapeHtml(
-                                    intel.subject
-                                    ||
-                                    'Untitled Intelligence'
-                                )}
-
-                            </div>
-
-                            <div class="intel-meta">
-
-                                Submitted ${escapeHtml(
-                                    createdDate
-                                )}
-
-                            </div>
-
-                        </div>
-
-
-                        ${statusBadge}
-
-                    </div>
-
-
-                    <div class="intel-body">
-
-
-                        <div class="info-grid">
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-
-                                    Intel Type
-
-                                </div>
-
-                                <div class="info-value">
-
-                                    ${escapeHtml(
-                                        intel.intel_type
-                                        ||
-                                        'Not specified'
-                                    )}
+                                                : ''
+                                        }
+
+
+                                        ${
+                                            scaAgents
+                                                .map(
+                                                    agent => `
+
+                                                        <option
+                                                            value="${escapeAttribute(agent.id)}"
+                                                            ${
+                                                                intel.recipient_id === agent.id
+                                                                    ? 'selected'
+                                                                    : ''
+                                                            }
+                                                        >
+
+                                                            ${escapeHtml(
+                                                                `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
+                                                            )}
+
+                                                        </option>
+
+                                                    `
+                                                )
+                                                .join('')
+                                        }
+
+                                    </select>
+
+
+                                    <button
+                                        class="send-button"
+                                        id="send-${escapeAttribute(intel.id)}"
+                                        onclick="assignIntel('${escapeAttribute(intel.id)}')"
+                                    >
+
+                                        ${
+                                            isUnassigned
+                                                ? 'SEND INTEL'
+                                                : 'REASSIGN INTEL'
+                                        }
+
+                                    </button>
 
                                 </div>
 
                             </div>
 
+                        `;
 
-                            <div class="info-box">
+                    }
 
-                                <div class="info-label">
 
-                                    Submitted By
+                    /* ================================================== */
+                    /* ASSIGNED INFORMATION */
+                    /* ================================================== */
+
+                    let assignedHtml = '';
+
+
+                    if (
+                        !isUnassigned &&
+                        hasFullIntelAccess()
+                    ) {
+
+                        assignedHtml = `
+
+                            <div class="assigned-panel">
+
+                                <div class="assigned-title">
+
+                                    CURRENT RECIPIENT
 
                                 </div>
 
-                                <div class="info-value">
-
-                                    ${escapeHtml(
-                                        senderDisplay
-                                    )}
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="info-box">
-
-                                <div class="info-label">
-
-                                    Recipient
-
-                                </div>
-
-                                <div class="info-value">
+                                <div class="assigned-description">
 
                                     ${escapeHtml(
                                         recipientDisplay
@@ -1477,18 +1227,203 @@
 
                             </div>
 
+                        `;
 
-                            <div class="info-box">
+                    }
 
-                                <div class="info-label">
 
-                                    Received
+                    /* ================================================== */
+                    /* DELETE PERMISSION */
+                    /* ================================================== */
+
+                    const canDeleteThisIntel =
+                        hasFullIntelAccess()
+                        ||
+                        (
+                            intel.recipient_id
+                            &&
+                            intel.recipient_id === currentUser.id
+                        );
+
+
+                    /* ================================================== */
+                    /* DELETE BUTTON */
+                    /* ================================================== */
+
+                    let deleteHtml = '';
+
+
+                    if (
+                        canDeleteThisIntel
+                    ) {
+
+                        deleteHtml = `
+
+                            <div class="intel-footer">
+
+                                <button
+                                    class="delete-button"
+                                    onclick="deleteIntel('${escapeAttribute(intel.id)}')"
+                                >
+
+                                    DELETE INTEL
+
+                                </button>
+
+                            </div>
+
+                        `;
+
+                    }
+
+
+                    /* ================================================== */
+                    /* LOCATION */
+                    /* ================================================== */
+
+                    let locationHtml = '';
+
+
+                    if (
+                        intel.location
+                    ) {
+
+                        locationHtml = `
+
+                            <div class="section">
+
+                                <div class="section-title">
+
+                                    Location
 
                                 </div>
 
-                                <div class="info-value">
+                                <div class="section-content">
 
                                     ${escapeHtml(
+                                        intel.location
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+
+
+                    /* ================================================== */
+                    /* SOURCE / CONTEXT */
+                    /* ================================================== */
+
+                    let sourceHtml = '';
+
+
+                    if (
+                        intel.source
+                        ||
+                        intel.context
+                    ) {
+
+                        sourceHtml = `
+
+                            <div class="section">
+
+                                <div class="section-title">
+
+                                    Source / Context
+
+                                </div>
+
+                                <div class="section-content">
+
+                                    ${escapeHtml(
+                                        intel.source
+                                        ||
+                                        intel.context
+                                        ||
+                                        ''
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+
+
+                    /* ================================================== */
+                    /* EVIDENCE */
+                    /* ================================================== */
+
+                    let evidenceHtml = '';
+
+
+                    if (
+                        intel.evidence
+                    ) {
+
+                        evidenceHtml = `
+
+                            <div class="section">
+
+                                <div class="section-title">
+
+                                    Evidence
+
+                                </div>
+
+                                <div class="section-content">
+
+                                    ${escapeHtml(
+                                        intel.evidence
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+
+
+                    /* ================================================== */
+                    /* CREATE CARD */
+                    /* ================================================== */
+
+                    const card =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    card.className =
+                        `intel-card ${cardClass}`;
+
+
+                    card.innerHTML = `
+
+                        <div class="intel-header">
+
+                            <div>
+
+                                <div class="intel-subject">
+
+                                    ${escapeHtml(
+                                        intel.subject
+                                        ||
+                                        'Untitled Intelligence'
+                                    )}
+
+                                </div>
+
+                                <div class="intel-meta">
+
+                                    Submitted ${escapeHtml(
                                         createdDate
                                     )}
 
@@ -1497,56 +1432,146 @@
                             </div>
 
 
-                        </div>
-
-
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Finding
-
-                            </div>
-
-                            <div class="section-content">
-
-                                ${escapeHtml(
-                                    intel.finding
-                                    ||
-                                    intel.description
-                                    ||
-                                    'No finding provided.'
-                                )}
-
-                            </div>
+                            ${statusBadge}
 
                         </div>
 
 
-                        ${locationHtml}
-
-                        ${sourceHtml}
-
-                        ${evidenceHtml}
-
-                        ${assignedHtml}
-
-                        ${triageHtml}
+                        <div class="intel-body">
 
 
-                    </div>
+                            <div class="info-grid">
 
 
-                    ${deleteHtml}
+                                <div class="info-box">
 
-                `;
+                                    <div class="info-label">
+
+                                        Intel Type
+
+                                    </div>
+
+                                    <div class="info-value">
+
+                                        ${escapeHtml(
+                                            intel.intel_type
+                                            ||
+                                            'Not specified'
+                                        )}
+
+                                    </div>
+
+                                </div>
 
 
-                intelList.appendChild(
-                    card
-                );
+                                <div class="info-box">
 
-            });
+                                    <div class="info-label">
+
+                                        Submitted By
+
+                                    </div>
+
+                                    <div class="info-value">
+
+                                        ${escapeHtml(
+                                            senderDisplay
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="info-box">
+
+                                    <div class="info-label">
+
+                                        Recipient
+
+                                    </div>
+
+                                    <div class="info-value">
+
+                                        ${escapeHtml(
+                                            recipientDisplay
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="info-box">
+
+                                    <div class="info-label">
+
+                                        Received
+
+                                    </div>
+
+                                    <div class="info-value">
+
+                                        ${escapeHtml(
+                                            createdDate
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="section">
+
+                                <div class="section-title">
+
+                                    Finding
+
+                                </div>
+
+                                <div class="section-content">
+
+                                    ${escapeHtml(
+                                        intel.finding
+                                        ||
+                                        intel.description
+                                        ||
+                                        'No finding provided.'
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            ${locationHtml}
+
+                            ${sourceHtml}
+
+                            ${evidenceHtml}
+
+                            ${assignedHtml}
+
+                            ${triageHtml}
+
+
+                        </div>
+
+
+                        ${deleteHtml}
+
+                    `;
+
+
+                    intelList.appendChild(
+                        card
+                    );
+
+                }
+            );
 
         }
 
@@ -1653,10 +1678,8 @@
                 .from('intel_submissions')
 
                 .update({
-
                     recipient_id:
                         recipientId
-
                 })
 
                 .eq(
@@ -1683,7 +1706,7 @@
                     button.disabled = false;
 
                     button.textContent =
-                        'SEND INTEL';
+                        'REASSIGN INTEL';
 
                 }
 
@@ -1706,12 +1729,72 @@
             intelId
         ) {
 
+            /*
+             * First retrieve the Intel record so we can
+             * verify who it is assigned to.
+             */
+
+            const {
+                data: intelRecord,
+                error: intelCheckError
+            } = await supabaseClient
+
+                .from('intel_submissions')
+
+                .select(
+                    'recipient_id'
+                )
+
+                .eq(
+                    'id',
+                    intelId
+                )
+
+                .single();
+
+
             if (
-                !hasFullIntelAccess()
+                intelCheckError
+                ||
+                !intelRecord
             ) {
 
+                console.error(
+                    'Intel permission check error:',
+                    intelCheckError
+                );
+
+
                 alert(
-                    'You do not have permission to delete intelligence.'
+                    'Unable to verify this intelligence.'
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * Senior roles can delete any Intel.
+             *
+             * Normal officers can only delete Intel
+             * assigned to themselves.
+             */
+
+            const canDelete =
+                hasFullIntelAccess()
+                ||
+                (
+                    intelRecord.recipient_id
+                    &&
+                    intelRecord.recipient_id === currentUser.id
+                );
+
+
+            if (!canDelete) {
+
+                alert(
+                    'You do not have permission to delete this intelligence.'
                 );
 
                 return;
