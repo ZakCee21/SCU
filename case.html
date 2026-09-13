@@ -192,6 +192,11 @@
             letter-spacing: 0.5px;
         }
 
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .save-button {
             background: #1d4ed8;
             color: white;
@@ -458,8 +463,6 @@
     </div>
 
 
-    <!-- CASE INFORMATION -->
-
     <div class="section">
 
         <div class="section-header">
@@ -556,8 +559,6 @@
     </div>
 
 
-    <!-- OFFICER ACCESS -->
-
     <div class="section">
 
         <div class="section-header">
@@ -606,8 +607,6 @@
 
     </div>
 
-
-    <!-- EVIDENCE -->
 
     <div class="section">
 
@@ -745,9 +744,12 @@ function showMessage(
 ) {
 
     const message =
-        document.getElementById('message');
+        document.getElementById(
+            'message'
+        );
 
-    message.textContent = text;
+    message.textContent =
+        text;
 
     message.className =
         'message ' + type;
@@ -763,9 +765,14 @@ async function getCurrentUser() {
     const {
         data,
         error
-    } = await supabaseClient.auth.getUser();
+    } =
+        await supabaseClient.auth.getUser();
 
-    if (error || !data.user) {
+
+    if (
+        error ||
+        !data.user
+    ) {
 
         window.location.href =
             'index.html';
@@ -773,6 +780,7 @@ async function getCurrentUser() {
         return null;
 
     }
+
 
     currentUser =
         data.user;
@@ -788,19 +796,22 @@ async function loadCurrentOfficer() {
         return null;
     }
 
+
     const {
         data,
         error
-    } = await supabaseClient
-        .from('officers')
-        .select(
-            'id, full_name, rank, role, active'
-        )
-        .eq(
-            'id',
-            currentUser.id
-        )
-        .single();
+    } =
+        await supabaseClient
+            .from('officers')
+            .select(
+                'id, full_name, rank, role, active'
+            )
+            .eq(
+                'id',
+                currentUser.id
+            )
+            .single();
+
 
     if (error) {
 
@@ -812,6 +823,7 @@ async function loadCurrentOfficer() {
         return null;
 
     }
+
 
     currentOfficer =
         data;
@@ -838,14 +850,15 @@ async function loadCase() {
     const {
         data,
         error
-    } = await supabaseClient
-        .from('cases')
-        .select('*')
-        .eq(
-            'id',
-            caseId
-        )
-        .single();
+    } =
+        await supabaseClient
+            .from('cases')
+            .select('*')
+            .eq(
+                'id',
+                caseId
+            )
+            .single();
 
 
     if (error) {
@@ -880,25 +893,29 @@ async function loadCase() {
     document.getElementById(
         'caseTitle'
     ).textContent =
-        data.case_name || 'Untitled Case';
+        data.case_name ||
+        'Untitled Case';
 
 
     document.getElementById(
         'caseName'
     ).value =
-        data.case_name || '';
+        data.case_name ||
+        '';
 
 
     document.getElementById(
         'classification'
     ).value =
-        data.classification || 'Open';
+        data.classification ||
+        'Open';
 
 
     document.getElementById(
         'description'
     ).value =
-        data.description || '';
+        data.description ||
+        '';
 
 
     updateStatusDisplay(
@@ -984,17 +1001,18 @@ function setupPermissions(
 
 
     /*
-        The creator of the case can manage
-        officer access.
+        Case creator can manage access.
 
         Existing senior roles can also
-        manage officer access.
+        manage access.
     */
 
     canManageAccess =
         currentOfficer &&
         (
-            currentOfficer.id === data.created_by ||
+            currentOfficer.id ===
+                data.created_by ||
+
             [
                 'master',
                 'officer',
@@ -1020,8 +1038,8 @@ function setupPermissions(
 
 
     /*
-        Delete case remains restricted
-        to the senior roles.
+        Delete remains restricted
+        to senior roles.
     */
 
     if (
@@ -1042,29 +1060,23 @@ function setupPermissions(
     }
 
 
-    /*
-        Close Case is restricted to:
-        master
-        investigator
-        case_lead
-    */
-
     setupCloseCase(
         data.status
     );
 
 
     /*
-        Anyone who can edit the case
-        information can save changes.
-
-        Case creator is included.
+        Case creator and existing
+        case-management roles can
+        edit the case.
     */
 
     if (
         currentOfficer &&
         (
-            currentOfficer.id === data.created_by ||
+            currentOfficer.id ===
+                data.created_by ||
+
             [
                 'master',
                 'officer',
@@ -1101,7 +1113,8 @@ function setupCloseCase(
 
     if (
         currentStatus &&
-        currentStatus.toLowerCase() === 'closed'
+        currentStatus.toLowerCase() ===
+            'closed'
     ) {
 
         closeButton.style.display =
@@ -1153,17 +1166,23 @@ function setupCloseCase(
 
             const {
                 error
-            } = await supabaseClient
-                .from('cases')
-                .update({
-                    status: 'closed',
-                    updated_at:
-                        new Date().toISOString()
-                })
-                .eq(
-                    'id',
-                    caseId
-                );
+            } =
+                await supabaseClient
+                    .from('cases')
+                    .update({
+
+                        status:
+                            'closed',
+
+                        updated_at:
+                            new Date()
+                                .toISOString()
+
+                    })
+                    .eq(
+                        'id',
+                        caseId
+                    );
 
 
             if (error) {
@@ -1228,19 +1247,20 @@ async function loadOfficerAccess() {
     const {
         data: officers,
         error
-    } = await supabaseClient
-        .from('officers')
-        .select(
-            'id, full_name, rank, callsign, active'
-        )
-        .eq(
-            'is_scu_agent',
-            true
-        )
-        .eq(
-            'active',
-            true
-        );
+    } =
+        await supabaseClient
+            .from('officers')
+            .select(
+                'id, full_name, rank, callsign, active'
+            )
+            .eq(
+                'is_scu_agent',
+                true
+            )
+            .eq(
+                'active',
+                true
+            );
 
 
     if (error) {
@@ -1265,15 +1285,16 @@ async function loadOfficerAccess() {
     const {
         data: accessRows,
         error: accessError
-    } = await supabaseClient
-        .from('case_access')
-        .select(
-            'officer_id, permission'
-        )
-        .eq(
-            'case_id',
-            caseId
-        );
+    } =
+        await supabaseClient
+            .from('case_access')
+            .select(
+                'officer_id, permission'
+            )
+            .eq(
+                'case_id',
+                caseId
+            );
 
 
     if (accessError) {
@@ -1289,20 +1310,28 @@ async function loadOfficerAccess() {
     const selectedOfficerIds =
         new Set(
             (accessRows || []).map(
-                row => row.officer_id
+                row =>
+                    String(
+                        row.officer_id
+                    )
             )
         );
 
 
     /*
-        The creator always has access.
-        We automatically show them checked.
+        Always show the case creator
+        as selected.
     */
 
-    if (caseData && caseData.created_by) {
+    if (
+        caseData &&
+        caseData.created_by
+    ) {
 
         selectedOfficerIds.add(
-            caseData.created_by
+            String(
+                caseData.created_by
+            )
         );
 
     }
@@ -1326,8 +1355,10 @@ async function loadOfficerAccess() {
 
                     const rank =
                         (
-                            officer.rank || ''
+                            officer.rank ||
+                            ''
                         ).trim();
+
 
                     return Object.prototype
                         .hasOwnProperty.call(
@@ -1343,10 +1374,16 @@ async function loadOfficerAccess() {
         (a, b) => {
 
             const rankA =
-                (a.rank || '').trim();
+                (
+                    a.rank ||
+                    ''
+                ).trim();
 
             const rankB =
-                (b.rank || '').trim();
+                (
+                    b.rank ||
+                    ''
+                ).trim();
 
 
             const rankDifference =
@@ -1364,12 +1401,19 @@ async function loadOfficerAccess() {
 
 
             const nameA =
-                (a.full_name || '')
+                (
+                    a.full_name ||
+                    ''
+                )
                     .trim()
                     .toLowerCase();
 
+
             const nameB =
-                (b.full_name || '')
+                (
+                    b.full_name ||
+                    ''
+                )
                     .trim()
                     .toLowerCase();
 
@@ -1428,12 +1472,15 @@ async function loadOfficerAccess() {
                 'div'
             );
 
+
         column.className =
             'officer-column';
+
 
         columns.push(
             column
         );
+
 
         list.appendChild(
             column
@@ -1443,7 +1490,10 @@ async function loadOfficerAccess() {
 
 
     filteredOfficers.forEach(
-        (officer, index) => {
+        (
+            officer,
+            index
+        ) => {
 
             const columnIndex =
                 Math.floor(
@@ -1456,6 +1506,7 @@ async function loadOfficerAccess() {
                 document.createElement(
                     'label'
                 );
+
 
             option.className =
                 'officer-option';
@@ -1481,26 +1532,18 @@ async function loadOfficerAccess() {
 
 
             checkbox.value =
-                officer.id;
-
-
-            checkbox.checked =
-                selectedOfficerIds.has(
+                String(
                     officer.id
                 );
 
 
-            /*
-                IMPORTANT:
-                The case creator can now
-                select officers.
+            checkbox.checked =
+                selectedOfficerIds.has(
+                    String(
+                        officer.id
+                    )
+                );
 
-                Senior roles can also
-                select officers.
-
-                Other users can only
-                view the list.
-            */
 
             checkbox.disabled =
                 !canManageAccess;
@@ -1510,6 +1553,7 @@ async function loadOfficerAccess() {
                 document.createElement(
                     'span'
                 );
+
 
             name.className =
                 'officer-name';
@@ -1536,12 +1580,14 @@ async function loadOfficerAccess() {
                     'span'
                 );
 
+
             rank.className =
                 'officer-rank';
 
 
             rank.textContent =
-                officer.rank || '';
+                officer.rank ||
+                '';
 
 
             option.appendChild(
@@ -1557,16 +1603,21 @@ async function loadOfficerAccess() {
             );
 
 
-            columns[columnIndex]
-                .appendChild(
-                    option
-                );
+            columns[
+                columnIndex
+            ].appendChild(
+                option
+            );
 
         }
     );
 
 }
 
+
+/*
+    SAVE OFFICER ACCESS
+*/
 
 document.getElementById(
     'saveAccess'
@@ -1586,38 +1637,82 @@ document.getElementById(
         }
 
 
-        const checkboxes =
-            document.querySelectorAll(
-                '#caseOfficerList input[type="checkbox"]:checked'
-            );
+        /*
+            Get every checked checkbox
+            from the officer list.
+        */
 
-
-        const selectedOfficers =
+        const checkedBoxes =
             Array.from(
-                checkboxes
-            ).map(
+                document.querySelectorAll(
+                    '#caseOfficerList input[type="checkbox"]'
+                )
+            ).filter(
                 checkbox =>
-                    checkbox.value
+                    checkbox.checked
             );
 
 
         /*
-            Always retain the case creator.
+            Convert the selected IDs
+            to strings first so the
+            comparison is consistent.
+        */
+
+        const selectedOfficers =
+            checkedBoxes
+                .map(
+                    checkbox =>
+                        String(
+                            checkbox.value
+                        )
+                )
+                .filter(
+                    id =>
+                        id.length > 0
+                );
+
+
+        /*
+            Always retain the creator.
         */
 
         if (
             caseData &&
-            caseData.created_by &&
-            !selectedOfficers.includes(
-                caseData.created_by
-            )
+            caseData.created_by
         ) {
 
-            selectedOfficers.push(
-                caseData.created_by
-            );
+            const creatorId =
+                String(
+                    caseData.created_by
+                );
+
+
+            if (
+                !selectedOfficers.includes(
+                    creatorId
+                )
+            ) {
+
+                selectedOfficers.push(
+                    creatorId
+                );
+
+            }
 
         }
+
+
+        /*
+            Debug information.
+            This also confirms exactly
+            what is being sent to Supabase.
+        */
+
+        console.log(
+            'Selected officer IDs:',
+            selectedOfficers
+        );
 
 
         const saveButton =
@@ -1635,17 +1730,19 @@ document.getElementById(
 
 
         const {
+            data,
             error
-        } = await supabaseClient.rpc(
-            'update_case_access',
-            {
-                p_case_id:
-                    caseId,
+        } =
+            await supabaseClient.rpc(
+                'update_case_access',
+                {
+                    p_case_id:
+                        caseId,
 
-                p_officer_ids:
-                    selectedOfficers
-            }
-        );
+                    p_officer_ids:
+                        selectedOfficers
+                }
+            );
 
 
         if (error) {
@@ -1671,6 +1768,12 @@ document.getElementById(
         }
 
 
+        console.log(
+            'Access saved successfully:',
+            data
+        );
+
+
         showMessage(
             'OFFICER ACCESS SAVED.',
             'success'
@@ -1680,12 +1783,25 @@ document.getElementById(
         saveButton.disabled =
             false;
 
+
         saveButton.textContent =
             'SAVE ACCESS';
+
+
+        /*
+            Reload the access list from
+            the database immediately.
+        */
+
+        await loadOfficerAccess();
 
     }
 );
 
+
+/*
+    SAVE CASE
+*/
 
 document.getElementById(
     'saveCase'
@@ -1706,6 +1822,7 @@ document.getElementById(
         const canEdit =
             currentOfficer.id ===
                 caseData.created_by ||
+
             [
                 'master',
                 'officer',
@@ -1774,27 +1891,29 @@ document.getElementById(
 
         const {
             error
-        } = await supabaseClient
-            .from('cases')
-            .update({
+        } =
+            await supabaseClient
+                .from('cases')
+                .update({
 
-                case_name:
-                    caseName,
+                    case_name:
+                        caseName,
 
-                classification:
-                    classification,
+                    classification:
+                        classification,
 
-                description:
-                    description,
+                    description:
+                        description,
 
-                updated_at:
-                    new Date().toISOString()
+                    updated_at:
+                        new Date()
+                            .toISOString()
 
-            })
-            .eq(
-                'id',
-                caseId
-            );
+                })
+                .eq(
+                    'id',
+                    caseId
+                );
 
 
         if (error) {
@@ -1839,12 +1958,17 @@ document.getElementById(
         saveButton.disabled =
             false;
 
+
         saveButton.textContent =
             'SAVE CHANGES';
 
     }
 );
 
+
+/*
+    DELETE CASE
+*/
 
 document.getElementById(
     'deleteCase'
@@ -1898,13 +2022,14 @@ document.getElementById(
 
         const {
             error
-        } = await supabaseClient.rpc(
-            'delete_case',
-            {
-                p_case_id:
-                    caseId
-            }
-        );
+        } =
+            await supabaseClient.rpc(
+                'delete_case',
+                {
+                    p_case_id:
+                        caseId
+                }
+            );
 
 
         if (error) {
@@ -1937,6 +2062,10 @@ document.getElementById(
 );
 
 
+/*
+    LOAD EVIDENCE
+*/
+
 async function loadEvidence() {
 
     const evidenceList =
@@ -1948,19 +2077,20 @@ async function loadEvidence() {
     const {
         data,
         error
-    } = await supabaseClient
-        .from('evidence')
-        .select('*')
-        .eq(
-            'case_id',
-            caseId
-        )
-        .order(
-            'created_at',
-            {
-                ascending: false
-            }
-        );
+    } =
+        await supabaseClient
+            .from('evidence')
+            .select('*')
+            .eq(
+                'case_id',
+                caseId
+            )
+            .order(
+                'created_at',
+                {
+                    ascending: false
+                }
+            );
 
 
     if (error) {
@@ -2011,6 +2141,7 @@ async function loadEvidence() {
                     'div'
                 );
 
+
             row.className =
                 'evidence-item';
 
@@ -2025,6 +2156,7 @@ async function loadEvidence() {
                 document.createElement(
                     'div'
                 );
+
 
             name.className =
                 'evidence-name';
@@ -2041,6 +2173,7 @@ async function loadEvidence() {
                     'div'
                 );
 
+
             type.className =
                 'evidence-type';
 
@@ -2054,6 +2187,7 @@ async function loadEvidence() {
                 name
             );
 
+
             information.appendChild(
                 type
             );
@@ -2064,8 +2198,10 @@ async function loadEvidence() {
                     'button'
                 );
 
+
             openButton.className =
                 'open-evidence';
+
 
             openButton.textContent =
                 'OPEN';
@@ -2101,6 +2237,7 @@ async function loadEvidence() {
                 information
             );
 
+
             row.appendChild(
                 openButton
             );
@@ -2115,6 +2252,10 @@ async function loadEvidence() {
 
 }
 
+
+/*
+    UPLOAD EVIDENCE
+*/
 
 document.getElementById(
     'uploadEvidence'
@@ -2153,6 +2294,7 @@ document.getElementById(
         uploadButton.disabled =
             true;
 
+
         uploadButton.textContent =
             'UPLOADING...';
 
@@ -2163,13 +2305,14 @@ document.getElementById(
 
         const {
             error: uploadError
-        } = await supabaseClient
-            .storage
-            .from('case-evidence')
-            .upload(
-                filePath,
-                file
-            );
+        } =
+            await supabaseClient
+                .storage
+                .from('case-evidence')
+                .upload(
+                    filePath,
+                    file
+                );
 
 
         if (uploadError) {
@@ -2208,26 +2351,27 @@ document.getElementById(
 
         const {
             error: evidenceError
-        } = await supabaseClient
-            .from('evidence')
-            .insert({
+        } =
+            await supabaseClient
+                .from('evidence')
+                .insert({
 
-                case_id:
-                    caseId,
+                    case_id:
+                        caseId,
 
-                file_name:
-                    file.name,
+                    file_name:
+                        file.name,
 
-                file_type:
-                    file.type,
+                    file_type:
+                        file.type,
 
-                file_url:
-                    publicData.publicUrl,
+                    file_url:
+                        publicData.publicUrl,
 
-                created_by:
-                    currentUser.id
+                    created_by:
+                        currentUser.id
 
-            });
+                });
 
 
         if (evidenceError) {
@@ -2266,6 +2410,7 @@ document.getElementById(
         uploadButton.disabled =
             false;
 
+
         uploadButton.textContent =
             'UPLOAD';
 
@@ -2275,6 +2420,10 @@ document.getElementById(
     }
 );
 
+
+/*
+    ADD EXTERNAL EVIDENCE LINK
+*/
 
 document.getElementById(
     'addEvidenceLink'
@@ -2313,32 +2462,34 @@ document.getElementById(
         addButton.disabled =
             true;
 
+
         addButton.textContent =
             'ADDING...';
 
 
         const {
             error
-        } = await supabaseClient
-            .from('evidence')
-            .insert({
+        } =
+            await supabaseClient
+                .from('evidence')
+                .insert({
 
-                case_id:
-                    caseId,
+                    case_id:
+                        caseId,
 
-                title:
-                    url,
+                    title:
+                        url,
 
-                external_url:
-                    url,
+                    external_url:
+                        url,
 
-                file_type:
-                    'External Link',
+                    file_type:
+                        'External Link',
 
-                created_by:
-                    currentUser.id
+                    created_by:
+                        currentUser.id
 
-            });
+                });
 
 
         if (error) {
@@ -2377,6 +2528,7 @@ document.getElementById(
         addButton.disabled =
             false;
 
+
         addButton.textContent =
             'ADD LINK';
 
@@ -2386,6 +2538,10 @@ document.getElementById(
     }
 );
 
+
+/*
+    INITIALISE
+*/
 
 async function initialise() {
 
