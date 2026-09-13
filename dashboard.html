@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -188,10 +187,10 @@
             color: #4ade80;
         }
 
-        /* MY CASES */
+        /* CLOSED CASES */
 
-        .my-cases-card .number {
-            color: #4ade80;
+        .closed-cases-card .number {
+            color: #ef4444;
         }
 
         /* NEW INTEL */
@@ -284,6 +283,12 @@
             background: #1c2935;
             border-radius: 4px;
             font-size: 11px;
+        }
+
+        .status.closed {
+            background: #3a1518;
+            color: #f87171;
+            border: 1px solid #7f1d1d;
         }
 
         .empty {
@@ -457,35 +462,17 @@
         </div>
 
 
-        <!-- MY CASES -->
+        <!-- CLOSED CASES -->
 
-        <div class="card my-cases-card">
+        <div class="card closed-cases-card">
 
             <div class="card-title">
-                My Cases
+                Closed Cases
             </div>
 
             <div
                 class="number"
-                id="myCases"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- EVIDENCE -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Evidence
-            </div>
-
-            <div
-                class="number"
-                id="evidenceCount"
+                id="closedCases"
             >
                 0
             </div>
@@ -580,6 +567,29 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
+
+// ======================================================
+// SENIOR CASE ACCESS
+// ======================================================
+//
+// These website-facing titles all use the existing
+// backend role values below.
+//
+// master      = Head of SCU / Assistant Head of SCU /
+//               High Command / GOV
+//
+// investigator = Head of Drugs
+//
+// case_lead    = Head of Weapons
+//
+// ======================================================
+
+const fullClosedCaseAccessRoles = [
+    'master',
+    'investigator',
+    'case_lead'
+];
 
 
 // ======================================================
@@ -708,6 +718,59 @@ async function loadCases(
 ) {
 
 
+    // --------------------------------------------------
+    // Get current officer role
+    // --------------------------------------------------
+
+    const {
+        data: officer,
+        error: officerError
+    } = await supabaseClient
+
+        .from('officers')
+
+        .select(
+            'role, rank'
+        )
+
+        .eq(
+            'id',
+            userId
+        )
+
+        .single();
+
+
+    if (officerError) {
+
+        console.error(
+            'Load officer role error:',
+            officerError
+        );
+
+        return;
+
+    }
+
+
+    const role =
+        String(
+            officer.role || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const hasFullClosedCaseAccess =
+        fullClosedCaseAccessRoles.includes(
+            role
+        );
+
+
+    // --------------------------------------------------
+    // Load cases
+    // --------------------------------------------------
+
     const {
         data,
         error
@@ -739,53 +802,116 @@ async function loadCases(
     }
 
 
-    const list =
-        document.getElementById(
-            'caseList'
-        );
+    const allCases =
+        data || [];
 
 
     // --------------------------------------------------
     // Active Cases
     // --------------------------------------------------
 
+    const activeCases =
+        allCases.filter(
+            c =>
+                String(
+                    c.status || ''
+                )
+                .trim()
+                .toLowerCase() === 'active'
+        );
+
+
     document
         .getElementById('activeCases')
         .textContent =
-            data.filter(
-                c => c.status === 'active'
-            ).length;
+            activeCases.length;
 
 
     // --------------------------------------------------
-    // My Cases
+    // Closed Cases
     // --------------------------------------------------
 
-    const myCaseCount =
-        data.filter(
+    const closedCases =
+        allCases.filter(
             c =>
-                c.created_by === userId ||
-                c.owner_id === userId
-        ).length;
+                String(
+                    c.status || ''
+                )
+                .trim()
+                .toLowerCase() === 'closed'
+        );
 
 
     document
-        .getElementById('myCases')
+        .getElementById('closedCases')
         .textContent =
-            myCaseCount;
+            closedCases.length;
 
 
     // --------------------------------------------------
-    // Evidence
+    // Accessible case files
+    // --------------------------------------------------
+    //
+    // Senior roles can see all cases, including all
+    // closed cases.
+    //
+    // Normal officers can see:
+    // - Active cases already available to them
+    // - Closed cases where they are the creator/owner
+    //
     // --------------------------------------------------
 
-    document
-        .getElementById('evidenceCount')
-        .textContent =
-            0;
+    let accessibleCases;
 
 
-    if (!data.length) {
+    if (
+        hasFullClosedCaseAccess
+    ) {
+
+        accessibleCases =
+            allCases;
+
+    } else {
+
+        accessibleCases =
+            allCases.filter(
+                caseFile => {
+
+                    const isClosed =
+                        String(
+                            caseFile.status || ''
+                        )
+                        .trim()
+                        .toLowerCase() === 'closed';
+
+
+                    if (isClosed) {
+
+                        return (
+                            caseFile.created_by === userId ||
+                            caseFile.owner_id === userId
+                        );
+
+                    }
+
+
+                    return true;
+
+                }
+            );
+
+    }
+
+
+    const list =
+        document.getElementById(
+            'caseList'
+        );
+
+
+    if (
+        accessibleCases.length === 0
+    ) {
 
         list.innerHTML =
             '<div class="empty">No authorised case files found.</div>';
@@ -798,7 +924,7 @@ async function loadCases(
     list.innerHTML = '';
 
 
-    data.forEach(
+    accessibleCases.forEach(
         caseFile => {
 
 
@@ -825,6 +951,20 @@ async function loadCases(
                 };
 
 
+            const caseStatus =
+                String(
+                    caseFile.status || ''
+                )
+                .trim()
+                .toLowerCase();
+
+
+            const statusClass =
+                caseStatus === 'closed'
+                    ? 'status closed'
+                    : 'status';
+
+
             row.innerHTML = `
 
                 <div>
@@ -848,7 +988,7 @@ async function loadCases(
                 </div>
 
 
-                <div class="status">
+                <div class="${statusClass}">
 
                     ${escapeHtml(
                         caseFile.status
@@ -863,6 +1003,30 @@ async function loadCases(
                 row
             );
 
+        }
+    );
+
+
+    console.log(
+        'Case access:',
+        {
+            totalCases:
+                allCases.length,
+
+            activeCases:
+                activeCases.length,
+
+            closedCases:
+                closedCases.length,
+
+            visibleCases:
+                accessibleCases.length,
+
+            fullClosedCaseAccess:
+                hasFullClosedCaseAccess,
+
+            role:
+                role
         }
     );
 
@@ -1278,4 +1442,3 @@ checkLogin();
 </body>
 
 </html>
-
