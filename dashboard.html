@@ -706,7 +706,7 @@ async function loadCases(
 // OPEN INTEL
 // = Intel with a view record for this user.
 //
-// For Masters:
+// For Master, Head of Drugs and Head of Weapons:
 // = All Intel in the system.
 //
 // For normal officers:
@@ -762,8 +762,21 @@ async function loadIntelCounts(
         .toLowerCase();
 
 
-    const isMaster =
-        role === 'master';
+    // --------------------------------------------------
+    // Roles with full Intel access
+    // --------------------------------------------------
+
+    const fullIntelAccessRoles = [
+        'master',
+        'investigator',
+        'case_lead'
+    ];
+
+
+    const hasFullIntelAccess =
+        fullIntelAccessRoles.includes(
+            role
+        );
 
 
     // --------------------------------------------------
@@ -784,7 +797,9 @@ async function loadIntelCounts(
 
     // Normal officers only receive their own Intel.
 
-    if (!isMaster) {
+    if (
+        !hasFullIntelAccess
+    ) {
 
         intelQuery =
             intelQuery.eq(
@@ -962,8 +977,8 @@ async function loadIntelCounts(
             total:
                 intel.length,
 
-            master:
-                isMaster
+            fullIntelAccess:
+                hasFullIntelAccess
         }
     );
 
@@ -1049,3 +1064,11 @@ checkLogin();
 
 </html>
 ```
+
+This now uses the actual database roles you have:
+
+* `master`
+* `investigator` → Head of Drugs
+* `case_lead` → Head of Weapons
+
+So once you promote someone, their Dashboard Intel counters automatically change based on their **current role**.
