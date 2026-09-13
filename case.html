@@ -643,10 +643,10 @@ async function loadCaseOfficers() {
     }
 
 
-    const canManageAccess =
-        ['master', 'case lead'].includes(
-            currentOfficer.role
-        );
+ const canManageAccess =
+    ['master', 'officer', 'investigator', 'case_lead'].includes(
+        currentOfficer.role
+    );
 
 
     // Officers can view the access list,
@@ -1238,9 +1238,9 @@ document
         return;
     }
 
-   if (
+ if (
     !officer ||
-    !['master', 'case lead'].includes(officer.role)
+    !['master', 'investigator', 'case_lead'].includes(officer.role)
 ) {
     deleteButton.style.display = 'none';
     return;
