@@ -96,8 +96,6 @@
             transform: translateY(-50%);
         }
 
-        /* Keep main content above background logos */
-
         .page {
             position: relative;
             z-index: 1;
@@ -393,9 +391,9 @@
             background: #080c11;
             border: 1px solid #25313c;
             border-radius: 4px;
-            padding: 12px;
+            padding: 14px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
         }
 
@@ -407,13 +405,23 @@
         .evidence-name {
             font-size: 13px;
             color: #e8edf2;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        .evidence-description {
+            font-size: 11px;
+            color: #9aa6b2;
+            margin-top: 6px;
+            line-height: 1.5;
+            white-space: pre-wrap;
             word-break: break-word;
         }
 
         .evidence-type {
             font-size: 10px;
             color: #6f7c88;
-            margin-top: 3px;
+            margin-top: 6px;
         }
 
         .evidence-open {
@@ -422,6 +430,11 @@
             color: #dce3e8;
             padding: 7px 10px;
             font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .evidence-open:hover {
+            background: #202c38;
         }
 
         /* =========================
@@ -490,6 +503,10 @@
 
             .background-logo-right {
                 right: -45px;
+            }
+
+            .evidence-item {
+                flex-direction: column;
             }
 
         }
@@ -782,6 +799,48 @@
 
             <div class="section-body">
 
+
+                <!-- =========================
+                     EVIDENCE TITLE
+                ========================= -->
+
+                <div class="field">
+
+                    <label>
+                        EVIDENCE TITLE
+                    </label>
+
+                    <input
+                        id="evidenceTitle"
+                        type="text"
+                        placeholder="Enter evidence title"
+                    >
+
+                </div>
+
+
+                <!-- =========================
+                     EVIDENCE DESCRIPTION
+                ========================= -->
+
+                <div class="field">
+
+                    <label>
+                        EVIDENCE DESCRIPTION
+                    </label>
+
+                    <textarea
+                        id="evidenceDescription"
+                        placeholder="Enter a description of the evidence"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- =========================
+                     FILE UPLOAD
+                ========================= -->
+
                 <div class="field">
 
                     <label>
@@ -816,6 +875,10 @@
                 ></div>
 
 
+                <!-- =========================
+                     EXTERNAL LINK
+                ========================= -->
+
                 <div class="field">
 
                     <label>
@@ -842,6 +905,10 @@
 
                 </div>
 
+
+                <!-- =========================
+                     EVIDENCE LIST
+                ========================= -->
 
                 <div
                     id="evidenceList"
@@ -1334,16 +1401,6 @@ async function loadOfficerAccess() {
     }
 
 
-    /*
-        IMPORTANT:
-
-        We only use the actual case_access
-        records here.
-
-        The creator is NOT automatically
-        added to the selected list.
-    */
-
     updateAccessPermission(
         accessRows || []
     );
@@ -1620,16 +1677,6 @@ document.getElementById(
                     checkbox.checked
             );
 
-
-        /*
-            IMPORTANT:
-
-            Do NOT automatically add
-            the case creator here.
-
-            The saved list is exactly
-            whatever the user selected.
-        */
 
         const selectedOfficers =
             checkedBoxes
@@ -1975,14 +2022,60 @@ document.getElementById(
     'click',
     async function () {
 
+        const titleInput =
+            document.getElementById(
+                'evidenceTitle'
+            );
+
+
+        const descriptionInput =
+            document.getElementById(
+                'evidenceDescription'
+            );
+
+
         const input =
             document.getElementById(
                 'evidenceFile'
             );
 
 
+        const title =
+            titleInput.value.trim();
+
+
+        const description =
+            descriptionInput.value.trim();
+
+
         const file =
             input.files[0];
+
+
+        if (!title) {
+
+            alert(
+                'Please enter an evidence title.'
+            );
+
+            titleInput.focus();
+
+            return;
+
+        }
+
+
+        if (!description) {
+
+            alert(
+                'Please enter an evidence description.'
+            );
+
+            descriptionInput.focus();
+
+            return;
+
+        }
 
 
         if (!file) {
@@ -2041,25 +2134,31 @@ document.getElementById(
 
 
         const {
-    error: evidenceError
-} =
-    await supabaseClient
-        .from('evidence')
-        .insert({
+            error: evidenceError
+        } =
+            await supabaseClient
+                .from('evidence')
+                .insert({
 
-            case_id:
-                caseId,
+                    case_id:
+                        caseId,
 
-            file_name:
-                file.name,
+                    officer_id:
+                        currentUser.id,
 
-            file_type:
-                file.type,
+                    evidence_type:
+                        'File',
 
-            file_url:
-                publicData.publicUrl
+                    title:
+                        title,
 
-        });
+                    description:
+                        description,
+
+                    file_url:
+                        publicData.publicUrl
+
+                });
 
 
         if (evidenceError) {
@@ -2078,6 +2177,10 @@ document.getElementById(
 
         }
 
+
+        titleInput.value = '';
+
+        descriptionInput.value = '';
 
         input.value = '';
 
@@ -2103,14 +2206,60 @@ document.getElementById(
     'click',
     async function () {
 
+        const titleInput =
+            document.getElementById(
+                'evidenceTitle'
+            );
+
+
+        const descriptionInput =
+            document.getElementById(
+                'evidenceDescription'
+            );
+
+
         const input =
             document.getElementById(
                 'evidenceUrl'
             );
 
 
+        const title =
+            titleInput.value.trim();
+
+
+        const description =
+            descriptionInput.value.trim();
+
+
         const url =
             input.value.trim();
+
+
+        if (!title) {
+
+            alert(
+                'Please enter an evidence title.'
+            );
+
+            titleInput.focus();
+
+            return;
+
+        }
+
+
+        if (!description) {
+
+            alert(
+                'Please enter an evidence description.'
+            );
+
+            descriptionInput.focus();
+
+            return;
+
+        }
 
 
         if (!url) {
@@ -2119,31 +2268,39 @@ document.getElementById(
                 'Please enter a URL.'
             );
 
+            input.focus();
+
             return;
 
         }
 
 
         const {
-    error
-} =
-    await supabaseClient
-        .from('evidence')
-        .insert({
+            error
+        } =
+            await supabaseClient
+                .from('evidence')
+                .insert({
 
-            case_id:
-                caseId,
+                    case_id:
+                        caseId,
 
-            title:
-                url,
+                    officer_id:
+                        currentUser.id,
 
-            external_url:
-                url,
+                    evidence_type:
+                        'External Link',
 
-            file_type:
-                'External Link'
+                    title:
+                        title,
 
-        });
+                    description:
+                        description,
+
+                    file_url:
+                        url
+
+                });
 
 
         if (error) {
@@ -2162,6 +2319,10 @@ document.getElementById(
 
         }
 
+
+        titleInput.value = '';
+
+        descriptionInput.value = '';
 
         input.value = '';
 
@@ -2275,9 +2436,23 @@ async function loadEvidence() {
 
 
             name.textContent =
-                item.file_name ||
                 item.title ||
                 'Evidence';
+
+
+            const description =
+                document.createElement(
+                    'div'
+                );
+
+
+            description.className =
+                'evidence-description';
+
+
+            description.textContent =
+                item.description ||
+                'No description provided.';
 
 
             const type =
@@ -2291,12 +2466,17 @@ async function loadEvidence() {
 
 
             type.textContent =
-                item.file_type ||
-                'External Link';
+                item.evidence_type ||
+                'Evidence';
 
 
             info.appendChild(
                 name
+            );
+
+
+            info.appendChild(
+                description
             );
 
 
@@ -2327,15 +2507,6 @@ async function loadEvidence() {
 
                         window.open(
                             item.file_url,
-                            '_blank'
-                        );
-
-                    } else if (
-                        item.external_url
-                    ) {
-
-                        window.open(
-                            item.external_url,
                             '_blank'
                         );
 
