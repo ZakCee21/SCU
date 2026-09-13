@@ -332,102 +332,129 @@
     </div>
 
 
-    <!-- DASHBOARD CARDS -->
+    ```html
+<!-- DASHBOARD CARDS -->
 
-    <section class="cards">
+<section class="cards">
 
 
-        <!-- ACTIVE CASES -->
+    <!-- ACTIVE CASES -->
 
-        <div class="card">
+    <div class="card">
 
-            <div class="card-title">
-                Active Cases
-            </div>
-
-            <div
-                class="number"
-                id="activeCases"
-            >
-                0
-            </div>
-
+        <div class="card-title">
+            Active Cases
         </div>
-
-
-        <!-- MY CASES -->
-
-        <div class="card">
-
-            <div class="card-title">
-                My Cases
-            </div>
-
-            <div
-                class="number"
-                id="myCases"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- EVIDENCE -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Evidence
-            </div>
-
-            <div
-                class="number"
-                id="evidenceCount"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- OFFICER STATUS -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Officer Status
-            </div>
-
-            <div
-                class="number"
-                style="color: #4ade80;"
-            >
-                ONLINE
-            </div>
-
-        </div>
-
-
-        <!-- HIDDEN INTEL COUNTERS -->
 
         <div
+            class="number"
+            id="activeCases"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <!-- MY CASES -->
+
+    <div class="card">
+
+        <div class="card-title">
+            My Cases
+        </div>
+
+        <div
+            class="number"
+            id="myCases"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <!-- EVIDENCE -->
+
+    <div class="card">
+
+        <div class="card-title">
+            Evidence
+        </div>
+
+        <div
+            class="number"
+            id="evidenceCount"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <!-- OFFICER STATUS -->
+
+    <div class="card">
+
+        <div class="card-title">
+            Officer Status
+        </div>
+
+        <div
+            class="number"
+            style="color: #4ade80;"
+        >
+            ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- NEW INTEL -->
+
+    <div
+        class="card intel-card"
+        onclick="window.location.href='intel.html'"
+    >
+
+        <div class="card-title">
+            New Intel
+        </div>
+
+        <div
+            class="number"
             id="newIntel"
-            style="display: none;"
         >
             0
         </div>
 
+    </div>
+
+
+    <!-- OPEN INTEL -->
+
+    <div
+        class="card open-intel-card"
+        onclick="window.location.href='intel.html'"
+    >
+
+        <div class="card-title">
+            Open Intel
+        </div>
 
         <div
+            class="number"
             id="openIntel"
-            style="display: none;"
         >
             0
         </div>
 
+    </div>
 
-    </section>
+
+</section>
+```
+
 
 
     <!-- CASE FILES -->
