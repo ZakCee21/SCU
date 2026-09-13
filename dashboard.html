@@ -60,6 +60,14 @@
             color: #7f8c99;
         }
 
+        .officer-status {
+            margin-top: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #4ade80;
+            letter-spacing: 0.8px;
+        }
+
         .logout {
             background: #202c38;
             color: white;
@@ -138,6 +146,15 @@
             background: #32495c;
         }
 
+        .intel-button {
+            background: #166534;
+            border: 1px solid #22c55e;
+        }
+
+        .intel-button:hover {
+            background: #15803d;
+        }
+
         .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -165,9 +182,26 @@
             margin-top: 10px;
         }
 
+        /* ACTIVE CASES */
+
+        .active-cases-card .number {
+            color: #4ade80;
+        }
+
+        /* MY CASES */
+
+        .my-cases-card .number {
+            color: #4ade80;
+        }
+
+        /* NEW INTEL */
+
         .intel-card {
             cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease;
+            transition:
+                border-color 0.15s ease,
+                background 0.15s ease,
+                box-shadow 0.15s ease;
         }
 
         .intel-card:hover {
@@ -176,12 +210,35 @@
         }
 
         .intel-card .number {
+            color: #e8edf2;
+        }
+
+        /*
+            New Intel notification state.
+
+            When there is new Intel:
+            - Number becomes green
+            - Card gets green border
+            - Card gets a subtle green glow
+        */
+
+        .intel-card.has-new-intel {
+            border-color: #22c55e;
+            background: #141f1a;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.18);
+        }
+
+        .intel-card.has-new-intel .number {
             color: #4ade80;
         }
 
+        /* OPEN INTEL */
+
         .open-intel-card {
             cursor: pointer;
-            transition: border-color 0.15s ease, background 0.15s ease;
+            transition:
+                border-color 0.15s ease,
+                background 0.15s ease;
         }
 
         .open-intel-card:hover {
@@ -261,6 +318,10 @@
                 font-size: 10px;
             }
 
+            .officer-status {
+                font-size: 9px;
+            }
+
         }
 
     </style>
@@ -298,6 +359,10 @@
                 id="officerRank"
             >
                 Loading...
+            </div>
+
+            <div class="officer-status">
+                ● ONLINE
             </div>
 
         </div>
@@ -358,6 +423,14 @@
             DOCUMENTS & TEMPLATES
         </button>
 
+
+        <button
+            class="dashboard-button intel-button"
+            onclick="window.location.href='submit-intel.html'"
+        >
+            SUBMIT SCU INTEL
+        </button>
+
     </div>
 
 
@@ -368,7 +441,7 @@
 
         <!-- ACTIVE CASES -->
 
-        <div class="card">
+        <div class="card active-cases-card">
 
             <div class="card-title">
                 Active Cases
@@ -386,7 +459,7 @@
 
         <!-- MY CASES -->
 
-        <div class="card">
+        <div class="card my-cases-card">
 
             <div class="card-title">
                 My Cases
@@ -420,28 +493,11 @@
         </div>
 
 
-        <!-- OFFICER STATUS -->
-
-        <div class="card">
-
-            <div class="card-title">
-                Officer Status
-            </div>
-
-            <div
-                class="number"
-                style="color: #4ade80;"
-            >
-                ONLINE
-            </div>
-
-        </div>
-
-
         <!-- NEW INTEL -->
 
         <div
             class="card intel-card"
+            id="newIntelCard"
             onclick="window.location.href='intel.html'"
         >
 
@@ -688,6 +744,10 @@ async function loadCases(
             'caseList'
         );
 
+
+    // --------------------------------------------------
+    // Active Cases
+    // --------------------------------------------------
 
     document
         .getElementById('activeCases')
@@ -943,6 +1003,12 @@ async function loadIntelCounts(
             .textContent =
                 '0';
 
+        document
+            .getElementById('newIntelCard')
+            .classList.remove(
+                'has-new-intel'
+            );
+
         return;
 
     }
@@ -969,6 +1035,12 @@ async function loadIntelCounts(
             .getElementById('openIntel')
             .textContent =
                 '0';
+
+        document
+            .getElementById('newIntelCard')
+            .classList.remove(
+                'has-new-intel'
+            );
 
         return;
 
@@ -1073,6 +1145,37 @@ async function loadIntelCounts(
         .getElementById('openIntel')
         .textContent =
             openCount;
+
+
+    // --------------------------------------------------
+    // New Intel notification
+    // --------------------------------------------------
+    //
+    // 0 = normal
+    // 1+ = green notification state
+    //
+
+    const newIntelCard =
+        document.getElementById(
+            'newIntelCard'
+        );
+
+
+    if (
+        newCount > 0
+    ) {
+
+        newIntelCard.classList.add(
+            'has-new-intel'
+        );
+
+    } else {
+
+        newIntelCard.classList.remove(
+            'has-new-intel'
+        );
+
+    }
 
 
     console.log(
