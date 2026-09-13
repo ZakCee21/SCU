@@ -23,10 +23,6 @@
             color: #e5e7eb;
         }
 
-        /* -------------------------------------------------- */
-        /* HEADER */
-        /* -------------------------------------------------- */
-
         .header {
             background: #0d131a;
             border-bottom: 1px solid #293542;
@@ -74,10 +70,6 @@
             background: #2b3a48;
         }
 
-        /* -------------------------------------------------- */
-        /* BACKGROUND LOGOS */
-        /* -------------------------------------------------- */
-
         .background-logo {
             position: fixed;
             top: 50%;
@@ -98,10 +90,6 @@
             right: 80px;
             transform: translateY(-50%);
         }
-
-        /* -------------------------------------------------- */
-        /* PAGE */
-        /* -------------------------------------------------- */
 
         .container {
             max-width: 1200px;
@@ -128,10 +116,6 @@
             font-size: 13px;
             text-align: left;
         }
-
-        /* -------------------------------------------------- */
-        /* INTEL CARD */
-        /* -------------------------------------------------- */
 
         .intel-card {
             background: #111821;
@@ -215,10 +199,6 @@
             text-align: left;
         }
 
-        /* -------------------------------------------------- */
-        /* INFORMATION GRID */
-        /* -------------------------------------------------- */
-
         .info-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -244,7 +224,6 @@
             font-weight: bold;
             text-transform: uppercase;
             margin: 0 0 5px 0;
-            padding: 0;
             letter-spacing: .5px;
             text-align: left;
             width: 100%;
@@ -255,15 +234,10 @@
             font-size: 12px;
             line-height: 1.4;
             margin: 0;
-            padding: 0;
             text-align: left;
             width: 100%;
             white-space: normal;
         }
-
-        /* -------------------------------------------------- */
-        /* SECTIONS */
-        /* -------------------------------------------------- */
 
         .section {
             margin-bottom: 15px;
@@ -294,10 +268,6 @@
             min-height: 42px;
         }
 
-        /* -------------------------------------------------- */
-        /* NON-SCU REPORTER */
-        /* -------------------------------------------------- */
-
         .non-scu-reporter {
             background: #160d20;
             border: 1px solid #6b21a8;
@@ -313,7 +283,6 @@
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 7px;
-            text-align: left;
         }
 
         .non-scu-reporter-name {
@@ -327,10 +296,6 @@
             color: #a78bfa;
             font-size: 12px;
         }
-
-        /* -------------------------------------------------- */
-        /* ASSIGNED */
-        /* -------------------------------------------------- */
 
         .assigned-panel {
             background: #0d1720;
@@ -347,20 +312,13 @@
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 5px;
-            text-align: left;
         }
 
         .assigned-description {
             color: #8b98a5;
             font-size: 12px;
-            text-align: left;
             margin: 0;
-            padding: 0;
         }
-
-        /* -------------------------------------------------- */
-        /* TRIAGE / REASSIGN */
-        /* -------------------------------------------------- */
 
         .triage-panel {
             background: #17130b;
@@ -377,7 +335,6 @@
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 6px;
-            text-align: left;
         }
 
         .triage-description {
@@ -385,11 +342,7 @@
             font-size: 12px;
             line-height: 1.5;
             margin: 0 0 12px 0;
-            padding: 0;
-            text-align: left;
         }
-
-        /* NON-SCU TRIAGE */
 
         .non-scu-triage {
             background: #160d20;
@@ -399,10 +352,6 @@
         .non-scu-triage .triage-title {
             color: #c084fc;
         }
-
-        /* -------------------------------------------------- */
-        /* AGENT LIST */
-        /* -------------------------------------------------- */
 
         .agent-list {
             display: grid;
@@ -417,7 +366,6 @@
 
         .agent-column {
             min-width: 0;
-            text-align: left;
         }
 
         .agent-option {
@@ -431,7 +379,6 @@
             color: #e8edf2;
             font-size: 13px;
             font-weight: normal;
-            text-align: left;
         }
 
         .agent-option:hover {
@@ -442,7 +389,6 @@
             width: 16px;
             height: 16px;
             margin: 0;
-            padding: 0;
             flex-shrink: 0;
             accent-color: #1d4ed8;
             cursor: pointer;
@@ -451,9 +397,6 @@
         .agent-name {
             flex: 1;
             min-width: 0;
-            text-align: left;
-            margin: 0;
-            padding: 0;
         }
 
         .agent-loading {
@@ -461,7 +404,6 @@
             padding: 12px;
             color: #6f7c88;
             font-size: 12px;
-            text-align: left;
         }
 
         .reassign-button-container {
@@ -492,8 +434,6 @@
             cursor: not-allowed;
         }
 
-        /* NON-SCU SEND BUTTON */
-
         .non-scu-send-button {
             background: #7e22ce;
         }
@@ -501,10 +441,6 @@
         .non-scu-send-button:hover {
             background: #9333ea;
         }
-
-        /* -------------------------------------------------- */
-        /* DELETE */
-        /* -------------------------------------------------- */
 
         .intel-footer {
             border-top: 1px solid #293542;
@@ -514,27 +450,11 @@
             background: #0d131a;
         }
 
-        .delete-button {
-            background: #3f1111;
-            color: #fca5a5;
-            border: 1px solid #7f1d1d;
-            padding: 7px 11px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .delete-button:hover {
-            background: #571515;
-        }
-
-        /* NON-SCU DELETE */
-
+        .delete-button,
         .delete-non-scu-button {
             background: #3f1111;
             color: #fca5a5;
-            border: 1px solid #991b1b;
+            border: 1px solid #7f1d1d;
             padding: 8px 12px;
             border-radius: 4px;
             font-size: 10px;
@@ -542,14 +462,11 @@
             cursor: pointer;
         }
 
+        .delete-button:hover,
         .delete-non-scu-button:hover {
             background: #7f1d1d;
             color: #ffffff;
         }
-
-        /* -------------------------------------------------- */
-        /* EMPTY / LOADING */
-        /* -------------------------------------------------- */
 
         .loading,
         .empty {
@@ -558,10 +475,6 @@
             color: #6f7c88;
             font-size: 13px;
         }
-
-        /* -------------------------------------------------- */
-        /* RESPONSIVE */
-        /* -------------------------------------------------- */
 
         @media (max-width: 800px) {
 
@@ -642,8 +555,6 @@
 
 <body>
 
-    <!-- BACKGROUND LOGOS -->
-
     <img
         class="background-logo background-logo-left"
         src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
@@ -656,9 +567,6 @@
         alt=""
     >
 
-
-    <!-- HEADER -->
-
     <header class="header">
 
         <div class="header-brand">
@@ -669,16 +577,11 @@
                 alt="SCU Logo"
             >
 
-            <div>
-
-                <div class="header-title">
-                    SCU INTELLIGENCE
-                </div>
-
+            <div class="header-title">
+                SCU INTELLIGENCE
             </div>
 
         </div>
-
 
         <button
             class="back-button"
@@ -688,9 +591,6 @@
         </button>
 
     </header>
-
-
-    <!-- PAGE -->
 
     <main class="container">
 
@@ -706,7 +606,6 @@
 
         </div>
 
-
         <div id="intel-list">
 
             <div class="loading">
@@ -716,7 +615,6 @@
         </div>
 
     </main>
-
 
     <script>
 
@@ -745,7 +643,6 @@
         let currentOfficer = null;
         let currentRole = null;
         let scaAgents = [];
-
         let nonScuReports = [];
 
 
@@ -819,7 +716,23 @@
             }
 
 
-            currentUser = session.user;
+            currentUser =
+                session.user;
+
+
+            if (!currentUser || !currentUser.id) {
+
+                console.error(
+                    'No authenticated user ID was found.'
+                );
+
+                alert(
+                    'Unable to identify the logged-in officer.'
+                );
+
+                return false;
+
+            }
 
 
             const {
@@ -850,13 +763,16 @@
             if (officerError || !officer) {
 
                 console.error(
+                    'Officer loading error:',
                     officerError
                 );
 
                 document.getElementById(
                     'intel-list'
                 ).innerHTML = `
-                    <div class="empty">Unable to load your officer profile.</div>
+                    <div class="empty">
+                        Unable to load your officer profile.
+                    </div>
                 `;
 
                 return false;
@@ -864,9 +780,27 @@
             }
 
 
-            currentOfficer = officer;
+            currentOfficer =
+                officer;
 
-            currentRole = officer.role;
+            currentRole =
+                officer.role;
+
+
+            console.log(
+                'CURRENT USER ID:',
+                currentUser.id
+            );
+
+            console.log(
+                'CURRENT OFFICER ID:',
+                currentOfficer.id
+            );
+
+            console.log(
+                'CURRENT ROLE:',
+                currentRole
+            );
 
 
             return true;
@@ -919,13 +853,9 @@
             const rankOrder = {
 
                 'Head of SCU': 1,
-
                 'Assistant Head of SCU': 2,
-
                 'Head of Weapons': 3,
-
                 'Head of Drugs': 4,
-
                 'Detective': 5
 
             };
@@ -998,7 +928,7 @@
 
 
         /* ================================================== */
-        /* LOAD NON-SCU MEMBER REPORTS */
+        /* LOAD NON-SCU REPORTS */
         /* ================================================== */
 
         async function loadNonScuReports() {
@@ -1060,22 +990,6 @@
             }
 
 
-            console.log(
-                'NON-SCU REPORT DATA:',
-                data
-            );
-
-            console.log(
-                'NON-SCU REPORT ERROR:',
-                error
-            );
-
-            console.log(
-                'CURRENT ROLE:',
-                currentRole
-            );
-
-
             nonScuReports =
                 data || [];
 
@@ -1083,7 +997,7 @@
 
 
         /* ================================================== */
-        /* BUILD SCU AGENT LIST */
+        /* BUILD AGENT LIST */
         /* ================================================== */
 
         function buildAgentList(
@@ -1093,13 +1007,14 @@
 
             const agentsPerColumn = 8;
 
-
             const numberOfColumns =
-                Math.ceil(
-                    scaAgents.length /
-                    agentsPerColumn
+                Math.max(
+                    1,
+                    Math.ceil(
+                        scaAgents.length /
+                        agentsPerColumn
+                    )
                 );
-
 
             const columns = [];
 
@@ -1161,7 +1076,11 @@
                                                     onchange="handleReassignSelection('${escapeAttribute(reportId)}', this)"
                                                 >
 
-                                                <span class="agent-name">${escapeHtml(`${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim())}</span>
+                                                <span class="agent-name">
+                                                    ${escapeHtml(
+                                                        `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
+                                                    )}
+                                                </span>
 
                                             </label>
 
@@ -1192,21 +1111,16 @@
 
 
             intelList.innerHTML = `
-                <div class="loading">Loading intelligence...</div>
+                <div class="loading">
+                    Loading intelligence...
+                </div>
             `;
 
 
-            /*
-             * EXISTING SCU INTEL QUERY
-             */
-
             let query =
                 supabaseClient
-
                     .from('intel_submissions')
-
                     .select('*')
-
                     .order(
                         'created_at',
                         {
@@ -1219,10 +1133,11 @@
                 !hasFullIntelAccess()
             ) {
 
-                query = query.eq(
-                    'recipient_id',
-                    currentUser.id
-                );
+                query =
+                    query.eq(
+                        'recipient_id',
+                        currentUser.id
+                    );
 
             }
 
@@ -1241,7 +1156,9 @@
                 );
 
                 intelList.innerHTML = `
-                    <div class="empty">Unable to load intelligence.</div>
+                    <div class="empty">
+                        Unable to load intelligence.
+                    </div>
                 `;
 
                 return;
@@ -1262,17 +1179,15 @@
             ) {
 
                 intelList.innerHTML = `
-                    <div class="empty">No intelligence available.</div>
+                    <div class="empty">
+                        No intelligence available.
+                    </div>
                 `;
 
                 return;
 
             }
 
-
-            /* ================================================== */
-            /* LOAD OFFICER INFORMATION */
-            /* ================================================== */
 
             const senderIds = [
                 ...new Set(
@@ -1348,10 +1263,6 @@
             }
 
 
-            /* ================================================== */
-            /* VIEWED STATE */
-            /* ================================================== */
-
             const intelIds =
                 scuIntel.map(
                     intel =>
@@ -1408,10 +1319,6 @@
             intelList.innerHTML = '';
 
 
-            /* ================================================== */
-            /* RENDER NON-SCU REPORTS FIRST */
-            /* ================================================== */
-
             if (
                 hasFullIntelAccess()
             ) {
@@ -1429,10 +1336,6 @@
 
             }
 
-
-            /* ================================================== */
-            /* RENDER EXISTING SCU INTEL */
-            /* ================================================== */
 
             scuIntel.forEach(
                 intel => {
@@ -1462,14 +1365,11 @@
                     if (!isViewed) {
 
                         supabaseClient
-
                             .from('intel_views')
-
                             .upsert(
                                 {
                                     intel_id:
                                         intel.id,
-
                                     user_id:
                                         currentUser.id
                                 },
@@ -1478,7 +1378,6 @@
                                         'intel_id,user_id'
                                 }
                             )
-
                             .then(
                                 result => {
 
@@ -1499,17 +1398,15 @@
                     }
 
 
-                    /* ================================================== */
-                    /* CARD STATUS */
-                    /* ================================================== */
-
                     let cardClass =
                         'read';
 
 
                     let statusBadge =
                         `
-                            <span class="status-badge status-read">OPEN</span>
+                            <span class="status-badge status-read">
+                                OPEN
+                            </span>
                         `;
 
 
@@ -1523,7 +1420,9 @@
 
                         statusBadge =
                             `
-                                <span class="status-badge status-unassigned">UNASSIGNED</span>
+                                <span class="status-badge status-unassigned">
+                                    UNASSIGNED
+                                </span>
                             `;
 
                     }
@@ -1537,15 +1436,13 @@
 
                         statusBadge =
                             `
-                                <span class="status-badge status-new">NEW</span>
+                                <span class="status-badge status-new">
+                                    NEW
+                                </span>
                             `;
 
                     }
 
-
-                    /* ================================================== */
-                    /* DATE */
-                    /* ================================================== */
 
                     const createdDate =
                         intel.created_at
@@ -1564,10 +1461,6 @@
                             : 'Unknown';
 
 
-                    /* ================================================== */
-                    /* SENDER */
-                    /* ================================================== */
-
                     const senderName =
                         sender
                             ? `${sender.rank || ''} ${sender.full_name || ''}`.trim()
@@ -1580,10 +1473,6 @@
                             : 'Unknown';
 
 
-                    /* ================================================== */
-                    /* RECIPIENT */
-                    /* ================================================== */
-
                     const recipientName =
                         recipient
                             ? `${recipient.rank || ''} ${recipient.full_name || ''}`.trim()
@@ -1595,10 +1484,6 @@
                             ? `${recipientName}${recipient.callsign ? ' — ' + recipient.callsign : ''}`
                             : 'No recipient assigned';
 
-
-                    /* ================================================== */
-                    /* TRIAGE / REASSIGN */
-                    /* ================================================== */
 
                     let triageHtml = '';
 
@@ -1618,22 +1503,28 @@
 
                             <div class="triage-panel">
 
-                                <div class="triage-title">${
-                                    isUnassigned
-                                        ? '⚠ UNASSIGNED INTELLIGENCE'
-                                        : '↻ REASSIGN INTELLIGENCE'
-                                }</div>
+                                <div class="triage-title">
+                                    ${
+                                        isUnassigned
+                                            ? '⚠ UNASSIGNED INTELLIGENCE'
+                                            : '↻ REASSIGN INTELLIGENCE'
+                                    }
+                                </div>
 
-                                <div class="triage-description">${
-                                    isUnassigned
-                                        ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
-                                        : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
-                                }</div>
+                                <div class="triage-description">
+                                    ${
+                                        isUnassigned
+                                            ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
+                                            : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
+                                    }
+                                </div>
 
                                 <div
                                     class="agent-list"
                                     id="agent-list-${escapeAttribute(intel.id)}"
-                                >${agentColumnsHtml}</div>
+                                >
+                                    ${agentColumnsHtml}
+                                </div>
 
                                 <div class="reassign-button-container">
 
@@ -1641,11 +1532,13 @@
                                         class="send-button"
                                         id="send-${escapeAttribute(intel.id)}"
                                         onclick="assignIntel('${escapeAttribute(intel.id)}')"
-                                    >${
-                                        isUnassigned
-                                            ? 'SEND INTEL'
-                                            : 'REASSIGN INTEL'
-                                    }</button>
+                                    >
+                                        ${
+                                            isUnassigned
+                                                ? 'SEND INTEL'
+                                                : 'REASSIGN INTEL'
+                                        }
+                                    </button>
 
                                 </div>
 
@@ -1655,10 +1548,6 @@
 
                     }
 
-
-                    /* ================================================== */
-                    /* ASSIGNED INFORMATION */
-                    /* ================================================== */
 
                     let assignedHtml = '';
 
@@ -1672,9 +1561,13 @@
 
                             <div class="assigned-panel">
 
-                                <div class="assigned-title">CURRENT RECIPIENT</div>
+                                <div class="assigned-title">
+                                    CURRENT RECIPIENT
+                                </div>
 
-                                <div class="assigned-description">${escapeHtml(recipientDisplay)}</div>
+                                <div class="assigned-description">
+                                    ${escapeHtml(recipientDisplay)}
+                                </div>
 
                             </div>
 
@@ -1683,23 +1576,14 @@
                     }
 
 
-                    /* ================================================== */
-                    /* DELETE PERMISSION */
-                    /* ================================================== */
-
                     const canDeleteThisIntel =
                         hasFullIntelAccess()
                         ||
                         (
-                            intel.recipient_id
-                            &&
+                            intel.recipient_id &&
                             intel.recipient_id === currentUser.id
                         );
 
-
-                    /* ================================================== */
-                    /* DELETE BUTTON */
-                    /* ================================================== */
 
                     let deleteHtml = '';
 
@@ -1726,10 +1610,6 @@
                     }
 
 
-                    /* ================================================== */
-                    /* LOCATION */
-                    /* ================================================== */
-
                     let locationHtml = '';
 
 
@@ -1741,9 +1621,13 @@
 
                             <div class="section">
 
-                                <div class="section-title">Location</div>
+                                <div class="section-title">
+                                    Location
+                                </div>
 
-                                <div class="section-content">${escapeHtml(intel.location)}</div>
+                                <div class="section-content">
+                                    ${escapeHtml(intel.location)}
+                                </div>
 
                             </div>
 
@@ -1752,16 +1636,11 @@
                     }
 
 
-                    /* ================================================== */
-                    /* SOURCE / CONTEXT */
-                    /* ================================================== */
-
                     let sourceHtml = '';
 
 
                     if (
-                        intel.source
-                        ||
+                        intel.source ||
                         intel.context
                     ) {
 
@@ -1769,9 +1648,17 @@
 
                             <div class="section">
 
-                                <div class="section-title">Source / Context</div>
+                                <div class="section-title">
+                                    Source / Context
+                                </div>
 
-                                <div class="section-content">${escapeHtml(intel.source || intel.context || '')}</div>
+                                <div class="section-content">
+                                    ${escapeHtml(
+                                        intel.source ||
+                                        intel.context ||
+                                        ''
+                                    )}
+                                </div>
 
                             </div>
 
@@ -1779,10 +1666,6 @@
 
                     }
 
-
-                    /* ================================================== */
-                    /* EVIDENCE */
-                    /* ================================================== */
 
                     let evidenceHtml = '';
 
@@ -1795,9 +1678,13 @@
 
                             <div class="section">
 
-                                <div class="section-title">Evidence</div>
+                                <div class="section-title">
+                                    Evidence
+                                </div>
 
-                                <div class="section-content">${escapeHtml(intel.evidence)}</div>
+                                <div class="section-content">
+                                    ${escapeHtml(intel.evidence)}
+                                </div>
 
                             </div>
 
@@ -1805,10 +1692,6 @@
 
                     }
 
-
-                    /* ================================================== */
-                    /* CREATE EXISTING SCU CARD */
-                    /* ================================================== */
 
                     const card =
                         document.createElement(
@@ -1826,12 +1709,18 @@
 
                             <div>
 
-                                <div class="intel-subject">${escapeHtml(intel.subject || 'Untitled Intelligence')}</div>
+                                <div class="intel-subject">
+                                    ${escapeHtml(
+                                        intel.subject ||
+                                        'Untitled Intelligence'
+                                    )}
+                                </div>
 
-                                <div class="intel-meta">Submitted ${escapeHtml(createdDate)}</div>
+                                <div class="intel-meta">
+                                    Submitted ${escapeHtml(createdDate)}
+                                </div>
 
                             </div>
-
 
                             ${statusBadge}
 
@@ -1844,36 +1733,55 @@
 
                                 <div class="info-box">
 
-                                    <div class="info-label">Intel Type</div>
+                                    <div class="info-label">
+                                        Intel Type
+                                    </div>
 
-                                    <div class="info-value">${escapeHtml(intel.intel_type || 'Not specified')}</div>
-
-                                </div>
-
-
-                                <div class="info-box">
-
-                                    <div class="info-label">Submitted By</div>
-
-                                    <div class="info-value">${escapeHtml(senderDisplay)}</div>
+                                    <div class="info-value">
+                                        ${escapeHtml(
+                                            intel.intel_type ||
+                                            'Not specified'
+                                        )}
+                                    </div>
 
                                 </div>
 
 
                                 <div class="info-box">
 
-                                    <div class="info-label">Recipient</div>
+                                    <div class="info-label">
+                                        Submitted By
+                                    </div>
 
-                                    <div class="info-value">${escapeHtml(recipientDisplay)}</div>
+                                    <div class="info-value">
+                                        ${escapeHtml(senderDisplay)}
+                                    </div>
 
                                 </div>
 
 
                                 <div class="info-box">
 
-                                    <div class="info-label">Received</div>
+                                    <div class="info-label">
+                                        Recipient
+                                    </div>
 
-                                    <div class="info-value">${escapeHtml(createdDate)}</div>
+                                    <div class="info-value">
+                                        ${escapeHtml(recipientDisplay)}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="info-box">
+
+                                    <div class="info-label">
+                                        Received
+                                    </div>
+
+                                    <div class="info-value">
+                                        ${escapeHtml(createdDate)}
+                                    </div>
 
                                 </div>
 
@@ -1882,9 +1790,17 @@
 
                             <div class="section">
 
-                                <div class="section-title">Finding</div>
+                                <div class="section-title">
+                                    Finding
+                                </div>
 
-                                <div class="section-content">${escapeHtml(intel.finding || intel.description || 'No finding provided.')}</div>
+                                <div class="section-content">
+                                    ${escapeHtml(
+                                        intel.finding ||
+                                        intel.description ||
+                                        'No finding provided.'
+                                    )}
+                                </div>
 
                             </div>
 
@@ -1970,9 +1886,13 @@
 
                     <div class="section">
 
-                        <div class="section-title">Location</div>
+                        <div class="section-title">
+                            Location
+                        </div>
 
-                        <div class="section-content">${escapeHtml(report.location)}</div>
+                        <div class="section-content">
+                            ${escapeHtml(report.location)}
+                        </div>
 
                     </div>
 
@@ -1992,9 +1912,13 @@
 
                     <div class="section">
 
-                        <div class="section-title">Source / Context</div>
+                        <div class="section-title">
+                            Source / Context
+                        </div>
 
-                        <div class="section-content">${escapeHtml(report.source)}</div>
+                        <div class="section-content">
+                            ${escapeHtml(report.source)}
+                        </div>
 
                     </div>
 
@@ -2014,9 +1938,13 @@
 
                     <div class="section">
 
-                        <div class="section-title">Evidence</div>
+                        <div class="section-title">
+                            Evidence
+                        </div>
 
-                        <div class="section-content">${escapeHtml(report.evidence)}</div>
+                        <div class="section-content">
+                            ${escapeHtml(report.evidence)}
+                        </div>
 
                     </div>
 
@@ -2086,7 +2014,10 @@
                             </div>
 
                             <div class="info-value">
-                                ${escapeHtml(report.intel_type || 'Not specified')}
+                                ${escapeHtml(
+                                    report.intel_type ||
+                                    'Not specified'
+                                )}
                             </div>
 
                         </div>
@@ -2140,7 +2071,10 @@
                         </div>
 
                         <div class="section-content">
-                            ${escapeHtml(report.finding || 'No finding provided.')}
+                            ${escapeHtml(
+                                report.finding ||
+                                'No finding provided.'
+                            )}
                         </div>
 
                     </div>
@@ -2206,7 +2140,7 @@
 
 
         /* ================================================== */
-        /* HANDLE REASSIGN CHECKBOX */
+        /* HANDLE CHECKBOX SELECTION */
         /* ================================================== */
 
         function handleReassignSelection(
@@ -2239,7 +2173,7 @@
 
 
         /* ================================================== */
-        /* ASSIGN / REASSIGN EXISTING SCU INTEL */
+        /* ASSIGN EXISTING SCU INTEL */
         /* ================================================== */
 
         async function assignIntel(
@@ -2293,13 +2227,11 @@
                     : 'the selected officer';
 
 
-            const confirmed =
-                confirm(
+            if (
+                !confirm(
                     `Send this intelligence to ${recipientName}?`
-                );
-
-
-            if (!confirmed) {
+                )
+            ) {
 
                 return;
 
@@ -2315,9 +2247,7 @@
             if (button) {
 
                 button.disabled = true;
-
-                button.textContent =
-                    'SENDING...';
+                button.textContent = 'SENDING...';
 
             }
 
@@ -2346,7 +2276,6 @@
                     error
                 );
 
-
                 alert(
                     `Unable to assign intelligence.\n\n${error.message || error}`
                 );
@@ -2355,12 +2284,9 @@
                 if (button) {
 
                     button.disabled = false;
-
-                    button.textContent =
-                        'REASSIGN INTEL';
+                    button.textContent = 'REASSIGN INTEL';
 
                 }
-
 
                 return;
 
@@ -2373,7 +2299,7 @@
 
 
         /* ================================================== */
-        /* ASSIGN NON-SCU MEMBER INTEL */
+        /* ASSIGN NON-SCU INTEL */
         /* ================================================== */
 
         async function assignNonScuIntel(
@@ -2386,6 +2312,37 @@
 
                 alert(
                     'You do not have permission to assign intelligence.'
+                );
+
+                return;
+
+            }
+
+
+            /*
+             * IMPORTANT:
+             *
+             * The NON-SCU report is being converted into a
+             * normal intel_submissions record.
+             *
+             * sender_id is NOT nullable.
+             *
+             * We therefore use the authenticated SCU officer's
+             * loaded officers.id as the sender.
+             */
+
+            if (
+                !currentOfficer ||
+                !currentOfficer.id
+            ) {
+
+                console.error(
+                    'NON-SCU conversion stopped: currentOfficer.id is missing.',
+                    currentOfficer
+                );
+
+                alert(
+                    'Unable to identify the sending SCU officer. Please refresh the page and try again.'
                 );
 
                 return;
@@ -2432,6 +2389,17 @@
                 selectedCheckbox.value;
 
 
+            if (!recipientId) {
+
+                alert(
+                    'Unable to identify the selected SCU officer.'
+                );
+
+                return;
+
+            }
+
+
             const selectedAgent =
                 scaAgents.find(
                     agent =>
@@ -2445,13 +2413,11 @@
                     : 'the selected officer';
 
 
-            const confirmed =
-                confirm(
+            if (
+                !confirm(
                     `Send this NON-SCU intelligence to ${recipientName}?`
-                );
-
-
-            if (!confirmed) {
+                )
+            ) {
 
                 return;
 
@@ -2467,28 +2433,39 @@
             if (button) {
 
                 button.disabled = true;
-
-                button.textContent =
-                    'SENDING...';
+                button.textContent = 'SENDING...';
 
             }
 
 
             /*
-             * ==================================================
-             * CONVERT NON-SCU REPORT INTO NORMAL INTEL
-             * ==================================================
+             * Build the sender ID from the loaded officer record.
              *
-             * IMPORTANT:
-             *
-             * intel_submissions does NOT contain an evidence
-             * column, so evidence is NOT included in this insert.
-             *
-             * The original NON-SCU report still contains its
-             * evidence while it remains in the NON-SCU queue.
+             * This is guaranteed to be the authenticated officer
+             * because loadCurrentUser() obtained this row using
+             * auth.uid().
+             */
+
+            const senderId =
+                currentOfficer.id;
+
+
+            console.log(
+                'NON-SCU CONVERSION',
+                {
+                    senderId,
+                    recipientId,
+                    reportId
+                }
+            );
+
+
+            /*
+             * Create the normal SCU intelligence record.
              */
 
             const {
+                data: insertedIntel,
                 error: insertError
             } = await supabaseClient
 
@@ -2496,7 +2473,8 @@
 
                 .insert({
 
-                    sender_id: currentUser.id,
+                    sender_id:
+                        senderId,
 
                     recipient_id:
                         recipientId,
@@ -2505,13 +2483,16 @@
                         'NON-SCU MEMBER INTELLIGENCE',
 
                     intel_type:
-                        report.intel_type || 'NON-SCU MEMBER REPORT',
+                        report.intel_type ||
+                        'NON-SCU MEMBER REPORT',
 
                     finding:
-                        report.finding || '',
+                        report.finding ||
+                        '',
 
                     location:
-                        report.location || null,
+                        report.location ||
+                        null,
 
                     source:
                         report.source
@@ -2520,7 +2501,8 @@
 
                 })
 
-                ;
+                .select()
+                .single();
 
 
             if (
@@ -2532,6 +2514,16 @@
                     insertError
                 );
 
+                console.error(
+                    'NON-SCU sender ID used:',
+                    senderId
+                );
+
+                console.error(
+                    'NON-SCU recipient ID used:',
+                    recipientId
+                );
+
 
                 alert(
                     `Unable to send NON-SCU intelligence.\n\n${insertError.message || insertError}`
@@ -2541,23 +2533,24 @@
                 if (button) {
 
                     button.disabled = false;
-
-                    button.textContent =
-                        'SEND INTEL';
+                    button.textContent = 'SEND INTEL';
 
                 }
-
 
                 return;
 
             }
 
 
+            console.log(
+                'NON-SCU INTEL CREATED:',
+                insertedIntel
+            );
+
+
             /*
-             * The normal SCU Intel record now exists.
-             *
-             * Only now do we mark the original NON-SCU report
-             * as assigned.
+             * Only after the normal SCU intel has successfully
+             * been created do we mark the original report assigned.
              */
 
             const {
@@ -2632,8 +2625,7 @@
 
 
             if (
-                intelCheckError
-                ||
+                intelCheckError ||
                 !intelRecord
             ) {
 
@@ -2641,7 +2633,6 @@
                     'Intel permission check error:',
                     intelCheckError
                 );
-
 
                 alert(
                     'Unable to verify this intelligence.'
@@ -2656,8 +2647,7 @@
                 hasFullIntelAccess()
                 ||
                 (
-                    intelRecord.recipient_id
-                    &&
+                    intelRecord.recipient_id &&
                     intelRecord.recipient_id === currentUser.id
                 );
 
@@ -2673,13 +2663,11 @@
             }
 
 
-            const confirmed =
-                confirm(
+            if (
+                !confirm(
                     'Are you sure you want to permanently delete this intelligence?'
-                );
-
-
-            if (!confirmed) {
+                )
+            ) {
 
                 return;
 
@@ -2707,7 +2695,6 @@
                     error
                 );
 
-
                 alert(
                     `Unable to delete intelligence.\n\n${error.message || error}`
                 );
@@ -2729,11 +2716,6 @@
         async function deleteNonScuIntel(
             reportId
         ) {
-
-            /*
-             * Only senior/full-access users can delete
-             * NON-SCU intelligence.
-             */
 
             if (
                 !hasFullIntelAccess()
@@ -2766,13 +2748,11 @@
             }
 
 
-            const confirmed =
-                confirm(
+            if (
+                !confirm(
                     'DELETE BOGUS REPORT?\n\nThis will permanently delete this NON-SCU intelligence report and it cannot be recovered.'
-                );
-
-
-            if (!confirmed) {
+                )
+            ) {
 
                 return;
 
@@ -2799,7 +2779,6 @@
                     'NON-SCU intelligence deletion error:',
                     error
                 );
-
 
                 alert(
                     `Unable to delete NON-SCU intelligence.\n\n${error.message || error}`
