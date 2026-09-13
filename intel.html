@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -100,6 +101,11 @@
             border-left: 4px solid #3b82f6;
         }
 
+        .intel-card.unassigned {
+            border-left: 4px solid #f59e0b;
+            border-color: #79540c;
+        }
+
         .intel-header {
             display: flex;
             justify-content: space-between;
@@ -149,6 +155,11 @@
             color: #93c5fd;
         }
 
+        .status-unassigned {
+            background: #78350f;
+            color: #fcd34d;
+        }
+
         .section {
             margin-top: 16px;
         }
@@ -167,6 +178,96 @@
             line-height: 1.5;
             font-size: 13px;
             white-space: pre-wrap;
+        }
+
+        .triage-panel {
+            margin-top: 20px;
+            padding: 18px;
+            background: #17140e;
+            border: 1px solid #79540c;
+            border-radius: 6px;
+        }
+
+        .triage-title {
+            color: #fbbf24;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .triage-description {
+            color: #aeb8c2;
+            font-size: 11px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .triage-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .triage-select {
+            flex: 1;
+            background: #080c11;
+            color: white;
+            border: 1px solid #354554;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .triage-select:focus {
+            outline: none;
+            border-color: #f59e0b;
+        }
+
+        .send-button {
+            background: #166534;
+            color: white;
+            border: 1px solid #22c55e;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .send-button:hover {
+            background: #15803d;
+        }
+
+        .send-button:disabled {
+            background: #263746;
+            border-color: #354554;
+            cursor: not-allowed;
+        }
+
+        .assigned-panel {
+            margin-top: 18px;
+            padding: 12px 14px;
+            background: #101a25;
+            border: 1px solid #293542;
+            border-radius: 5px;
+        }
+
+        .assigned-label {
+            color: #7f8c99;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .assigned-value {
+            margin-top: 5px;
+            color: #60a5fa;
+            font-size: 12px;
+            font-weight: bold;
         }
 
         .intel-footer {
@@ -251,6 +352,15 @@
             .intel-footer {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .triage-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .send-button {
+                width: 100%;
             }
 
         }
@@ -348,6 +458,7 @@ let currentUserRole = null;
 
 async function checkLogin() {
 
+
     const {
         data: {
             session
@@ -370,7 +481,7 @@ async function checkLogin() {
 
 
     // --------------------------------------------------
-    // Get logged-in officer's role
+    // Get logged-in officer role
     // --------------------------------------------------
 
     const {
@@ -380,7 +491,9 @@ async function checkLogin() {
 
         .from('officers')
 
-        .select('role, active')
+        .select(
+            'role, active'
+        )
 
         .eq(
             'id',
@@ -396,6 +509,7 @@ async function checkLogin() {
             'Load officer role error:',
             officerError
         );
+
 
         document
             .getElementById('intelList')
@@ -429,11 +543,11 @@ async function checkLogin() {
 
 
     // --------------------------------------------------
-    // Change page heading for Masters
+    // Change page heading for full-access users
     // --------------------------------------------------
 
     if (
-        currentUserRole === 'master'
+        hasFullIntelAccess()
     ) {
 
         document
@@ -445,7 +559,7 @@ async function checkLogin() {
         document
             .getElementById('pageDescription')
             .textContent =
-                'All intelligence submissions across the SCU system.';
+                'All intelligence submissions across the SCU system. Unassigned intelligence requires triage.';
 
     }
 
@@ -456,10 +570,34 @@ async function checkLogin() {
 
 
 // ======================================================
+// FULL INTELLIGENCE ACCESS
+// ======================================================
+
+function hasFullIntelAccess() {
+
+
+    const fullAccessRoles = [
+
+        'master',
+        'investigator',
+        'case_lead'
+
+    ];
+
+
+    return fullAccessRoles.includes(
+        currentUserRole
+    );
+
+}
+
+
+// ======================================================
 // LOAD INTELLIGENCE
 // ======================================================
 
 async function loadIntel() {
+
 
     const intelList =
         document.getElementById(
@@ -477,34 +615,32 @@ async function loadIntel() {
             .select('*');
 
 
-  // --------------------------------------------------
-// FULL INTELLIGENCE ACCESS
-// --------------------------------------------------
+    // --------------------------------------------------
+    // Full access
+    // --------------------------------------------------
 
-const fullAccessRoles = [
-    'master',
-    'investigator',
-    'case_lead'
-];
+    if (
+        hasFullIntelAccess()
+    ) {
 
-if (fullAccessRoles.includes(currentUserRole)) {
+        console.log(
+            'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
+        );
 
-    console.log(
-        'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
-    );
+    } else {
 
-} else {
+        console.log(
+            'STANDARD ACCESS: Loading received intelligence only'
+        );
 
-    console.log(
-        'STANDARD ACCESS: Loading received intelligence only'
-    );
 
-    query = query.eq(
-        'recipient_id',
-        currentUser.id
-    );
+        query =
+            query.eq(
+                'recipient_id',
+                currentUser.id
+            );
 
-}
+    }
 
 
     const {
@@ -584,10 +720,15 @@ if (fullAccessRoles.includes(currentUserRole)) {
     const senderIds =
         [
             ...new Set(
-                data.map(
-                    intel =>
-                        intel.sender_id
-                )
+                data
+                    .map(
+                        intel =>
+                            intel.sender_id
+                    )
+                    .filter(
+                        id =>
+                            id
+                    )
             )
         ];
 
@@ -634,6 +775,117 @@ if (fullAccessRoles.includes(currentUserRole)) {
 
 
     // --------------------------------------------------
+    // Get recipient information
+    // --------------------------------------------------
+
+    const recipientIds =
+        [
+            ...new Set(
+                data
+                    .map(
+                        intel =>
+                            intel.recipient_id
+                    )
+                    .filter(
+                        id =>
+                            id
+                    )
+            )
+        ];
+
+
+    let recipients = [];
+
+
+    if (
+        recipientIds.length > 0
+    ) {
+
+        const {
+            data: recipientData,
+            error: recipientError
+        } = await supabaseClient
+
+            .from('officers')
+
+            .select(
+                'id, full_name, rank, callsign'
+            )
+
+            .in(
+                'id',
+                recipientIds
+            );
+
+
+        if (recipientError) {
+
+            console.error(
+                'Load recipient information error:',
+                recipientError
+            );
+
+        } else {
+
+            recipients =
+                recipientData || [];
+
+        }
+
+    }
+
+
+    // --------------------------------------------------
+    // Get all active SCU agents
+    // --------------------------------------------------
+
+    let scaAgents = [];
+
+
+    if (
+        hasFullIntelAccess()
+    ) {
+
+        const {
+            data: agentData,
+            error: agentError
+        } = await supabaseClient
+
+            .from('officers')
+
+            .select(
+                'id, full_name, rank, callsign'
+            )
+
+            .eq(
+                'is_scu_agent',
+                true
+            )
+
+            .eq(
+                'active',
+                true
+            );
+
+
+        if (agentError) {
+
+            console.error(
+                'Load SCU agents error:',
+                agentError
+            );
+
+        } else {
+
+            scaAgents =
+                agentData || [];
+
+        }
+
+    }
+
+
+    // --------------------------------------------------
     // Get this user's viewed records
     // --------------------------------------------------
 
@@ -658,7 +910,9 @@ if (fullAccessRoles.includes(currentUserRole)) {
 
             .from('intel_views')
 
-            .select('intel_id')
+            .select(
+                'intel_id'
+            )
 
             .eq(
                 'user_id',
@@ -706,11 +960,20 @@ if (fullAccessRoles.includes(currentUserRole)) {
     data.forEach(
         intel => {
 
+
             const sender =
                 senders.find(
                     officer =>
                         officer.id ===
                         intel.sender_id
+                );
+
+
+            const recipient =
+                recipients.find(
+                    officer =>
+                        officer.id ===
+                        intel.recipient_id
                 );
 
 
@@ -720,10 +983,20 @@ if (fullAccessRoles.includes(currentUserRole)) {
                     : 'Unknown Officer';
 
 
+            const recipientName =
+                recipient
+                    ? `${recipient.rank || ''} ${recipient.full_name || ''}${recipient.callsign ? ' — ' + recipient.callsign : ''}`.trim()
+                    : 'UNASSIGNED — REQUIRES TRIAGE';
+
+
             const hasBeenViewed =
                 viewedIds.includes(
                     intel.id
                 );
+
+
+            const isUnassigned =
+                !intel.recipient_id;
 
 
             const card =
@@ -732,10 +1005,21 @@ if (fullAccessRoles.includes(currentUserRole)) {
                 );
 
 
-            card.className =
-                hasBeenViewed
-                    ? 'intel-card read'
-                    : 'intel-card unread';
+            if (
+                isUnassigned
+            ) {
+
+                card.className =
+                    'intel-card unassigned';
+
+            } else {
+
+                card.className =
+                    hasBeenViewed
+                        ? 'intel-card read'
+                        : 'intel-card unread';
+
+            }
 
 
             const createdDate =
@@ -755,6 +1039,126 @@ if (fullAccessRoles.includes(currentUserRole)) {
                         minute: '2-digit'
                     }
                 );
+
+
+            let triageHtml = '';
+
+
+            // --------------------------------------------------
+            // Triage controls
+            // Only full-access senior roles can assign.
+            // --------------------------------------------------
+
+            if (
+                isUnassigned &&
+                hasFullIntelAccess()
+            ) {
+
+                triageHtml = `
+
+                    <div class="triage-panel">
+
+                        <div class="triage-title">
+
+                            ⚠ UNASSIGNED — REQUIRES TRIAGE
+
+                        </div>
+
+                        <div class="triage-description">
+
+                            This intelligence was submitted without a recipient.
+                            Select the appropriate SCU officer below and send the intelligence to them.
+
+                        </div>
+
+                        <div class="triage-controls">
+
+                            <select
+                                class="triage-select"
+                                id="recipient-${intel.id}"
+                            >
+
+                                <option value="">
+
+                                    Select officer...
+
+                                </option>
+
+                                ${
+                                    scaAgents
+                                        .map(
+                                            agent => `
+
+                                                <option value="${escapeAttribute(agent.id)}">
+
+                                                    ${escapeHtml(
+                                                        `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join('')
+                                }
+
+                            </select>
+
+
+                            <button
+                                class="send-button"
+                                id="send-${intel.id}"
+                                onclick="assignIntel('${intel.id}')"
+                            >
+
+                                SEND INTEL
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            // --------------------------------------------------
+            // Assigned information
+            // --------------------------------------------------
+
+            let assignedHtml = '';
+
+
+            if (
+                !isUnassigned &&
+                hasFullIntelAccess()
+            ) {
+
+                assignedHtml = `
+
+                    <div class="assigned-panel">
+
+                        <div class="assigned-label">
+
+                            Assigned To
+
+                        </div>
+
+                        <div class="assigned-value">
+
+                            ${escapeHtml(
+                                recipientName
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
 
 
             card.innerHTML = `
@@ -782,19 +1186,35 @@ if (fullAccessRoles.includes(currentUserRole)) {
                         </div>
 
 
-                        <div class="status-badge ${
-                            hasBeenViewed
-                                ? 'status-open'
-                                : 'status-new'
-                        }">
+                        ${
+                            isUnassigned
+                            ? `
 
-                            ${
-                                hasBeenViewed
-                                    ? 'OPEN'
-                                    : 'NEW'
-                            }
+                                <div class="status-badge status-unassigned">
 
-                        </div>
+                                    UNASSIGNED
+
+                                </div>
+
+                            `
+                            : `
+
+                                <div class="status-badge ${
+                                    hasBeenViewed
+                                        ? 'status-open'
+                                        : 'status-new'
+                                }">
+
+                                    ${
+                                        hasBeenViewed
+                                            ? 'OPEN'
+                                            : 'NEW'
+                                    }
+
+                                </div>
+
+                            `
+                        }
 
                     </div>
 
@@ -909,7 +1329,9 @@ if (fullAccessRoles.includes(currentUserRole)) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
+
                                     Open supporting evidence
+
                                 </a>
 
                             </div>
@@ -919,6 +1341,12 @@ if (fullAccessRoles.includes(currentUserRole)) {
                     `
                     : ''
                 }
+
+
+                ${assignedHtml}
+
+
+                ${triageHtml}
 
 
                 <div class="intel-footer">
@@ -935,7 +1363,9 @@ if (fullAccessRoles.includes(currentUserRole)) {
                         class="delete-button"
                         onclick="deleteIntel('${intel.id}')"
                     >
+
                         DELETE INTEL
+
                     </button>
 
                 </div>
@@ -969,12 +1399,154 @@ if (fullAccessRoles.includes(currentUserRole)) {
 
 
 // ======================================================
+// ASSIGN / SEND INTEL
+// ======================================================
+
+async function assignIntel(
+    intelId
+) {
+
+
+    if (
+        !hasFullIntelAccess()
+    ) {
+
+        alert(
+            'You do not have permission to assign intelligence.'
+        );
+
+        return;
+
+    }
+
+
+    const select =
+        document.getElementById(
+            `recipient-${intelId}`
+        );
+
+
+    const sendButton =
+        document.getElementById(
+            `send-${intelId}`
+        );
+
+
+    if (
+        !select
+    ) {
+
+        return;
+
+    }
+
+
+    const recipientId =
+        select.value;
+
+
+    if (
+        !recipientId
+    ) {
+
+        alert(
+            'Please select an officer to receive this intelligence.'
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            'Send this intelligence to the selected officer?'
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    sendButton.disabled =
+        true;
+
+
+    sendButton.textContent =
+        'SENDING...';
+
+
+    const {
+        error
+    } = await supabaseClient
+
+        .from(
+            'intel_submissions'
+        )
+
+        .update({
+
+            recipient_id:
+                recipientId
+
+        })
+
+        .eq(
+            'id',
+            intelId
+        );
+
+
+    if (error) {
+
+        console.error(
+            'Assign intel error:',
+            error
+        );
+
+
+        alert(
+            'Unable to send intelligence.\n\n' +
+            error.message
+        );
+
+
+        sendButton.disabled =
+            false;
+
+
+        sendButton.textContent =
+            'SEND INTEL';
+
+
+        return;
+
+    }
+
+
+    alert(
+        'Intelligence sent successfully.'
+    );
+
+
+    // Reload the page data.
+
+    loadIntel();
+
+}
+
+
+// ======================================================
 // MARK INTEL AS VIEWED
 // ======================================================
 
 async function markIntelAsViewed(
     intelId
 ) {
+
 
     if (
         !currentUser
@@ -993,6 +1565,7 @@ async function markIntelAsViewed(
 
         .upsert(
             {
+
                 intel_id:
                     intelId,
 
@@ -1001,8 +1574,10 @@ async function markIntelAsViewed(
 
             },
             {
+
                 onConflict:
                     'intel_id,user_id'
+
             }
         );
 
@@ -1026,6 +1601,7 @@ async function markIntelAsViewed(
 async function deleteIntel(
     intelId
 ) {
+
 
     const confirmed =
         confirm(
@@ -1086,6 +1662,7 @@ async function deleteIntel(
 function escapeHtml(
     value
 ) {
+
 
     if (
         value === null ||
@@ -1151,3 +1728,4 @@ checkLogin();
 </body>
 
 </html>
+```
