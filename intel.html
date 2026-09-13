@@ -271,26 +271,68 @@
             margin-bottom: 12px;
         }
 
-        .triage-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+        /* -------------------------------------------------- */
+        /* REASSIGN AGENT LIST */
+        /* Same styling as Submit SCU Intelligence */
+        /* -------------------------------------------------- */
+
+        .agent-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 20px;
+            background: #080c11;
+            border: 1px solid #354554;
+            border-radius: 5px;
+            overflow: hidden;
         }
 
-        .triage-select {
+        .agent-column {
+            min-width: 0;
+        }
+
+        .agent-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            margin: 0;
+            border-bottom: 1px solid #202b36;
+            cursor: pointer;
+            color: #e8edf2;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        .agent-option:hover {
+            background: #111a23;
+        }
+
+        .agent-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            padding: 0;
+            flex-shrink: 0;
+            accent-color: #1d4ed8;
+            cursor: pointer;
+        }
+
+        .agent-name {
             flex: 1;
             min-width: 0;
-            background: #080c11;
-            color: #dbe1e7;
-            border: 1px solid #354554;
-            border-radius: 4px;
-            padding: 10px;
+        }
+
+        .agent-loading {
+            grid-column: 1 / -1;
+            padding: 12px;
+            color: #6f7c88;
             font-size: 12px;
         }
 
-        .triage-select:focus {
-            outline: none;
-            border-color: #1d4ed8;
+        .reassign-button-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
         }
 
         .send-button {
@@ -307,6 +349,11 @@
 
         .send-button:hover {
             background: #2563eb;
+        }
+
+        .send-button:disabled {
+            background: #263746;
+            cursor: not-allowed;
         }
 
         /* -------------------------------------------------- */
@@ -378,9 +425,16 @@
                 grid-template-columns: 1fr;
             }
 
-            .triage-controls {
-                flex-direction: column;
-                align-items: stretch;
+            .agent-list {
+                grid-template-columns: 1fr;
+            }
+
+            .agent-loading {
+                grid-column: 1;
+            }
+
+            .reassign-button-container {
+                justify-content: stretch;
             }
 
             .send-button {
@@ -639,7 +693,97 @@
             }
 
 
-            scaAgents = data || [];
+            /* ================================================== */
+            /* SAME RANK ORDER AS SUBMIT SCU INTELLIGENCE */
+            /* ================================================== */
+
+            const rankOrder = {
+
+                'Head of SCU': 1,
+
+                'Assistant Head of SCU': 2,
+
+                'Head of Weapons': 3,
+
+                'Head of Drugs': 4,
+
+                'Detective': 5
+
+            };
+
+
+            /*
+             * Remove High Command, GOV and any other
+             * ranks which should not appear in the
+             * recipient/reassignment list.
+             */
+
+            const filteredAgents =
+                (data || []).filter(
+                    agent => {
+
+                        const rank =
+                            (agent.rank || '').trim();
+
+                        return Object.prototype.hasOwnProperty.call(
+                            rankOrder,
+                            rank
+                        );
+
+                    }
+                );
+
+
+            /* ================================================== */
+            /* SORT BY RANK THEN NAME */
+            /* ================================================== */
+
+            filteredAgents.sort(
+                (a, b) => {
+
+                    const rankA =
+                        (a.rank || '').trim();
+
+                    const rankB =
+                        (b.rank || '').trim();
+
+
+                    const rankDifference =
+                        rankOrder[rankA] -
+                        rankOrder[rankB];
+
+
+                    if (
+                        rankDifference !== 0
+                    ) {
+
+                        return rankDifference;
+
+                    }
+
+
+                    const nameA =
+                        (a.full_name || '')
+                            .trim()
+                            .toLowerCase();
+
+
+                    const nameB =
+                        (b.full_name || '')
+                            .trim()
+                            .toLowerCase();
+
+
+                    return nameA.localeCompare(
+                        nameB
+                    );
+
+                }
+            );
+
+
+            scaAgents =
+                filteredAgents;
 
         }
 
@@ -1098,6 +1242,105 @@
                         hasFullIntelAccess()
                     ) {
 
+                        /*
+                         * Build the same two-column,
+                         * 8-per-column checkbox layout
+                         * used by Submit SCU Intelligence.
+                         */
+
+                        const agentsPerColumn = 8;
+
+
+                        const numberOfColumns =
+                            Math.ceil(
+                                scaAgents.length /
+                                agentsPerColumn
+                            );
+
+
+                        const columns = [];
+
+
+                        for (
+                            let i = 0;
+                            i < numberOfColumns;
+                            i++
+                        ) {
+
+                            columns.push([]);
+
+                        }
+
+
+                        scaAgents.forEach(
+                            (agent, index) => {
+
+                                const columnIndex =
+                                    Math.floor(
+                                        index /
+                                        agentsPerColumn
+                                    );
+
+
+                                columns[
+                                    columnIndex
+                                ].push(
+                                    agent
+                                );
+
+                            }
+                        );
+
+
+                        const agentColumnsHtml =
+                            columns
+                                .map(
+                                    column => `
+
+                                        <div class="agent-column">
+
+                                            ${
+                                                column
+                                                    .map(
+                                                        agent => `
+
+                                                            <label class="agent-option">
+
+                                                                <input
+                                                                    type="checkbox"
+                                                                    class="reassign-checkbox"
+                                                                    value="${escapeAttribute(agent.id)}"
+                                                                    data-intel-id="${escapeAttribute(intel.id)}"
+                                                                    ${
+                                                                        intel.recipient_id === agent.id
+                                                                            ? 'checked'
+                                                                            : ''
+                                                                    }
+                                                                    onchange="handleReassignSelection('${escapeAttribute(intel.id)}', this)"
+                                                                >
+
+                                                                <span class="agent-name">
+
+                                                                    ${escapeHtml(
+                                                                        `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
+                                                                    )}
+
+                                                                </span>
+
+                                                            </label>
+
+                                                        `
+                                                    )
+                                                    .join('')
+                                            }
+
+                                        </div>
+
+                                    `
+                                )
+                                .join('');
+
+
                         triageHtml = `
 
                             <div class="triage-panel">
@@ -1124,53 +1367,19 @@
                                 </div>
 
 
-                                <div class="triage-controls">
+                                <div
+                                    class="agent-list"
+                                    id="agent-list-${escapeAttribute(intel.id)}"
+                                >
 
-                                    <select
-                                        class="triage-select"
-                                        id="recipient-${escapeAttribute(intel.id)}"
-                                    >
+                                    ${
+                                        agentColumnsHtml
+                                    }
 
-                                        ${
-                                            isUnassigned
-                                                ? `
-                                                    <option value="">
-
-                                                        Select officer...
-
-                                                    </option>
-                                                `
-                                                : ''
-                                        }
+                                </div>
 
 
-                                        ${
-                                            scaAgents
-                                                .map(
-                                                    agent => `
-
-                                                        <option
-                                                            value="${escapeAttribute(agent.id)}"
-                                                            ${
-                                                                intel.recipient_id === agent.id
-                                                                    ? 'selected'
-                                                                    : ''
-                                                            }
-                                                        >
-
-                                                            ${escapeHtml(
-                                                                `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
-                                                            )}
-
-                                                        </option>
-
-                                                    `
-                                                )
-                                                .join('')
-                                        }
-
-                                    </select>
-
+                                <div class="reassign-button-container">
 
                                     <button
                                         class="send-button"
@@ -1577,6 +1786,39 @@
 
 
         /* ================================================== */
+        /* HANDLE REASSIGN CHECKBOX */
+        /* ================================================== */
+
+        function handleReassignSelection(
+            intelId,
+            selectedCheckbox
+        ) {
+
+            const checkboxes =
+                document.querySelectorAll(
+                    `.reassign-checkbox[data-intel-id="${intelId}"]`
+                );
+
+
+            checkboxes.forEach(
+                checkbox => {
+
+                    if (
+                        checkbox !== selectedCheckbox
+                    ) {
+
+                        checkbox.checked =
+                            false;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* ================================================== */
         /* ASSIGN / REASSIGN INTEL */
         /* ================================================== */
 
@@ -1597,28 +1839,13 @@
             }
 
 
-            const select =
-                document.getElementById(
-                    `recipient-${intelId}`
+            const selectedCheckbox =
+                document.querySelector(
+                    `.reassign-checkbox[data-intel-id="${intelId}"]:checked`
                 );
 
 
-            if (!select) {
-
-                alert(
-                    'Recipient selector could not be found.'
-                );
-
-                return;
-
-            }
-
-
-            const recipientId =
-                select.value;
-
-
-            if (!recipientId) {
+            if (!selectedCheckbox) {
 
                 alert(
                     'Please select an SCU officer.'
@@ -1627,6 +1854,10 @@
                 return;
 
             }
+
+
+            const recipientId =
+                selectedCheckbox.value;
 
 
             const selectedAgent =
