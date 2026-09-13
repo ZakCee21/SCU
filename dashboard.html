@@ -3,428 +3,433 @@
 <html lang="en">
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SCU Dashboard</title>
+<title>SCU Dashboard</title>
 
-    <style>
+<style>
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #080c11;
-            color: #e8edf2;
-        }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #080c11;
+        color: #e8edf2;
+    }
+
+    .header {
+        background: #111821;
+        border-bottom: 1px solid #293542;
+        padding: 18px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .header-logo {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 21px;
+        letter-spacing: 1.5px;
+    }
+
+    .header p {
+        margin: 5px 0 0;
+        color: #7f8c99;
+        font-size: 11px;
+    }
+
+    .officer-info {
+        text-align: right;
+        margin-right: 2px;
+    }
+
+    .officer-name {
+        font-size: 13px;
+        font-weight: bold;
+        color: #e8edf2;
+    }
+
+    .officer-rank {
+        margin-top: 3px;
+        font-size: 11px;
+        color: #7f8c99;
+    }
+
+    .officer-status {
+        margin-top: 3px;
+        font-size: 10px;
+        font-weight: bold;
+        color: #4ade80;
+        letter-spacing: 0.8px;
+    }
+
+    .logout {
+        background: #202c38;
+        color: white;
+        border: 1px solid #354554;
+        padding: 9px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .profile-button {
+        background: #263746;
+        color: white;
+        border: 1px solid #354554;
+        padding: 9px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .profile-button:hover {
+        background: #32495c;
+    }
+
+    .logout:hover {
+        background: #2b3a48;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: auto;
+        padding: 30px;
+    }
+
+    .welcome {
+        margin-bottom: 25px;
+    }
+
+    .welcome h2 {
+        margin: 0 0 6px;
+    }
+
+    .welcome p {
+        color: #7f8c99;
+        margin: 0;
+    }
+
+    .dashboard-buttons {
+        margin-bottom: 25px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-button {
+        color: white;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .create-case-button {
+        background: #1d4ed8;
+        border: none;
+    }
+
+    .create-case-button:hover {
+        background: #2563eb;
+    }
+
+    .documents-button {
+        background: #263746;
+        border: 1px solid #354554;
+    }
+
+    .documents-button:hover {
+        background: #32495c;
+    }
+
+    .intel-button {
+        background: #166534;
+        border: 1px solid #22c55e;
+    }
+
+    .intel-button:hover {
+        background: #15803d;
+    }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .card-title {
+        color: #8996a3;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .number {
+        font-size: 30px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    /* ACTIVE CASES */
+
+    .active-cases-card {
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+
+    .active-cases-card:hover {
+        border-color: #22c55e;
+        background: #141f1a;
+    }
+
+    .active-cases-card .number {
+        color: #4ade80;
+    }
+
+    .active-cases-card.selected {
+        border-color: #22c55e;
+        background: #141f1a;
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+    }
+
+    /* CLOSED CASES */
+
+    .closed-cases-card {
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+
+    .closed-cases-card:hover {
+        border-color: #ef4444;
+        background: #211416;
+    }
+
+    .closed-cases-card .number {
+        color: #ef4444;
+    }
+
+    .closed-cases-card.selected {
+        border-color: #ef4444;
+        background: #211416;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+    }
+
+    /* NEW INTEL */
+
+    .intel-card {
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+
+    .intel-card:hover {
+        border-color: #22c55e;
+        background: #141f1a;
+    }
+
+    .intel-card .number {
+        color: #e8edf2;
+    }
+
+    /*
+        New Intel notification state.
+
+        When there is new Intel:
+        - Number becomes green
+        - Card gets green border
+        - Card gets a subtle green glow
+    */
+
+    .intel-card.has-new-intel {
+        border-color: #22c55e;
+        background: #141f1a;
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.18);
+    }
+
+    .intel-card.has-new-intel .number {
+        color: #4ade80;
+    }
+
+    /* OPEN INTEL */
+
+    .open-intel-card {
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background 0.15s ease;
+    }
+
+    .open-intel-card:hover {
+        border-color: #3b82f6;
+        background: #141b27;
+    }
+
+    .open-intel-card .number {
+        color: #60a5fa;
+    }
+
+    .panel {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 22px;
+    }
+
+    .panel h2 {
+        margin-top: 0;
+    }
+
+    /* CASE FILTER BUTTONS */
+
+    .case-filter-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .case-filter-button {
+        background: #202c38;
+        color: #dbe3ea;
+        border: 1px solid #354554;
+        padding: 8px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .case-filter-button:hover {
+        background: #2b3a48;
+    }
+
+    .case-filter-button.active {
+        background: #1d4ed8;
+        border-color: #2563eb;
+        color: white;
+    }
+
+    .case-filter-button.closed-filter.active {
+        background: #991b1b;
+        border-color: #ef4444;
+    }
+
+    .case-row {
+        border-top: 1px solid #293542;
+        padding: 16px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .case-row:hover {
+        background: #0d141c;
+    }
+
+    .case-name {
+        font-weight: bold;
+    }
+
+    .case-number {
+        color: #7f8c99;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .status {
+        padding: 5px 9px;
+        background: #1c2935;
+        border-radius: 4px;
+        font-size: 11px;
+    }
+
+    .status.closed {
+        background: #3a1518;
+        color: #f87171;
+        border: 1px solid #7f1d1d;
+    }
+
+    .empty {
+        color: #6f7c88;
+        text-align: center;
+        padding: 30px;
+    }
+
+    @media (max-width: 700px) {
 
         .header {
-            background: #111821;
-            border-bottom: 1px solid #293542;
-            padding: 18px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 16px;
         }
-.header-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
 
-.header-logo {
-    width: 52px;
-    height: 52px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
         .header h1 {
-            margin: 0;
-            font-size: 21px;
-            letter-spacing: 1.5px;
-        }
-
-        .header p {
-            margin: 5px 0 0;
-            color: #7f8c99;
-            font-size: 11px;
-        }
-
-        .officer-info {
-            text-align: right;
-            margin-right: 2px;
-        }
-
-        .officer-name {
-            font-size: 13px;
-            font-weight: bold;
-            color: #e8edf2;
-        }
-
-        .officer-rank {
-            margin-top: 3px;
-            font-size: 11px;
-            color: #7f8c99;
-        }
-
-        .officer-status {
-            margin-top: 3px;
-            font-size: 10px;
-            font-weight: bold;
-            color: #4ade80;
-            letter-spacing: 0.8px;
-        }
-
-        .logout {
-            background: #202c38;
-            color: white;
-            border: 1px solid #354554;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .profile-button {
-            background: #263746;
-            color: white;
-            border: 1px solid #354554;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .profile-button:hover {
-            background: #32495c;
-        }
-
-        .logout:hover {
-            background: #2b3a48;
+            font-size: 17px;
         }
 
         .container {
-            max-width: 1400px;
-            margin: auto;
-            padding: 30px;
-        }
-
-        .welcome {
-            margin-bottom: 25px;
-        }
-
-        .welcome h2 {
-            margin: 0 0 6px;
-        }
-
-        .welcome p {
-            color: #7f8c99;
-            margin: 0;
-        }
-
-        .dashboard-buttons {
-            margin-bottom: 25px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .dashboard-button {
-            color: white;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .create-case-button {
-            background: #1d4ed8;
-            border: none;
-        }
-
-        .create-case-button:hover {
-            background: #2563eb;
-        }
-
-        .documents-button {
-            background: #263746;
-            border: 1px solid #354554;
-        }
-
-        .documents-button:hover {
-            background: #32495c;
-        }
-
-        .intel-button {
-            background: #166534;
-            border: 1px solid #22c55e;
-        }
-
-        .intel-button:hover {
-            background: #15803d;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: #111821;
-            border: 1px solid #293542;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .card-title {
-            color: #8996a3;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .number {
-            font-size: 30px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        /* ACTIVE CASES */
-
-        .active-cases-card {
-            cursor: pointer;
-            transition:
-                border-color 0.15s ease,
-                background 0.15s ease,
-                box-shadow 0.15s ease;
-        }
-
-        .active-cases-card:hover {
-            border-color: #22c55e;
-            background: #141f1a;
-        }
-
-        .active-cases-card .number {
-            color: #4ade80;
-        }
-
-        .active-cases-card.selected {
-            border-color: #22c55e;
-            background: #141f1a;
-            box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
-        }
-
-        /* CLOSED CASES */
-
-        .closed-cases-card {
-            cursor: pointer;
-            transition:
-                border-color 0.15s ease,
-                background 0.15s ease,
-                box-shadow 0.15s ease;
-        }
-
-        .closed-cases-card:hover {
-            border-color: #ef4444;
-            background: #211416;
-        }
-
-        .closed-cases-card .number {
-            color: #ef4444;
-        }
-
-        .closed-cases-card.selected {
-            border-color: #ef4444;
-            background: #211416;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
-        }
-
-        /* NEW INTEL */
-
-        .intel-card {
-            cursor: pointer;
-            transition:
-                border-color 0.15s ease,
-                background 0.15s ease,
-                box-shadow 0.15s ease;
-        }
-
-        .intel-card:hover {
-            border-color: #22c55e;
-            background: #141f1a;
-        }
-
-        .intel-card .number {
-            color: #e8edf2;
-        }
-
-        /*
-            New Intel notification state.
-
-            When there is new Intel:
-            - Number becomes green
-            - Card gets green border
-            - Card gets a subtle green glow
-        */
-
-        .intel-card.has-new-intel {
-            border-color: #22c55e;
-            background: #141f1a;
-            box-shadow: 0 0 12px rgba(34, 197, 94, 0.18);
-        }
-
-        .intel-card.has-new-intel .number {
-            color: #4ade80;
-        }
-
-        /* OPEN INTEL */
-
-        .open-intel-card {
-            cursor: pointer;
-            transition:
-                border-color 0.15s ease,
-                background 0.15s ease;
-        }
-
-        .open-intel-card:hover {
-            border-color: #3b82f6;
-            background: #141b27;
-        }
-
-        .open-intel-card .number {
-            color: #60a5fa;
-        }
-
-        .panel {
-            background: #111821;
-            border: 1px solid #293542;
-            border-radius: 8px;
-            padding: 22px;
-        }
-
-        .panel h2 {
-            margin-top: 0;
-        }
-
-        /* CASE FILTER BUTTONS */
-
-        .case-filter-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 18px;
-        }
-
-        .case-filter-button {
-            background: #202c38;
-            color: #dbe3ea;
-            border: 1px solid #354554;
-            padding: 8px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .case-filter-button:hover {
-            background: #2b3a48;
-        }
-
-        .case-filter-button.active {
-            background: #1d4ed8;
-            border-color: #2563eb;
-            color: white;
-        }
-
-        .case-filter-button.closed-filter.active {
-            background: #991b1b;
-            border-color: #ef4444;
+            padding: 20px 15px;
         }
 
         .case-row {
-            border-top: 1px solid #293542;
-            padding: 16px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 15px;
         }
 
-        .case-row:hover {
-            background: #0d141c;
-        }
-
-        .case-name {
-            font-weight: bold;
-        }
-
-        .case-number {
-            color: #7f8c99;
+        .officer-name {
             font-size: 12px;
-            margin-top: 5px;
         }
 
-        .status {
-            padding: 5px 9px;
-            background: #1c2935;
-            border-radius: 4px;
-            font-size: 11px;
+        .officer-rank {
+            font-size: 10px;
         }
 
-        .status.closed {
-            background: #3a1518;
-            color: #f87171;
-            border: 1px solid #7f1d1d;
+        .officer-status {
+            font-size: 9px;
         }
 
-        .empty {
-            color: #6f7c88;
-            text-align: center;
-            padding: 30px;
+        .header-logo {
+            width: 42px;
+            height: 42px;
         }
 
-        @media (max-width: 700px) {
-
-            .header {
-                padding: 16px;
-            }
-
-            .header h1 {
-                font-size: 17px;
-            }
-
-            .container {
-                padding: 20px 15px;
-            }
-
-            .case-row {
-                gap: 15px;
-            }
-
-            .officer-name {
-                font-size: 12px;
-            }
-
-            .officer-rank {
-                font-size: 10px;
-            }
-
-            .officer-status {
-                font-size: 9px;
-            }
-.header-logo {
-    width: 42px;
-    height: 42px;
-}
-
-.header-brand {
-    gap: 10px;
-}
+        .header-brand {
+            gap: 10px;
         }
+    }
 
-    </style>
+</style>
+```
 
 </head>
 
@@ -432,7 +437,8 @@
 
 <header class="header">
 
-   <div class="header-brand">
+```
+<div class="header-brand">
 
     <img
         class="header-logo"
@@ -453,251 +459,246 @@
 </div>
 
 
-    <div style="display: flex; gap: 10px; align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
 
-        <div class="officer-info">
+    <div class="officer-info">
 
-            <div
-                class="officer-name"
-                id="officerName"
-            >
-                Loading...
-            </div>
-
-            <div
-                class="officer-rank"
-                id="officerRank"
-            >
-                Loading...
-            </div>
-
-            <div class="officer-status">
-                ● ONLINE
-            </div>
-
+        <div
+            class="officer-name"
+            id="officerName"
+        >
+            Loading...
         </div>
 
-
-        <button
-            class="profile-button"
-            onclick="window.location.href='profile.html'"
+        <div
+            class="officer-rank"
+            id="officerRank"
         >
-            PROFILE
-        </button>
+            Loading...
+        </div>
 
-
-        <button
-            class="logout"
-            onclick="logout()"
-        >
-            LOG OUT
-        </button>
+        <div class="officer-status">
+            ● ONLINE
+        </div>
 
     </div>
+
+
+    <button
+        class="profile-button"
+        onclick="window.location.href='profile.html'"
+    >
+        PROFILE
+    </button>
+
+
+    <button
+        class="logout"
+        onclick="logout()"
+    >
+        LOG OUT
+    </button>
+
+</div>
+```
 
 </header>
 
-
 <main class="container">
 
+```
+<section class="welcome">
 
-    <section class="welcome">
+    <h2>
+        SCU Dashboard
+    </h2>
 
-        <h2>
-            SCU Dashboard
-        </h2>
+    <p>
+        Authorised officer access.
+    </p>
 
-        <p>
-            Authorised officer access.
-        </p>
-
-    </section>
+</section>
 
 
-    <!-- DASHBOARD ACTIONS -->
+<!-- DASHBOARD ACTIONS -->
 
-    <div class="dashboard-buttons">
+<div class="dashboard-buttons">
+
+    <button
+        class="dashboard-button create-case-button"
+        onclick="window.location.href='create-case.html'"
+    >
+        + CREATE NEW CASE
+    </button>
+
+
+    <button
+        class="dashboard-button documents-button"
+        onclick="window.location.href='documents.html'"
+    >
+        DOCUMENTS & TEMPLATES
+    </button>
+
+
+    <button
+        class="dashboard-button intel-button"
+        onclick="window.location.href='submit-intel.html'"
+    >
+        SUBMIT SCU INTEL
+    </button>
+
+</div>
+
+
+<!-- DASHBOARD CARDS -->
+
+<section class="cards">
+
+    <!-- ACTIVE CASES -->
+
+    <div
+        class="card active-cases-card"
+        id="activeCasesCard"
+        onclick="filterCases('active')"
+    >
+
+        <div class="card-title">
+            Active Cases
+        </div>
+
+        <div
+            class="number"
+            id="activeCases"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <!-- CLOSED CASES -->
+
+    <div
+        class="card closed-cases-card"
+        id="closedCasesCard"
+        onclick="filterCases('closed')"
+    >
+
+        <div class="card-title">
+            Closed Cases
+        </div>
+
+        <div
+            class="number"
+            id="closedCases"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <!-- NEW INTEL -->
+
+    <div
+        class="card intel-card"
+        id="newIntelCard"
+        onclick="window.location.href='intel.html'"
+    >
+
+        <div class="card-title">
+            New Intel
+        </div>
+
+        <div
+            class="number"
+            id="newIntel"
+        >
+            0
+        </div>
+
+    </div>
+
+
+    <!-- OPEN INTEL -->
+
+    <div
+        class="card open-intel-card"
+        onclick="window.location.href='intel.html'"
+    >
+
+        <div class="card-title">
+            Open Intel
+        </div>
+
+        <div
+            class="number"
+            id="openIntel"
+        >
+            0
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CASE FILES -->
+
+<section class="panel">
+
+    <h2>
+        Accessible Case Files
+    </h2>
+
+
+    <div class="case-filter-buttons">
 
         <button
-            class="dashboard-button create-case-button"
-            onclick="window.location.href='create-case.html'"
+            class="case-filter-button active"
+            id="showAllCasesButton"
+            onclick="filterCases('all')"
         >
-            + CREATE NEW CASE
+            ALL CASES
         </button>
 
 
         <button
-            class="dashboard-button documents-button"
-            onclick="window.location.href='documents.html'"
+            class="case-filter-button"
+            id="showActiveCasesButton"
+            onclick="filterCases('active')"
         >
-            DOCUMENTS & TEMPLATES
+            ACTIVE CASES
         </button>
 
 
         <button
-            class="dashboard-button intel-button"
-            onclick="window.location.href='submit-intel.html'"
+            class="case-filter-button closed-filter"
+            id="showClosedCasesButton"
+            onclick="filterCases('closed')"
         >
-            SUBMIT SCU INTEL
+            CLOSED CASES
         </button>
 
     </div>
 
 
-    <!-- DASHBOARD CARDS -->
+    <div id="caseList">
 
-    <section class="cards">
-
-
-        <!-- ACTIVE CASES -->
-
-        <div
-            class="card active-cases-card"
-            id="activeCasesCard"
-            onclick="filterCases('active')"
-        >
-
-            <div class="card-title">
-                Active Cases
-            </div>
-
-            <div
-                class="number"
-                id="activeCases"
-            >
-                0
-            </div>
-
+        <div class="empty">
+            Loading case files...
         </div>
 
+    </div>
 
-        <!-- CLOSED CASES -->
-
-        <div
-            class="card closed-cases-card"
-            id="closedCasesCard"
-            onclick="filterCases('closed')"
-        >
-
-            <div class="card-title">
-                Closed Cases
-            </div>
-
-            <div
-                class="number"
-                id="closedCases"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- NEW INTEL -->
-
-        <div
-            class="card intel-card"
-            id="newIntelCard"
-            onclick="window.location.href='intel.html'"
-        >
-
-            <div class="card-title">
-                New Intel
-            </div>
-
-            <div
-                class="number"
-                id="newIntel"
-            >
-                0
-            </div>
-
-        </div>
-
-
-        <!-- OPEN INTEL -->
-
-        <div
-            class="card open-intel-card"
-            onclick="window.location.href='intel.html'"
-        >
-
-            <div class="card-title">
-                Open Intel
-            </div>
-
-            <div
-                class="number"
-                id="openIntel"
-            >
-                0
-            </div>
-
-        </div>
-
-
-    </section>
-
-
-    <!-- CASE FILES -->
-
-    <section class="panel">
-
-        <h2>
-            Accessible Case Files
-        </h2>
-
-
-        <div class="case-filter-buttons">
-
-            <button
-                class="case-filter-button active"
-                id="showAllCasesButton"
-                onclick="filterCases('all')"
-            >
-                ALL CASES
-            </button>
-
-
-            <button
-                class="case-filter-button"
-                id="showActiveCasesButton"
-                onclick="filterCases('active')"
-            >
-                ACTIVE CASES
-            </button>
-
-
-            <button
-                class="case-filter-button closed-filter"
-                id="showClosedCasesButton"
-                onclick="filterCases('closed')"
-            >
-                CLOSED CASES
-            </button>
-
-        </div>
-
-
-        <div id="caseList">
-
-            <div class="empty">
-                Loading case files...
-            </div>
-
-        </div>
-
-    </section>
-
+</section>
+```
 
 </main>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
-
 
 const SUPABASE_URL =
     'https://mtlozyseibrefhxnocvb.supabase.co';
@@ -752,7 +753,6 @@ let currentCaseFilter = 'all';
 
 async function checkLogin() {
 
-
     const {
         data: {
             session
@@ -774,21 +774,15 @@ async function checkLogin() {
         session.user.id;
 
 
-    // Load officer name and rank
-
     loadOfficerDetails(
         userId
     );
 
 
-    // Load existing cases
-
     loadCases(
         userId
     );
 
-
-    // Load Intel counters
 
     loadIntelCounts(
         userId
@@ -804,7 +798,6 @@ async function checkLogin() {
 async function loadOfficerDetails(
     userId
 ) {
-
 
     const {
         data: officer,
@@ -871,11 +864,6 @@ async function loadCases(
     userId
 ) {
 
-
-    // --------------------------------------------------
-    // Get current officer role
-    // --------------------------------------------------
-
     const {
         data: officer,
         error: officerError
@@ -921,10 +909,6 @@ async function loadCases(
         );
 
 
-    // --------------------------------------------------
-    // Load cases
-    // --------------------------------------------------
-
     const {
         data,
         error
@@ -960,10 +944,6 @@ async function loadCases(
         data || [];
 
 
-    // --------------------------------------------------
-    // Active Cases
-    // --------------------------------------------------
-
     const activeCases =
         allCases.filter(
             c =>
@@ -981,10 +961,6 @@ async function loadCases(
             activeCases.length;
 
 
-    // --------------------------------------------------
-    // Closed Cases
-    // --------------------------------------------------
-
     const closedCases =
         allCases.filter(
             c =>
@@ -1001,19 +977,6 @@ async function loadCases(
         .textContent =
             closedCases.length;
 
-
-    // --------------------------------------------------
-    // Accessible case files
-    // --------------------------------------------------
-    //
-    // Senior roles can see all cases, including all
-    // closed cases.
-    //
-    // Normal officers can see:
-    // - Active cases already available to them
-    // - Closed cases where they are the creator
-    //
-    // --------------------------------------------------
 
     if (
         hasFullClosedCaseAccess
@@ -1090,14 +1053,9 @@ function filterCases(
     filter
 ) {
 
-
     currentCaseFilter =
         filter;
 
-
-    // --------------------------------------------------
-    // Update filter button states
-    // --------------------------------------------------
 
     document
         .getElementById(
@@ -1128,10 +1086,6 @@ function filterCases(
             filter === 'closed'
         );
 
-
-    // --------------------------------------------------
-    // Update dashboard card states
-    // --------------------------------------------------
 
     document
         .getElementById(
@@ -1164,7 +1118,6 @@ function filterCases(
 
 function renderCaseList() {
 
-
     const list =
         document.getElementById(
             'caseList'
@@ -1181,10 +1134,6 @@ function renderCaseList() {
     let casesToDisplay =
         accessibleCases || [];
 
-
-    // --------------------------------------------------
-    // ACTIVE FILTER
-    // --------------------------------------------------
 
     if (
         currentCaseFilter === 'active'
@@ -1203,10 +1152,6 @@ function renderCaseList() {
     }
 
 
-    // --------------------------------------------------
-    // CLOSED FILTER
-    // --------------------------------------------------
-
     if (
         currentCaseFilter === 'closed'
     ) {
@@ -1224,14 +1169,9 @@ function renderCaseList() {
     }
 
 
-    // --------------------------------------------------
-    // NO CASES
-    // --------------------------------------------------
-
     if (
         casesToDisplay.length === 0
     ) {
-
 
         let message =
             'No authorised case files found.';
@@ -1265,20 +1205,11 @@ function renderCaseList() {
     }
 
 
-    // --------------------------------------------------
-    // CLEAR EXISTING LIST
-    // --------------------------------------------------
-
     list.innerHTML = '';
 
 
-    // --------------------------------------------------
-    // CREATE CASE ROWS
-    // --------------------------------------------------
-
     casesToDisplay.forEach(
         caseFile => {
-
 
             const row =
                 document.createElement(
@@ -1371,6 +1302,9 @@ function renderCaseList() {
 // OPEN INTEL
 // = Intel with a view record for this user.
 //
+// NON-SCU NEW INTEL
+// = Unassigned NON-SCU intelligence reports.
+//
 // Full Intel access:
 // = Master, Head of Drugs and Head of Weapons.
 //
@@ -1382,7 +1316,6 @@ function renderCaseList() {
 async function loadIntelCounts(
     userId
 ) {
-
 
     // --------------------------------------------------
     // Get officer role
@@ -1427,8 +1360,9 @@ async function loadIntelCounts(
         .toLowerCase();
 
 
-    // Master, Head of Drugs and Head of Weapons
-    // can see all Intel.
+    // --------------------------------------------------
+    // Full Intel access roles
+    // --------------------------------------------------
 
     const fullIntelAccessRoles = [
         'master',
@@ -1444,7 +1378,7 @@ async function loadIntelCounts(
 
 
     // --------------------------------------------------
-    // Load Intel
+    // Load normal SCU Intel
     // --------------------------------------------------
 
     let intelQuery =
@@ -1513,11 +1447,65 @@ async function loadIntelCounts(
 
 
     // --------------------------------------------------
-    // No Intel
+    // Load NON-SCU Intel
+    // --------------------------------------------------
+    //
+    // Only senior users can see/count NON-SCU reports.
+    //
+    // Unassigned reports are treated as NEW Intel.
+    //
+    // --------------------------------------------------
+
+    let nonScuNewCount = 0;
+
+
+    if (
+        hasFullIntelAccess
+    ) {
+
+        const {
+            data: nonScuData,
+            error: nonScuError
+        } = await supabaseClient
+
+            .from(
+                'non_scu_intel_submissions'
+            )
+
+            .select(
+                'id'
+            )
+
+            .eq(
+                'status',
+                'unassigned'
+            );
+
+
+        if (nonScuError) {
+
+            console.error(
+                'Load NON-SCU Intel counts error:',
+                nonScuError
+            );
+
+        } else {
+
+            nonScuNewCount =
+                (nonScuData || []).length;
+
+        }
+
+    }
+
+
+    // --------------------------------------------------
+    // No Intel at all
     // --------------------------------------------------
 
     if (
-        intel.length === 0
+        intel.length === 0 &&
+        nonScuNewCount === 0
     ) {
 
         document
@@ -1536,49 +1524,18 @@ async function loadIntelCounts(
                 'has-new-intel'
             );
 
-        return;
-
-    }
-
-
-    // --------------------------------------------------
-    // Get this user's viewed Intel
-    // --------------------------------------------------
-
-    const intelIds =
-        intel.map(
-            item =>
-                item.id
-        );
-
-
-    const {
-        data: viewData,
-        error: viewError
-    } = await supabaseClient
-
-        .from('intel_views')
-
-        .select(
-            'intel_id'
-        )
-
-        .eq(
-            'user_id',
-            userId
-        )
-
-        .in(
-            'intel_id',
-            intelIds
-        );
-
-
-    if (viewError) {
-
-        console.error(
-            'Load Intel views error:',
-            viewError
+        console.log(
+            'Intel counts:',
+            {
+                newIntel: 0,
+                openIntel: 0,
+                total: 0,
+                nonScuNewIntel: 0,
+                fullIntelAccess:
+                    hasFullIntelAccess,
+                role:
+                    role
+            }
         );
 
         return;
@@ -1586,21 +1543,77 @@ async function loadIntelCounts(
     }
 
 
-    const viewedIds =
-        new Set(
-            (viewData || [])
-                .map(
-                    view =>
-                        view.intel_id
-                )
-        );
+    // --------------------------------------------------
+    // Get viewed normal SCU Intel
+    // --------------------------------------------------
+
+    let viewedIds =
+        new Set();
+
+
+    if (
+        intel.length > 0
+    ) {
+
+        const intelIds =
+            intel.map(
+                item =>
+                    item.id
+            );
+
+
+        const {
+            data: viewData,
+            error: viewError
+        } = await supabaseClient
+
+            .from('intel_views')
+
+            .select(
+                'intel_id'
+            )
+
+            .eq(
+                'user_id',
+                userId
+            )
+
+            .in(
+                'intel_id',
+                intelIds
+            );
+
+
+        if (viewError) {
+
+            console.error(
+                'Load Intel views error:',
+                viewError
+            );
+
+            return;
+
+        }
+
+
+        viewedIds =
+            new Set(
+                (viewData || [])
+                    .map(
+                        view =>
+                            view.intel_id
+                    )
+            );
+
+    }
 
 
     // --------------------------------------------------
-    // Calculate counts
+    // Calculate existing SCU Intel counts
     // --------------------------------------------------
 
     let newCount = 0;
+
     let openCount = 0;
 
 
@@ -1626,6 +1639,14 @@ async function loadIntelCounts(
 
 
     // --------------------------------------------------
+    // Add NON-SCU unassigned reports to NEW INTEL
+    // --------------------------------------------------
+
+    newCount +=
+        nonScuNewCount;
+
+
+    // --------------------------------------------------
     // Display counts
     // --------------------------------------------------
 
@@ -1644,10 +1665,6 @@ async function loadIntelCounts(
     // --------------------------------------------------
     // New Intel notification
     // --------------------------------------------------
-    //
-    // 0 = normal
-    // 1+ = green notification state
-    //
 
     const newIntelCard =
         document.getElementById(
@@ -1672,6 +1689,10 @@ async function loadIntelCounts(
     }
 
 
+    // --------------------------------------------------
+    // Debug information
+    // --------------------------------------------------
+
     console.log(
         'Intel counts:',
         {
@@ -1682,7 +1703,11 @@ async function loadIntelCounts(
                 openCount,
 
             total:
-                intel.length,
+                intel.length +
+                nonScuNewCount,
+
+            nonScuNewIntel:
+                nonScuNewCount,
 
             fullIntelAccess:
                 hasFullIntelAccess,
@@ -1702,7 +1727,6 @@ async function loadIntelCounts(
 function escapeHtml(
     value
 ) {
-
 
     if (
         value === null ||
@@ -1749,7 +1773,6 @@ function escapeHtml(
 // ======================================================
 
 async function logout() {
-
 
     await supabaseClient.auth.signOut();
 
