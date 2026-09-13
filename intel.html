@@ -477,41 +477,34 @@ async function loadIntel() {
             .select('*');
 
 
-    // --------------------------------------------------
-    // FULL INTELLIGENCE ACCESS
-    // Master
-    // Head of Drugs = investigator
-    // Head of Weapons = case_lead
-    // --------------------------------------------------
+  // --------------------------------------------------
+// FULL INTELLIGENCE ACCESS
+// --------------------------------------------------
 
-    if (
-        [
-            'master',
-            'investigator',
-            'case_lead'
-        ].includes(
-            currentUserRole
-        )
-    ) {
+const fullAccessRoles = [
+    'master',
+    'investigator',
+    'case_lead'
+];
 
-        console.log(
-            'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
-        );
+if (fullAccessRoles.includes(currentUserRole)) {
 
-    } else {
+    console.log(
+        'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
+    );
 
-        console.log(
-            'STANDARD ACCESS: Loading received intelligence only'
-        );
+} else {
 
+    console.log(
+        'STANDARD ACCESS: Loading received intelligence only'
+    );
 
-        query =
-            query.eq(
-                'recipient_id',
-                currentUser.id
-            );
+    query = query.eq(
+        'recipient_id',
+        currentUser.id
+    );
 
-    }
+}
 
 
     const {
