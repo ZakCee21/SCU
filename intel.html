@@ -153,8 +153,6 @@
             border-left: 4px solid #f59e0b;
         }
 
-        /* NEW - NON SCU */
-
         .intel-card.non-scu {
             border-left: 4px solid #a855f7;
         }
@@ -206,8 +204,6 @@
             background: #451a03;
             color: #fbbf24;
         }
-
-        /* NEW - NON SCU */
 
         .status-non-scu {
             background: #3b0764;
@@ -333,7 +329,7 @@
         }
 
         /* -------------------------------------------------- */
-        /* SECTIONS */
+        /* ASSIGNED */
         /* -------------------------------------------------- */
 
         .assigned-panel {
@@ -405,7 +401,7 @@
         }
 
         /* -------------------------------------------------- */
-        /* REASSIGN AGENT LIST */
+        /* AGENT LIST */
         /* -------------------------------------------------- */
 
         .agent-list {
@@ -472,6 +468,7 @@
             margin-top: 10px;
             display: flex;
             justify-content: flex-end;
+            gap: 8px;
         }
 
         .send-button {
@@ -530,6 +527,24 @@
 
         .delete-button:hover {
             background: #571515;
+        }
+
+        /* NON-SCU DELETE */
+
+        .delete-non-scu-button {
+            background: #3f1111;
+            color: #fca5a5;
+            border: 1px solid #991b1b;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .delete-non-scu-button:hover {
+            background: #7f1d1d;
+            color: #ffffff;
         }
 
         /* -------------------------------------------------- */
@@ -597,9 +612,11 @@
 
             .reassign-button-container {
                 justify-content: stretch;
+                flex-direction: column;
             }
 
-            .send-button {
+            .send-button,
+            .delete-non-scu-button {
                 width: 100%;
             }
 
@@ -989,16 +1006,6 @@
             nonScuReports = [];
 
 
-            /*
-             * IMPORTANT:
-             *
-             * This is completely separate from intel_submissions.
-             *
-             * Existing SCU intelligence is NOT changed here.
-             *
-             * Only senior/full-access users can see these reports.
-             */
-
             if (
                 !hasFullIntelAccess()
             ) {
@@ -1052,12 +1059,25 @@
 
             }
 
-console.log('NON-SCU REPORT DATA:', data);
-console.log('NON-SCU REPORT ERROR:', error);
-console.log('CURRENT ROLE:', currentRole);
 
-nonScuReports =
-    data || [];
+            console.log(
+                'NON-SCU REPORT DATA:',
+                data
+            );
+
+            console.log(
+                'NON-SCU REPORT ERROR:',
+                error
+            );
+
+            console.log(
+                'CURRENT ROLE:',
+                currentRole
+            );
+
+
+            nonScuReports =
+                data || [];
 
         }
 
@@ -1178,9 +1198,6 @@ nonScuReports =
 
             /*
              * EXISTING SCU INTEL QUERY
-             *
-             * This is deliberately left as the existing
-             * intel_submissions query.
              */
 
             let query =
@@ -1232,20 +1249,12 @@ nonScuReports =
             }
 
 
-            /*
-             * ONLY SENIOR USERS RECEIVE NON-SCU REPORTS.
-             */
-
             await loadNonScuReports();
 
 
             const scuIntel =
                 data || [];
 
-
-            /*
-             * If neither system has anything to display.
-             */
 
             if (
                 scuIntel.length === 0 &&
@@ -1262,7 +1271,7 @@ nonScuReports =
 
 
             /* ================================================== */
-            /* LOAD OFFICER INFORMATION FOR EXISTING SCU INTEL */
+            /* LOAD OFFICER INFORMATION */
             /* ================================================== */
 
             const senderIds = [
@@ -1340,7 +1349,7 @@ nonScuReports =
 
 
             /* ================================================== */
-            /* VIEWED STATE - EXISTING SCU INTEL ONLY */
+            /* VIEWED STATE */
             /* ================================================== */
 
             const intelIds =
@@ -1706,7 +1715,9 @@ nonScuReports =
                                 <button
                                     class="delete-button"
                                     onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                                >DELETE INTEL</button>
+                                >
+                                    DELETE INTEL
+                                </button>
 
                             </div>
 
@@ -2171,6 +2182,13 @@ nonScuReports =
                                 SEND INTEL
                             </button>
 
+                            <button
+                                class="delete-non-scu-button"
+                                onclick="deleteNonScuIntel('${escapeAttribute(report.id)}')"
+                            >
+                                DELETE BOGUS REPORT
+                            </button>
+
                         </div>
 
                     </div>
@@ -2227,12 +2245,6 @@ nonScuReports =
         async function assignIntel(
             intelId
         ) {
-
-            /*
-             * EXISTING SCU INTEL FUNCTION.
-             *
-             * This remains separate from NON-SCU assignment.
-             */
 
             if (
                 !hasFullIntelAccess()
@@ -2381,10 +2393,6 @@ nonScuReports =
             }
 
 
-            /*
-             * Find the original NON-SCU report.
-             */
-
             const report =
                 nonScuReports.find(
                     item =>
@@ -2402,10 +2410,6 @@ nonScuReports =
 
             }
 
-
-            /*
-             * Find selected SCU officer.
-             */
 
             const selectedCheckbox =
                 document.querySelector(
@@ -2475,15 +2479,16 @@ nonScuReports =
              * CONVERT NON-SCU REPORT INTO NORMAL INTEL
              * ==================================================
              *
-             * We DO NOT alter the existing SCU reporting process.
+             * IMPORTANT:
              *
-             * Instead we create a brand-new normal
-             * intel_submissions record using the information
-             * from the NON-SCU report.
+             * intel_submissions does NOT contain an evidence
+             * column, so evidence is NOT included in this insert.
+             *
+             * The original NON-SCU report still contains its
+             * evidence while it remains in the NON-SCU queue.
              */
 
             const {
-                data: newIntel,
                 error: insertError
             } = await supabaseClient
 
@@ -2512,15 +2517,11 @@ nonScuReports =
                     source:
                         report.source
                             ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
-                            : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`,
-
-                    evidence:
-                        report.evidence || null
+                            : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`
 
                 })
 
-                .select()
-                .single();
+                ;
 
 
             if (
@@ -2554,11 +2555,10 @@ nonScuReports =
 
 
             /*
-             * The normal intel record now exists.
+             * The normal SCU Intel record now exists.
              *
-             * Mark the original public report as assigned so
-             * it disappears from the UNASSIGNED queue and cannot
-             * be converted twice.
+             * Only now do we mark the original NON-SCU report
+             * as assigned.
              */
 
             const {
@@ -2588,14 +2588,6 @@ nonScuReports =
                 );
 
 
-                /*
-                 * The normal intel record has already been
-                 * created, so do NOT create another one.
-                 *
-                 * The error is reported but the assignment
-                 * itself has succeeded.
-                 */
-
                 alert(
                     'The intelligence was sent successfully, but the original NON-SCU report could not be marked as assigned. Please refresh the page and check the queue.'
                 );
@@ -2608,17 +2600,13 @@ nonScuReports =
             }
 
 
-            /*
-             * Successful conversion.
-             */
-
             await loadIntel();
 
         }
 
 
         /* ================================================== */
-        /* DELETE INTEL */
+        /* DELETE EXISTING SCU INTEL */
         /* ================================================== */
 
         async function deleteIntel(
@@ -2723,6 +2711,99 @@ nonScuReports =
 
                 alert(
                     `Unable to delete intelligence.\n\n${error.message || error}`
+                );
+
+                return;
+
+            }
+
+
+            await loadIntel();
+
+        }
+
+
+        /* ================================================== */
+        /* DELETE NON-SCU INTEL */
+        /* ================================================== */
+
+        async function deleteNonScuIntel(
+            reportId
+        ) {
+
+            /*
+             * Only senior/full-access users can delete
+             * NON-SCU intelligence.
+             */
+
+            if (
+                !hasFullIntelAccess()
+            ) {
+
+                alert(
+                    'You do not have permission to delete NON-SCU intelligence.'
+                );
+
+                return;
+
+            }
+
+
+            const report =
+                nonScuReports.find(
+                    item =>
+                        item.id === reportId
+                );
+
+
+            if (!report) {
+
+                alert(
+                    'Unable to find this NON-SCU intelligence report.'
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    'DELETE BOGUS REPORT?\n\nThis will permanently delete this NON-SCU intelligence report and it cannot be recovered.'
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            const {
+                error
+            } = await supabaseClient
+
+                .from('non_scu_intel_submissions')
+
+                .delete()
+
+                .eq(
+                    'id',
+                    reportId
+                );
+
+
+            if (error) {
+
+                console.error(
+                    'NON-SCU intelligence deletion error:',
+                    error
+                );
+
+
+                alert(
+                    `Unable to delete NON-SCU intelligence.\n\n${error.message || error}`
                 );
 
                 return;
