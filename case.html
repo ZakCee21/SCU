@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -296,13 +297,15 @@
             line-height: 1.5;
         }
 
-        .evidence-upload {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
+        .evidence-field {
             margin-bottom: 15px;
         }
 
+        .evidence-field:last-child {
+            margin-bottom: 0;
+        }
+
+        .evidence-upload,
         .evidence-link {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -310,10 +313,17 @@
             margin-bottom: 15px;
         }
 
+        .evidence-file-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
         .evidence-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin-top: 20px;
         }
 
         .evidence-item {
@@ -323,19 +333,35 @@
             padding: 12px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 15px;
+        }
+
+        .evidence-information {
+            min-width: 0;
+            flex: 1;
         }
 
         .evidence-name {
             font-size: 13px;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        .evidence-description {
+            font-size: 12px;
+            color: #a5b1bc;
+            margin-top: 6px;
+            line-height: 1.5;
+            white-space: pre-wrap;
             word-break: break-word;
         }
 
         .evidence-type {
             font-size: 10px;
             color: #71808e;
-            margin-top: 4px;
+            margin-top: 7px;
+            text-transform: uppercase;
         }
 
         .open-evidence {
@@ -345,6 +371,10 @@
             padding: 7px 10px;
             font-size: 10px;
             flex-shrink: 0;
+        }
+
+        .open-evidence:hover {
+            background: #202c38;
         }
 
         .empty {
@@ -373,6 +403,20 @@
             color: #ef4444;
         }
 
+        .subheading {
+            font-size: 12px;
+            font-weight: bold;
+            color: #dce4eb;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #263441;
+            margin: 25px 0;
+        }
+
         @media (max-width: 650px) {
 
             .officer-list {
@@ -384,7 +428,8 @@
             }
 
             .evidence-upload,
-            .evidence-link {
+            .evidence-link,
+            .evidence-file-row {
                 grid-template-columns: 1fr;
             }
 
@@ -394,6 +439,10 @@
 
             .container {
                 padding: 0 12px 30px;
+            }
+
+            .evidence-item {
+                flex-direction: column;
             }
 
         }
@@ -462,6 +511,8 @@
 
     </div>
 
+
+    <!-- CASE INFORMATION -->
 
     <div class="section">
 
@@ -559,6 +610,8 @@
     </div>
 
 
+    <!-- OFFICER ACCESS -->
+
     <div class="section">
 
         <div class="section-header">
@@ -584,7 +637,8 @@
                 class="access-note"
             >
                 Select the officers who are authorised to access this case.
-                The case creator always retains access.
+                The case creator always retains access and all selected officers
+                have the same access level.
             </div>
 
 
@@ -608,6 +662,8 @@
     </div>
 
 
+    <!-- EVIDENCE -->
+
     <div class="section">
 
         <div class="section-header">
@@ -616,13 +672,47 @@
 
         <div class="section-body">
 
+            <div class="subheading">
+                UPLOAD EVIDENCE
+            </div>
+
+
             <div class="field">
 
-                <label>
-                    Upload Document
+                <label for="evidenceTitle">
+                    Evidence Title
                 </label>
 
-                <div class="evidence-upload">
+                <input
+                    id="evidenceTitle"
+                    type="text"
+                    placeholder="Enter a title for this evidence"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="evidenceDescription">
+                    Evidence Description
+                </label>
+
+                <textarea
+                    id="evidenceDescription"
+                    placeholder="Describe what this evidence is, where it came from, or anything relevant..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="evidenceFile">
+                    Evidence File
+                </label>
+
+                <div class="evidence-file-row">
 
                     <input
                         id="evidenceFile"
@@ -641,10 +731,47 @@
             </div>
 
 
+            <div class="divider"></div>
+
+
+            <div class="subheading">
+                ADD EXTERNAL LINK
+            </div>
+
+
             <div class="field">
 
-                <label>
-                    Add External Link
+                <label for="evidenceLinkTitle">
+                    Link Title
+                </label>
+
+                <input
+                    id="evidenceLinkTitle"
+                    type="text"
+                    placeholder="Enter a title for this link"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="evidenceLinkDescription">
+                    Link Description
+                </label>
+
+                <textarea
+                    id="evidenceLinkDescription"
+                    placeholder="Describe what this link contains or why it is relevant..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="evidenceLink">
+                    External Link
                 </label>
 
                 <div class="evidence-link">
@@ -1000,13 +1127,6 @@ function setupPermissions(
         );
 
 
-    /*
-        Case creator can manage access.
-
-        Existing senior roles can also
-        manage access.
-    */
-
     canManageAccess =
         currentOfficer &&
         (
@@ -1037,11 +1157,6 @@ function setupPermissions(
     }
 
 
-    /*
-        Delete remains restricted
-        to senior roles.
-    */
-
     if (
         currentOfficer &&
         closeCaseRoles.includes(
@@ -1064,12 +1179,6 @@ function setupPermissions(
         data.status
     );
 
-
-    /*
-        Case creator and existing
-        case-management roles can
-        edit the case.
-    */
 
     if (
         currentOfficer &&
@@ -1319,8 +1428,7 @@ async function loadOfficerAccess() {
 
 
     /*
-        Always show the case creator
-        as selected.
+        Always include the case creator.
     */
 
     if (
@@ -1637,11 +1745,6 @@ document.getElementById(
         }
 
 
-        /*
-            Get every checked checkbox
-            from the officer list.
-        */
-
         const checkedBoxes =
             Array.from(
                 document.querySelectorAll(
@@ -1652,12 +1755,6 @@ document.getElementById(
                     checkbox.checked
             );
 
-
-        /*
-            Convert the selected IDs
-            to strings first so the
-            comparison is consistent.
-        */
 
         const selectedOfficers =
             checkedBoxes
@@ -1674,7 +1771,7 @@ document.getElementById(
 
 
         /*
-            Always retain the creator.
+            The creator is ALWAYS included.
         */
 
         if (
@@ -1702,12 +1799,6 @@ document.getElementById(
 
         }
 
-
-        /*
-            Debug information.
-            This also confirms exactly
-            what is being sent to Supabase.
-        */
 
         console.log(
             'Selected officer IDs:',
@@ -1787,11 +1878,6 @@ document.getElementById(
         saveButton.textContent =
             'SAVE ACCESS';
 
-
-        /*
-            Reload the access list from
-            the database immediately.
-        */
 
         await loadOfficerAccess();
 
@@ -2152,6 +2238,10 @@ async function loadEvidence() {
                 );
 
 
+            information.className =
+                'evidence-information';
+
+
             const name =
                 document.createElement(
                     'div'
@@ -2163,9 +2253,27 @@ async function loadEvidence() {
 
 
             name.textContent =
-                item.file_name ||
                 item.title ||
+                item.file_name ||
                 'Evidence';
+
+
+            const description =
+                document.createElement(
+                    'div'
+                );
+
+
+            description.className =
+                'evidence-description';
+
+
+            if (item.description) {
+
+                description.textContent =
+                    item.description;
+
+            }
 
 
             const type =
@@ -2186,6 +2294,15 @@ async function loadEvidence() {
             information.appendChild(
                 name
             );
+
+
+            if (item.description) {
+
+                information.appendChild(
+                    description
+                );
+
+            }
 
 
             information.appendChild(
@@ -2269,14 +2386,46 @@ document.getElementById(
             );
 
 
+        const titleInput =
+            document.getElementById(
+                'evidenceTitle'
+            );
+
+
+        const descriptionInput =
+            document.getElementById(
+                'evidenceDescription'
+            );
+
+
         const file =
             fileInput.files[0];
+
+
+        const title =
+            titleInput.value.trim();
+
+
+        const description =
+            descriptionInput.value.trim();
 
 
         if (!file) {
 
             showMessage(
                 'PLEASE SELECT A FILE.',
+                'error'
+            );
+
+            return;
+
+        }
+
+
+        if (!title) {
+
+            showMessage(
+                'PLEASE ENTER AN EVIDENCE TITLE.',
                 'error'
             );
 
@@ -2359,6 +2508,12 @@ document.getElementById(
                     case_id:
                         caseId,
 
+                    title:
+                        title,
+
+                    description:
+                        description,
+
                     file_name:
                         file.name,
 
@@ -2400,6 +2555,12 @@ document.getElementById(
         fileInput.value =
             '';
 
+        titleInput.value =
+            '';
+
+        descriptionInput.value =
+            '';
+
 
         showMessage(
             'EVIDENCE UPLOADED SUCCESSFULLY.',
@@ -2437,14 +2598,46 @@ document.getElementById(
             );
 
 
+        const titleInput =
+            document.getElementById(
+                'evidenceLinkTitle'
+            );
+
+
+        const descriptionInput =
+            document.getElementById(
+                'evidenceLinkDescription'
+            );
+
+
         const url =
             linkInput.value.trim();
+
+
+        const title =
+            titleInput.value.trim();
+
+
+        const description =
+            descriptionInput.value.trim();
 
 
         if (!url) {
 
             showMessage(
                 'PLEASE ENTER A LINK.',
+                'error'
+            );
+
+            return;
+
+        }
+
+
+        if (!title) {
+
+            showMessage(
+                'PLEASE ENTER A LINK TITLE.',
                 'error'
             );
 
@@ -2478,7 +2671,10 @@ document.getElementById(
                         caseId,
 
                     title:
-                        url,
+                        title,
+
+                    description:
+                        description,
 
                     external_url:
                         url,
@@ -2516,6 +2712,12 @@ document.getElementById(
 
 
         linkInput.value =
+            '';
+
+        titleInput.value =
+            '';
+
+        descriptionInput.value =
             '';
 
 
@@ -2581,3 +2783,4 @@ initialise();
 </body>
 
 </html>
+```
