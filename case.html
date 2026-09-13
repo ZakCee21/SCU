@@ -21,6 +21,10 @@
             color: #e8edf2;
         }
 
+        /* =========================
+           HEADER
+        ========================= */
+
         header {
             height: 70px;
             background: #0d131a;
@@ -28,24 +32,28 @@
             display: flex;
             align-items: center;
             padding: 0 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-logo {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            flex-shrink: 0;
         }
 
         .header-left {
             display: flex;
             flex-direction: column;
         }
-.header-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
 
-.header-logo {
-    width: 52px;
-    height: 52px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
         .header-title {
             font-size: 20px;
             font-weight: bold;
@@ -63,6 +71,42 @@
             margin-left: auto;
         }
 
+        /* =========================
+           BACKGROUND LOGOS
+        ========================= */
+
+        .background-logo {
+            position: fixed;
+            top: 50%;
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-logo-left {
+            left: 20px;
+            transform: translateY(-50%);
+        }
+
+        .background-logo-right {
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        /* Keep main content above background logos */
+
+        .page {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
         .back-button {
             background: #17202a;
             border: 1px solid #354554;
@@ -77,11 +121,19 @@
             background: #202c38;
         }
 
+        /* =========================
+           PAGE
+        ========================= */
+
         .page {
             max-width: 1200px;
             margin: 25px auto;
             padding: 0 20px 40px;
         }
+
+        /* =========================
+           CASE HEADER
+        ========================= */
 
         .case-header {
             background: #0d131a;
@@ -134,6 +186,10 @@
             font-weight: bold;
         }
 
+        /* =========================
+           SECTIONS
+        ========================= */
+
         .section {
             background: #0d131a;
             border: 1px solid #25313c;
@@ -154,6 +210,10 @@
         .section-body {
             padding: 20px;
         }
+
+        /* =========================
+           FORM
+        ========================= */
 
         label {
             display: block;
@@ -190,6 +250,10 @@
         .field {
             margin-bottom: 18px;
         }
+
+        /* =========================
+           BUTTON ROW
+        ========================= */
 
         .button-row {
             display: flex;
@@ -251,6 +315,10 @@
             background: #4b5563;
         }
 
+        /* =========================
+           OFFICER ACCESS
+        ========================= */
+
         .agent-list {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -310,6 +378,10 @@
             font-size: 12px;
         }
 
+        /* =========================
+           EVIDENCE
+        ========================= */
+
         .evidence-list {
             display: flex;
             flex-direction: column;
@@ -352,6 +424,10 @@
             font-size: 10px;
         }
 
+        /* =========================
+           GENERAL
+        ========================= */
+
         .empty {
             color: #6f7c88;
             font-size: 12px;
@@ -362,6 +438,10 @@
             color: #6f7c88;
             font-size: 12px;
         }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 650px) {
 
@@ -380,34 +460,38 @@
             .page {
                 padding: 0 12px 30px;
             }
-.background-logo {
-    position: fixed;
-    top: 50%;
-    width: 320px;
-    max-width: 30vw;
-    opacity: 0.5;
-    transform: translateY(-50%);
-    z-index: 0;
-    pointer-events: none;
-}
 
-.background-logo-left {
-    left: calc(50% - 380px);
-    transform: translate(-50%, -50%);
-}
-
-.background-logo-right {
-    left: calc(50% + 380px);
-    transform: translate(-50%, -50%);
-}
             .header-logo {
-    width: 42px;
-    height: 42px;
-}
+                width: 42px;
+                height: 42px;
+            }
 
-.header-brand {
-    gap: 10px;
-}
+            .header-brand {
+                gap: 10px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .header-subtitle {
+                font-size: 9px;
+            }
+
+            .background-logo {
+                width: 130px;
+                height: 130px;
+                opacity: 0.25;
+            }
+
+            .background-logo-left {
+                left: -45px;
+            }
+
+            .background-logo-right {
+                right: -45px;
+            }
+
         }
 
     </style>
@@ -415,40 +499,58 @@
 </head>
 
 <body>
+
+
+<!-- =========================
+     BACKGROUND LOGO - LEFT
+========================= -->
+
 <img
     class="background-logo background-logo-left"
     src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
     alt=""
 >
 
+
+<!-- =========================
+     BACKGROUND LOGO - RIGHT
+========================= -->
+
 <img
     class="background-logo background-logo-right"
     src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
     alt=""
 >
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
 <header>
 
     <div class="header-brand">
 
-    <img
-        class="header-logo"
-        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
-        alt="SCU Logo"
-    >
+        <img
+            class="header-logo"
+            src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+            alt="SCU Logo"
+        >
 
-    <div class="header-left">
+        <div class="header-left">
 
-        <div class="header-title">
-            SCU CASE MANAGEMENT
-        </div>
+            <div class="header-title">
+                SCU CASE MANAGEMENT
+            </div>
 
-        <div class="header-subtitle">
-            SPECIAL CONSTABULARY UNIT
+            <div class="header-subtitle">
+                SPECIAL CONSTABULARY UNIT
+            </div>
+
         </div>
 
     </div>
 
-</div>
 
     <div class="header-right">
 
@@ -464,17 +566,29 @@
 </header>
 
 
+<!-- =========================
+     MAIN PAGE
+========================= -->
+
 <div class="page">
 
-    <div id="loadingMessage" class="loading">
+    <div
+        id="loadingMessage"
+        class="loading"
+    >
         Loading case...
     </div>
 
 
-    <div id="caseContent" style="display:none;">
+    <div
+        id="caseContent"
+        style="display:none;"
+    >
 
 
-        <!-- CASE HEADER -->
+        <!-- =========================
+             CASE HEADER
+        ========================= -->
 
         <div class="case-header">
 
@@ -504,7 +618,9 @@
         </div>
 
 
-        <!-- CASE INFORMATION -->
+        <!-- =========================
+             CASE INFORMATION
+        ========================= -->
 
         <div class="section">
 
@@ -602,7 +718,9 @@
         </div>
 
 
-        <!-- OFFICER ACCESS -->
+        <!-- =========================
+             OFFICER ACCESS
+        ========================= -->
 
         <div class="section">
 
@@ -652,7 +770,9 @@
         </div>
 
 
-        <!-- EVIDENCE -->
+        <!-- =========================
+             EVIDENCE
+        ========================= -->
 
         <div class="section">
 
@@ -759,6 +879,7 @@ let currentOfficer = null;
 let caseData = null;
 let canManageAccess = false;
 
+
 const closeCaseRoles = [
     'master',
     'investigator',
@@ -770,6 +891,7 @@ const params =
     new URLSearchParams(
         window.location.search
     );
+
 
 const caseId =
     params.get('id');
@@ -958,6 +1080,7 @@ function updateStatusDisplay(status) {
             'caseStatus'
         );
 
+
     const notice =
         document.getElementById(
             'closedNotice'
@@ -1005,10 +1128,12 @@ function setupPermissions(data) {
             'saveCase'
         );
 
+
     const closeCase =
         document.getElementById(
             'closeCase'
         );
+
 
     const deleteCase =
         document.getElementById(
@@ -1289,6 +1414,7 @@ async function loadOfficerAccess() {
                             .trim()
                             .toLowerCase();
 
+
                     const nameB =
                         (b.full_name || '')
                             .trim()
@@ -1304,6 +1430,7 @@ async function loadOfficerAccess() {
 
 
     const officersPerColumn = 8;
+
 
     const numberOfColumns =
         Math.ceil(
@@ -1327,12 +1454,15 @@ async function loadOfficerAccess() {
                 'div'
             );
 
+
         column.className =
             'agent-column';
+
 
         columns.push(
             column
         );
+
 
         list.appendChild(
             column
@@ -1357,6 +1487,7 @@ async function loadOfficerAccess() {
                     'label'
                 );
 
+
             label.className =
                 'agent-option';
 
@@ -1369,6 +1500,7 @@ async function loadOfficerAccess() {
 
             checkbox.type =
                 'checkbox';
+
 
             checkbox.value =
                 officer.id;
@@ -1388,6 +1520,7 @@ async function loadOfficerAccess() {
                 document.createElement(
                     'span'
                 );
+
 
             name.className =
                 'agent-name';
@@ -1410,8 +1543,10 @@ async function loadOfficerAccess() {
                     'span'
                 );
 
+
             rank.className =
                 'agent-rank';
+
 
             rank.textContent =
                 officer.rank || '';
@@ -1421,9 +1556,11 @@ async function loadOfficerAccess() {
                 checkbox
             );
 
+
             label.appendChild(
                 name
             );
+
 
             label.appendChild(
                 rank
@@ -1518,7 +1655,9 @@ document.getElementById(
             await supabaseClient.rpc(
                 'update_case_access',
                 {
-                    p_case_id: caseId,
+                    p_case_id:
+                        caseId,
+
                     p_officer_ids:
                         selectedOfficers
                 }
@@ -1615,6 +1754,7 @@ document.getElementById(
             await supabaseClient
                 .from('cases')
                 .update({
+
                     case_name:
                         caseName,
 
@@ -1626,6 +1766,7 @@ document.getElementById(
 
                     updated_at:
                         new Date().toISOString()
+
                 })
                 .eq(
                     'id',
@@ -1704,9 +1845,13 @@ document.getElementById(
             await supabaseClient
                 .from('cases')
                 .update({
-                    status: 'closed',
+
+                    status:
+                        'closed',
+
                     updated_at:
                         new Date().toISOString()
+
                 })
                 .eq(
                     'id',
@@ -2110,6 +2255,7 @@ async function loadEvidence() {
                     'div'
                 );
 
+
             row.className =
                 'evidence-item';
 
@@ -2119,6 +2265,7 @@ async function loadEvidence() {
                     'div'
                 );
 
+
             info.className =
                 'evidence-info';
 
@@ -2127,6 +2274,7 @@ async function loadEvidence() {
                 document.createElement(
                     'div'
                 );
+
 
             name.className =
                 'evidence-name';
@@ -2143,6 +2291,7 @@ async function loadEvidence() {
                     'div'
                 );
 
+
             type.className =
                 'evidence-type';
 
@@ -2156,6 +2305,7 @@ async function loadEvidence() {
                 name
             );
 
+
             info.appendChild(
                 type
             );
@@ -2166,8 +2316,10 @@ async function loadEvidence() {
                     'button'
                 );
 
+
             openButton.className =
                 'evidence-open';
+
 
             openButton.textContent =
                 'OPEN';
@@ -2202,6 +2354,7 @@ async function loadEvidence() {
             row.appendChild(
                 info
             );
+
 
             row.appendChild(
                 openButton
