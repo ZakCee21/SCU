@@ -140,7 +140,15 @@
         color: #596673;
         font-size: 11px;
     }
+.non-scu-button {
+    margin-top: 12px;
+    background: #3a2525;
+    border: 1px solid #654040;
+}
 
+.non-scu-button:hover {
+    background: #513131;
+}
 </style>
 
 
@@ -193,9 +201,17 @@
             required
         >
 
-        <button type="submit" id="loginButton">
-            SECURE LOGIN
-        </button>
+       <button type="submit" id="loginButton">
+    SECURE LOGIN
+</button>
+
+<button
+    type="button"
+    class="non-scu-button"
+    onclick="window.location.href='non-scu-intel.html'"
+>
+    NON-SCU MEMBER REPORT
+</button>
 
     </form>
 
