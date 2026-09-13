@@ -4,6 +4,7 @@
 
 <head>
 
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -144,10 +145,17 @@
     }
 
     .agent-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0 20px;
         background: #080c11;
         border: 1px solid #354554;
         border-radius: 5px;
         overflow: hidden;
+    }
+
+    .agent-column {
+        min-width: 0;
     }
 
     .agent-option {
@@ -161,10 +169,6 @@
         color: #e8edf2;
         font-size: 13px;
         font-weight: normal;
-    }
-
-    .agent-option:last-child {
-        border-bottom: none;
     }
 
     .agent-option:hover {
@@ -183,9 +187,11 @@
 
     .agent-name {
         flex: 1;
+        min-width: 0;
     }
 
     .triage-option {
+        grid-column: 1 / -1;
         border-bottom: 1px solid #354554;
         background: #17202a;
     }
@@ -195,6 +201,7 @@
     }
 
     .agent-loading {
+        grid-column: 1 / -1;
         padding: 12px;
         color: #6f7c88;
         font-size: 12px;
@@ -231,6 +238,19 @@
 
     .error {
         color: #f87171;
+    }
+
+    @media (max-width: 650px) {
+
+        .agent-list {
+            grid-template-columns: 1fr;
+        }
+
+        .triage-option,
+        .agent-loading {
+            grid-column: 1;
+        }
+
     }
 
 </style>
@@ -603,6 +623,35 @@ async function loadAgents() {
     }
 
 
+    // ==================================================
+    // SORT AGENTS ALPHABETICALLY
+    // ==================================================
+
+    data.sort(
+        (a, b) => {
+
+            const nameA =
+                (a.full_name || '')
+                    .trim()
+                    .toLowerCase();
+
+            const nameB =
+                (b.full_name || '')
+                    .trim()
+                    .toLowerCase();
+
+            return nameA.localeCompare(
+                nameB
+            );
+
+        }
+    );
+
+
+    // ==================================================
+    // SEND TO SCU LEADS
+    // ==================================================
+
     agentList.innerHTML = `
 
         <label class="agent-option triage-option">
@@ -633,8 +682,74 @@ async function loadAgents() {
     }
 
 
+    // ==================================================
+    // CREATE COLUMNS
+    // 8 AGENTS PER COLUMN
+    // ==================================================
+
+    const agentsPerColumn =
+        8;
+
+
+    const numberOfColumns =
+        Math.ceil(
+            data.length /
+            agentsPerColumn
+        );
+
+
+    const columns =
+        [];
+
+
+    for (
+        let i = 0;
+        i < numberOfColumns;
+        i++
+    ) {
+
+        const column =
+            document.createElement(
+                'div'
+            );
+
+
+        column.className =
+            'agent-column';
+
+
+        columns.push(
+            column
+        );
+
+
+        agentList.appendChild(
+            column
+        );
+
+    }
+
+
+    // ==================================================
+    // ADD AGENTS TO COLUMNS
+    // ==================================================
+
     data.forEach(
-        agent => {
+        (agent, index) => {
+
+
+            const columnIndex =
+                Math.floor(
+                    index /
+                    agentsPerColumn
+                );
+
+
+            const column =
+                columns[
+                    columnIndex
+                ];
+
 
             const label =
                 document.createElement(
@@ -688,7 +803,7 @@ async function loadAgents() {
             );
 
 
-            agentList.appendChild(
+            column.appendChild(
                 label
             );
 
@@ -824,7 +939,7 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // Validation
+    // VALIDATION
     // --------------------------------------------------
 
     if (!intelType) {
@@ -895,13 +1010,14 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // Prepare submissions
+    // PREPARE SUBMISSIONS
     // --------------------------------------------------
 
-    const submissions = [];
+    const submissions =
+        [];
 
 
-    // Send one copy to each selected agent.
+    // Create one Intel record for each selected agent.
 
     selectedAgents.forEach(
         agentId => {
@@ -938,7 +1054,7 @@ async function submitIntel() {
     );
 
 
-    // Send one unassigned copy to SCU Leads.
+    // Create one unassigned Intel record for SCU Leads.
 
     if (sendToTriage) {
 
@@ -974,7 +1090,7 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // Insert submissions
+    // INSERT SUBMISSIONS
     // --------------------------------------------------
 
     const {
@@ -1021,6 +1137,10 @@ async function submitIntel() {
     }
 
 
+    // --------------------------------------------------
+    // SUCCESS MESSAGE
+    // --------------------------------------------------
+
     message.classList.add(
         'success'
     );
@@ -1034,7 +1154,9 @@ async function submitIntel() {
         message.textContent =
             `Intelligence submitted successfully to ${selectedAgents.length} SCU agent${selectedAgents.length === 1 ? '' : 's'} and sent to SCU Leads.`;
 
-    } else if (sendToTriage) {
+    } else if (
+        sendToTriage
+    ) {
 
         message.textContent =
             'Intelligence submitted successfully and sent to SCU Leads.';
@@ -1048,7 +1170,7 @@ async function submitIntel() {
 
 
     // --------------------------------------------------
-    // Clear form
+    // CLEAR FORM
     // --------------------------------------------------
 
     document
