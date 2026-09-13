@@ -199,25 +199,26 @@
             text-align: left;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 10px;
-            margin-bottom: 17px;
-        }
+       .info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 17px;
+    align-items: start;
+}
 
-        .info-box {
-            background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 10px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-
+.info-box {
+    background: #0b1117;
+    border: 1px solid #293542;
+    border-radius: 4px;
+    padding: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-self: start;
+}
         .info-label {
             color: #667381;
             font-size: 9px;
