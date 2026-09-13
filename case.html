@@ -34,7 +34,18 @@
             display: flex;
             flex-direction: column;
         }
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
 
+.header-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
         .header-title {
             font-size: 20px;
             font-weight: bold;
@@ -369,7 +380,34 @@
             .page {
                 padding: 0 12px 30px;
             }
+.background-logo {
+    position: fixed;
+    top: 50%;
+    width: 320px;
+    max-width: 30vw;
+    opacity: 0.5;
+    transform: translateY(-50%);
+    z-index: 0;
+    pointer-events: none;
+}
 
+.background-logo-left {
+    left: calc(50% - 380px);
+    transform: translate(-50%, -50%);
+}
+
+.background-logo-right {
+    left: calc(50% + 380px);
+    transform: translate(-50%, -50%);
+}
+            .header-logo {
+    width: 42px;
+    height: 42px;
+}
+
+.header-brand {
+    gap: 10px;
+}
         }
 
     </style>
@@ -377,8 +415,26 @@
 </head>
 
 <body>
+<img
+    class="background-logo background-logo-left"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
 
+<img
+    class="background-logo background-logo-right"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
 <header>
+
+    <div class="header-brand">
+
+    <img
+        class="header-logo"
+        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+        alt="SCU Logo"
+    >
 
     <div class="header-left">
 
@@ -391,6 +447,8 @@
         </div>
 
     </div>
+
+</div>
 
     <div class="header-right">
 
