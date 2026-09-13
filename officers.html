@@ -1,229 +1,235 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SCU Officer Management</title>
+```
+<title>SCU Officer Management</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0b0f14;
-            color: #e6edf3;
-        }
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0b0f14;
+        color: #e6edf3;
+    }
 
-        header {
-            background: #111820;
-            border-bottom: 1px solid #26313c;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    header {
+        background: #111820;
+        border-bottom: 1px solid #26313c;
+        padding: 20px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 2px;
-        }
+    header h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
 
-        .master {
-            color: #7dd3fc;
-            font-size: 13px;
-            margin-right: 15px;
-        }
+    .master {
+        color: #7dd3fc;
+        font-size: 13px;
+        margin-right: 15px;
+    }
 
-        main {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
+    main {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
 
-        h2 {
-            margin: 0;
-        }
+    h2 {
+        margin: 0;
+    }
 
-        button {
-            background: #1d4ed8;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    button {
+        background: #1d4ed8;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-        button:hover {
-            background: #2563eb;
-        }
+    button:hover {
+        background: #2563eb;
+    }
 
-        .logout {
-            background: #374151;
-        }
+    .logout {
+        background: #374151;
+    }
 
-        .logout:hover {
-            background: #4b5563;
-        }
+    .logout:hover {
+        background: #4b5563;
+    }
 
-        .panel {
-            background: #111820;
-            border: 1px solid #26313c;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
+    .panel {
+        background: #111820;
+        border: 1px solid #26313c;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 850px;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+    }
 
-        th,
-        td {
-            padding: 14px;
-            text-align: left;
-            border-bottom: 1px solid #26313c;
-        }
+    th,
+    td {
+        padding: 14px;
+        text-align: left;
+        border-bottom: 1px solid #26313c;
+    }
 
-        th {
-            background: #151d26;
-            color: #94a3b8;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
+    th {
+        background: #151d26;
+        color: #94a3b8;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
 
-        td {
-            font-size: 14px;
-        }
+    td {
+        font-size: 14px;
+    }
 
-        input,
-        select {
-            width: 100%;
-            padding: 9px;
-            background: #0b0f14;
-            color: white;
-            border: 1px solid #374151;
-            border-radius: 4px;
-        }
+    input,
+    select {
+        width: 100%;
+        padding: 9px;
+        background: #0b0f14;
+        color: white;
+        border: 1px solid #374151;
+        border-radius: 4px;
+    }
 
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #7dd3fc;
-        }
+    input:focus,
+    select:focus {
+        outline: none;
+        border-color: #7dd3fc;
+    }
 
-        .save {
-            background: #15803d;
-        }
+    .save {
+        background: #15803d;
+    }
 
-        .save:hover {
-            background: #16a34a;
-        }
+    .save:hover {
+        background: #16a34a;
+    }
 
-        .status {
-            color: #4ade80;
-            font-weight: bold;
-        }
+    .status {
+        color: #4ade80;
+        font-weight: bold;
+    }
 
-        .empty {
-            padding: 30px;
-            text-align: center;
-            color: #94a3b8;
-        }
+    .empty {
+        padding: 30px;
+        text-align: center;
+        color: #94a3b8;
+    }
 
-        .warning {
-            margin-bottom: 20px;
-            padding: 14px;
-            background: #151d26;
-            border: 1px solid #26313c;
-            border-radius: 6px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-    </style>
+    .warning {
+        margin-bottom: 20px;
+        padding: 14px;
+        background: #151d26;
+        border: 1px solid #26313c;
+        border-radius: 6px;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+</style>
+```
+
 </head>
 
 <body>
 
 <header>
 
-    <h1>SCU // OFFICER MANAGEMENT</h1>
+```
+<h1>SCU // OFFICER MANAGEMENT</h1>
 
-    <div>
-        <span class="master">MASTER ACCESS</span>
+<div>
+    <span class="master">SCU COMMAND ACCESS</span>
 
-        <button class="logout" onclick="logout()">
-            LOGOUT
-        </button>
-    </div>
+    <button class="logout" onclick="logout()">
+        LOGOUT
+    </button>
+</div>
+```
 
 </header>
 
 <main>
 
-    <div class="top-bar">
+```
+<div class="top-bar">
+    <h2>Authorised Officers</h2>
+</div>
 
-        <h2>Authorised Officers</h2>
+<div class="warning">
+    Changes made here are saved directly to the SCU database.
+    System roles control website permissions.
+</div>
 
-    </div>
+<div class="panel">
 
-    <div class="warning">
-        Changes made here are saved directly to the SCU database.
-        System roles control website permissions.
-    </div>
+    <table>
 
-    <div class="panel">
+        <thead>
 
-        <table>
+            <tr>
+                <th>Callsign</th>
+                <th>In-Game Name</th>
+                <th>Rank</th>
+                <th>System Role</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
 
-            <thead>
+        </thead>
 
-                <tr>
-                    <th>Callsign</th>
-                    <th>In-Game Name</th>
-                    <th>Rank</th>
-                    <th>System Role</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
+        <tbody id="officerList">
 
-            </thead>
+            <tr>
+                <td colspan="6" class="empty">
+                    Loading officers...
+                </td>
+            </tr>
 
-            <tbody id="officerList">
+        </tbody>
 
-                <tr>
-                    <td colspan="6" class="empty">
-                        Loading officers...
-                    </td>
-                </tr>
+    </table>
 
-            </tbody>
-
-        </table>
-
-    </div>
+</div>
+```
 
 </main>
-
 
 <script>
 
 const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+
 const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
 const supabaseClient = window.supabase.createClient(
@@ -232,17 +238,114 @@ const supabaseClient = window.supabase.createClient(
 );
 
 
-async function checkMaster() {
+/*
+ * BACKEND SYSTEM ROLES
+ *
+ * These values control permissions.
+ *
+ * master      = full command access
+ * officer     = Detective permissions
+ * investigator = Head of Drugs permissions
+ * case_lead   = Head of Weapons permissions
+ *
+ * The displayed title is stored separately
+ * in portal_title.
+ */
+
+
+/*
+ * Check whether a role has master access.
+ */
+
+function isMasterRole(role) {
+
+    return role === 'master';
+
+}
+
+
+/*
+ * Escape values before placing database
+ * content into HTML.
+ */
+
+function escapeHtml(value) {
+
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+}
+
+
+/*
+ * Escape a value before placing it inside
+ * a JavaScript string in an onclick handler.
+ */
+
+function escapeJs(value) {
+
+    return String(value ?? '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\r/g, '\\r')
+        .replace(/\n/g, '\\n');
+
+}
+
+
+/*
+ * Convert backend role into its normal
+ * displayed SCU title.
+ */
+
+function getDefaultPortalTitle(role) {
+
+    switch (role) {
+
+        case 'master':
+            return 'High Command';
+
+        case 'officer':
+            return 'Detective';
+
+        case 'investigator':
+            return 'Head of Drugs';
+
+        case 'case_lead':
+            return 'Head of Weapons';
+
+        default:
+            return '';
+
+    }
+
+}
+
+
+/*
+ * Check that the logged-in user has
+ * master-level command access.
+ */
+
+async function checkCommandAccess() {
 
     const {
-        data: { session }
+        data: { session },
+        error: sessionError
     } = await supabaseClient.auth.getSession();
 
-    if (!session) {
+
+    if (sessionError || !session) {
 
         window.location.href = 'index.html';
 
         return;
+
     }
 
 
@@ -251,7 +354,7 @@ async function checkMaster() {
         error
     } = await supabaseClient
         .from('officers')
-        .select('*')
+        .select('role')
         .eq('id', session.user.id)
         .single();
 
@@ -259,7 +362,7 @@ async function checkMaster() {
     if (
         error ||
         !officer ||
-        officer.role !== 'master'
+        !isMasterRole(officer.role)
     ) {
 
         alert('ACCESS DENIED');
@@ -267,6 +370,7 @@ async function checkMaster() {
         window.location.href = 'dashboard.html';
 
         return;
+
     }
 
 
@@ -274,6 +378,10 @@ async function checkMaster() {
 
 }
 
+
+/*
+ * Load all officers.
+ */
 
 async function loadOfficers() {
 
@@ -303,6 +411,7 @@ async function loadOfficers() {
         `;
 
         return;
+
     }
 
 
@@ -317,18 +426,163 @@ async function loadOfficers() {
         `;
 
         return;
+
     }
 
 
-    list.innerHTML = data.map(officer => `
+    list.innerHTML = data.map(officer => {
+
+        const id = escapeJs(officer.id);
+
+        const safeId = escapeHtml(officer.id);
+
+        const callsign = escapeHtml(
+            officer.callsign || ''
+        );
+
+        const fullName = escapeHtml(
+            officer.full_name || ''
+        );
+
+        const rank = escapeHtml(
+            officer.rank || ''
+        );
+
+        const active = Boolean(officer.active);
+
+        const backendRole = officer.role || '';
+
+        const portalTitle =
+            officer.portal_title ||
+            getDefaultPortalTitle(backendRole);
+
+
+        /*
+         * Master accounts use portal_title
+         * to determine their displayed command
+         * position.
+         *
+         * Non-master roles have fixed titles.
+         */
+
+        let roleOptions = '';
+
+
+        if (backendRole === 'master') {
+
+            roleOptions = `
+
+                <option
+                    value="master|Head of SCU"
+                    ${portalTitle === 'Head of SCU' ? 'selected' : ''}
+                >
+                    Head of SCU
+                </option>
+
+                <option
+                    value="master|Assistant Head of SCU"
+                    ${portalTitle === 'Assistant Head of SCU' ? 'selected' : ''}
+                >
+                    Assistant Head of SCU
+                </option>
+
+                <option
+                    value="master|GOV"
+                    ${portalTitle === 'GOV' ? 'selected' : ''}
+                >
+                    GOV
+                </option>
+
+                <option
+                    value="master|High Command"
+                    ${portalTitle === 'High Command' ? 'selected' : ''}
+                >
+                    High Command
+                </option>
+
+                <option
+                    value="officer|Detective"
+                >
+                    Detective
+                </option>
+
+                <option
+                    value="investigator|Head of Drugs"
+                >
+                    Head of Drugs
+                </option>
+
+                <option
+                    value="case_lead|Head of Weapons"
+                >
+                    Head of Weapons
+                </option>
+
+            `;
+
+        } else {
+
+            roleOptions = `
+
+                <option
+                    value="officer|Detective"
+                    ${backendRole === 'officer' ? 'selected' : ''}
+                >
+                    Detective
+                </option>
+
+                <option
+                    value="investigator|Head of Drugs"
+                    ${backendRole === 'investigator' ? 'selected' : ''}
+                >
+                    Head of Drugs
+                </option>
+
+                <option
+                    value="case_lead|Head of Weapons"
+                    ${backendRole === 'case_lead' ? 'selected' : ''}
+                >
+                    Head of Weapons
+                </option>
+
+                <option
+                    value="master|Head of SCU"
+                >
+                    Head of SCU
+                </option>
+
+                <option
+                    value="master|Assistant Head of SCU"
+                >
+                    Assistant Head of SCU
+                </option>
+
+                <option
+                    value="master|GOV"
+                >
+                    GOV
+                </option>
+
+                <option
+                    value="master|High Command"
+                >
+                    High Command
+                </option>
+
+            `;
+
+        }
+
+
+        return `
 
         <tr>
 
             <td>
 
                 <input
-                    id="callsign-${officer.id}"
-                    value="${escapeHtml(officer.callsign || '')}"
+                    id="callsign-${safeId}"
+                    value="${callsign}"
                 >
 
             </td>
@@ -337,8 +591,8 @@ async function loadOfficers() {
             <td>
 
                 <input
-                    id="name-${officer.id}"
-                    value="${escapeHtml(officer.full_name || '')}"
+                    id="name-${safeId}"
+                    value="${fullName}"
                 >
 
             </td>
@@ -347,8 +601,8 @@ async function loadOfficers() {
             <td>
 
                 <input
-                    id="rank-${officer.id}"
-                    value="${escapeHtml(officer.rank || '')}"
+                    id="rank-${safeId}"
+                    value="${rank}"
                     placeholder="e.g. Detective"
                 >
 
@@ -357,106 +611,218 @@ async function loadOfficers() {
 
             <td>
 
-                <select id="role-${officer.id}">
+                <select
+                    id="role-${safeId}"
+                >
 
-                    <option value="officer"
-                        ${officer.role === 'officer' ? 'selected' : ''}>
-                        Officer
-                    </option>
-
-                    <option value="investigator"
-                        ${officer.role === 'investigator' ? 'selected' : ''}>
-                        Investigator
-                    </option>
-
-                    <option value="lead"
-                        ${officer.role === 'lead' ? 'selected' : ''}>
-                        Case Lead
-                    </option>
-
-                    <option value="master"
-                        ${officer.role === 'master' ? 'selected' : ''}>
-                        Master
-                    </option>
+                    ${roleOptions}
 
                 </select>
 
             </td>
 
 
-          <td class="status">
-    ${officer.active ? 'ACTIVE' : 'INACTIVE'}
-</td>
+            <td class="status">
+
+                ${active ? 'ACTIVE' : 'INACTIVE'}
+
+            </td>
+
 
             <td>
 
-<td>
+                <button
+                    class="save"
+                    onclick="saveOfficer('${id}')"
+                >
+                    SAVE
+                </button>
 
-    <button
-        class="save"
-        onclick="saveOfficer('${officer.id}')"
-    >
-        SAVE
-    </button>
 
-    <br>
+                <br>
 
-    <button
-        onclick="toggleOfficerStatus('${officer.id}', ${officer.active})"
-        style="
-            margin-top:8px;
-            background:${officer.active ? '#991b1b' : '#15803d'};
-        "
-    >
-        ${officer.active ? 'DEACTIVATE' : 'REACTIVATE'}
-    </button>
 
-</td>
+                <button
+                    onclick="toggleOfficerStatus('${id}', ${active})"
+                    style="
+                        margin-top:8px;
+                        background:${active ? '#991b1b' : '#15803d'};
+                    "
+                >
+                    ${active ? 'DEACTIVATE' : 'REACTIVATE'}
+                </button>
+
+            </td>
+
         </tr>
 
-    `).join('');
+        `;
+
+    }).join('');
 
 }
 
 
+/*
+ * Save officer changes.
+ */
+
 async function saveOfficer(id) {
-
-    const callsign =
-        document.getElementById(`callsign-${id}`).value.trim();
-
-    const fullName =
-        document.getElementById(`name-${id}`).value.trim();
-
-    const rank =
-        document.getElementById(`rank-${id}`).value.trim();
-
-    const role =
-        document.getElementById(`role-${id}`).value;
-
-
-    if (!callsign || !fullName || !rank) {
-
-        alert('Please complete Callsign, Name and Rank.');
-
-        return;
-    }
-
-
-    /*
-     * Prevent the currently logged-in Master
-     * from accidentally removing their own Master role.
-     */
 
     const {
         data: { session }
     } = await supabaseClient.auth.getSession();
 
 
-    if (id === session.user.id && role !== 'master') {
+    if (!session) {
 
-        alert('You cannot remove your own Master role.');
+        alert('You are not logged in.');
 
         return;
+
+    }
+
+
+    const safeId = id;
+
+
+    const callsign =
+        document.getElementById(`callsign-${safeId}`).value.trim();
+
+
+    const fullName =
+        document.getElementById(`name-${safeId}`).value.trim();
+
+
+    const rank =
+        document.getElementById(`rank-${safeId}`).value.trim();
+
+
+    const roleSelection =
+        document.getElementById(`role-${safeId}`).value;
+
+
+    const separatorIndex =
+        roleSelection.indexOf('|');
+
+
+    if (separatorIndex === -1) {
+
+        alert('Invalid system role.');
+
+        return;
+
+    }
+
+
+    const role =
+        roleSelection.substring(0, separatorIndex);
+
+
+    const portalTitle =
+        roleSelection.substring(separatorIndex + 1);
+
+
+    if (!callsign || !fullName || !rank) {
+
+        alert(
+            'Please complete Callsign, Name and Rank.'
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Only recognised backend roles can
+     * be saved.
+     */
+
+    const allowedRoles = [
+        'officer',
+        'investigator',
+        'case_lead',
+        'master'
+    ];
+
+
+    if (!allowedRoles.includes(role)) {
+
+        alert('Invalid system role.');
+
+        return;
+
+    }
+
+
+    /*
+     * Prevent the logged-in master user
+     * from removing their own master access.
+     */
+
+    if (
+        id === session.user.id &&
+        !isMasterRole(role)
+    ) {
+
+        alert(
+            'You cannot remove your own SCU Command access.'
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Verify the current logged-in user's
+     * database role before making changes.
+     */
+
+    const {
+        data: currentUser,
+        error: currentUserError
+    } = await supabaseClient
+        .from('officers')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
+
+    if (
+        currentUserError ||
+        !currentUser ||
+        !isMasterRole(currentUser.role)
+    ) {
+
+        alert('Unable to verify your permissions.');
+
+        return;
+
+    }
+
+
+    /*
+     * Prevent the logged-in master user
+     * from downgrading themselves.
+     *
+     * They may change their displayed
+     * command title between master titles.
+     */
+
+    if (
+        id === session.user.id &&
+        isMasterRole(currentUser.role) &&
+        !isMasterRole(role)
+    ) {
+
+        alert(
+            'You cannot downgrade your own SCU Command access.'
+        );
+
+        return;
+
     }
 
 
@@ -465,10 +831,13 @@ async function saveOfficer(id) {
     } = await supabaseClient
         .from('officers')
         .update({
+
             callsign: callsign,
             full_name: fullName,
             rank: rank,
-            role: role
+            role: role,
+            portal_title: portalTitle
+
         })
         .eq('id', id);
 
@@ -483,51 +852,95 @@ async function saveOfficer(id) {
         );
 
         return;
+
     }
 
 
-    alert('OFFICER UPDATED SUCCESSFULLY');
+    alert(
+        'OFFICER UPDATED SUCCESSFULLY'
+    );
+
+
+    loadOfficers();
 
 }
-async function toggleOfficerStatus(id, currentlyActive) {
+
+
+/*
+ * Activate / deactivate an officer.
+ */
+
+async function toggleOfficerStatus(
+    id,
+    currentlyActive
+) {
 
     const {
         data: { session }
     } = await supabaseClient.auth.getSession();
 
+
     if (!session) {
-        alert('You are not logged in.');
+
+        alert(
+            'You are not logged in.'
+        );
+
         return;
+
     }
 
-    // Prevent a Master from deactivating themselves
-    if (id === session.user.id && currentlyActive) {
-        alert('You cannot deactivate your own account.');
+
+    /*
+     * Prevent a master user from
+     * deactivating themselves.
+     */
+
+    if (
+        id === session.user.id &&
+        currentlyActive
+    ) {
+
+        alert(
+            'You cannot deactivate your own account.'
+        );
+
         return;
+
     }
+
 
     const newStatus = !currentlyActive;
+
 
     const action = newStatus
         ? 'reactivate'
         : 'deactivate';
 
+
     const confirmed = confirm(
         `Are you sure you want to ${action} this officer?`
     );
 
+
     if (!confirmed) {
+
         return;
+
     }
+
 
     const {
         error
     } = await supabaseClient
         .from('officers')
         .update({
+
             active: newStatus
+
         })
         .eq('id', id);
+
 
     if (error) {
 
@@ -539,7 +952,9 @@ async function toggleOfficerStatus(id, currentlyActive) {
         );
 
         return;
+
     }
+
 
     alert(
         newStatus
@@ -547,20 +962,15 @@ async function toggleOfficerStatus(id, currentlyActive) {
             : 'OFFICER DEACTIVATED SUCCESSFULLY'
     );
 
+
     loadOfficers();
-}
-
-function escapeHtml(value) {
-
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
 
 }
 
+
+/*
+ * Logout.
+ */
 
 async function logout() {
 
@@ -571,7 +981,11 @@ async function logout() {
 }
 
 
-checkMaster();
+/*
+ * Start access check.
+ */
+
+checkCommandAccess();
 
 </script>
 
