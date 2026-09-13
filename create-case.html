@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -20,19 +23,50 @@
             color: #e6edf3;
         }
 
+        /* =========================
+           HEADER
+        ========================= */
+
         header {
+            height: 70px;
             background: #111820;
             border-bottom: 1px solid #26313c;
-            padding: 20px 30px;
+            padding: 0 30px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 2;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 2px;
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-logo {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .header-subtitle {
+            font-size: 11px;
+            color: #6f7c88;
+            margin-top: 3px;
+            letter-spacing: 1px;
         }
 
         .master {
@@ -40,10 +74,45 @@
             font-size: 13px;
         }
 
+        .header-right {
+            margin-left: auto;
+        }
+
+        /* =========================
+           BACKGROUND LOGOS
+        ========================= */
+
+        .background-logo {
+            position: fixed;
+            top: 50%;
+            width: 220px;
+            height: 220px;
+            object-fit: contain;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-logo-left {
+            left: 20px;
+            transform: translateY(-50%);
+        }
+
+        .background-logo-right {
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
         main {
             max-width: 900px;
             margin: 35px auto;
             padding: 0 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .panel {
@@ -63,6 +132,10 @@
             font-size: 13px;
             margin-bottom: 30px;
         }
+
+        /* =========================
+           FORM
+        ========================= */
 
         label {
             display: block;
@@ -96,6 +169,10 @@
             outline: none;
             border-color: #7dd3fc;
         }
+
+        /* =========================
+           OFFICERS
+        ========================= */
 
         .officers {
             margin-top: 10px;
@@ -134,6 +211,10 @@
             margin-top: 3px;
         }
 
+        /* =========================
+           BUTTONS
+        ========================= */
+
         .buttons {
             display: flex;
             gap: 12px;
@@ -167,6 +248,10 @@
             background: #4b5563;
         }
 
+        /* =========================
+           MESSAGE
+        ========================= */
+
         .message {
             margin-top: 20px;
             padding: 12px;
@@ -174,27 +259,151 @@
             display: none;
             font-size: 13px;
         }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 0 15px;
+            }
+
+            .header-logo {
+                width: 42px;
+                height: 42px;
+            }
+
+            .header-brand {
+                gap: 10px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .header-subtitle {
+                font-size: 9px;
+            }
+
+            main {
+                padding: 0 12px;
+                margin: 20px auto;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .background-logo {
+                width: 130px;
+                height: 130px;
+                opacity: 0.25;
+            }
+
+            .background-logo-left {
+                left: -45px;
+            }
+
+            .background-logo-right {
+                right: -45px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .create {
+                order: 1;
+            }
+
+            .cancel {
+                order: 2;
+            }
+
+        }
+
     </style>
+
 </head>
 
 <body>
 
+
+<!-- =========================
+     BACKGROUND LOGO - LEFT
+========================= -->
+
+<img
+    class="background-logo background-logo-left"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
+
+
+<!-- =========================
+     BACKGROUND LOGO - RIGHT
+========================= -->
+
+<img
+    class="background-logo background-logo-right"
+    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+    alt=""
+>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
 <header>
 
-    <h1>SCU // CASE MANAGEMENT</h1>
+    <div class="header-brand">
 
-    <div>
-        <span class="master">AUTHORISED PERSONNEL</span>
+        <img
+            class="header-logo"
+            src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+            alt="SCU Logo"
+        >
+
+        <div class="header-left">
+
+            <div class="header-title">
+                SCU CASE MANAGEMENT
+            </div>
+
+            <div class="header-subtitle">
+                SPECIAL CONSTABULARY UNIT
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <span class="master">
+            AUTHORISED PERSONNEL
+        </span>
+
     </div>
 
 </header>
 
 
+<!-- =========================
+     MAIN
+========================= -->
+
 <main>
 
     <div class="panel">
 
-        <h2>CREATE NEW CASE</h2>
+        <h2>
+            CREATE NEW CASE
+        </h2>
 
         <div class="subtitle">
             Create an active SCU investigation and select which officers can access it.
@@ -203,8 +412,8 @@
 
         <form id="caseForm">
 
-          
 
+            <!-- CASE NAME -->
 
             <label for="caseName">
                 Case Name
@@ -218,6 +427,8 @@
             >
 
 
+            <!-- DESCRIPTION -->
+
             <label for="description">
                 Initial Case Information
             </label>
@@ -227,6 +438,8 @@
                 placeholder="Enter the initial case information..."
             ></textarea>
 
+
+            <!-- CLASSIFICATION -->
 
             <label for="classification">
                 Classification
@@ -253,16 +466,21 @@
             </select>
 
 
+            <!-- OFFICER ACCESS -->
+
             <label>
                 Officers With Access
             </label>
 
-            <div class="officers" id="officerList">
-
+            <div
+                class="officers"
+                id="officerList"
+            >
                 Loading officers...
-
             </div>
 
+
+            <!-- BUTTONS -->
 
             <div class="buttons">
 
@@ -286,6 +504,8 @@
         </form>
 
 
+        <!-- MESSAGE -->
+
         <div
             id="message"
             class="message"
@@ -298,53 +518,81 @@
 
 <script>
 
-const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+const SUPABASE_URL =
+    'https://mtlozyseibrefhxnocvb.supabase.co';
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+
+const SUPABASE_KEY =
+    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
 let currentUser = null;
 
 
+/* =========================
+   INITIALISE
+========================= */
+
 async function initialise() {
 
     const {
-        data: { session }
-    } = await supabaseClient.auth.getSession();
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth.getSession();
 
 
     if (!session) {
 
-        window.location.href = 'index.html';
+        window.location.href =
+            'index.html';
 
         return;
+
     }
 
 
-    currentUser = session.user;
+    currentUser =
+        session.user;
+
 
     loadOfficers();
 
 }
 
 
+/* =========================
+   LOAD OFFICERS
+========================= */
+
 async function loadOfficers() {
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from('officers')
-        .select('id, callsign, full_name, rank')
-        .order('callsign');
+    } =
+        await supabaseClient
+            .from('officers')
+            .select(
+                'id, callsign, full_name, rank'
+            )
+            .order(
+                'callsign'
+            );
 
 
     const list =
-        document.getElementById('officerList');
+        document.getElementById(
+            'officerList'
+        );
 
 
     if (error) {
@@ -352,9 +600,12 @@ async function loadOfficers() {
         list.innerHTML =
             'Unable to load officers.';
 
-        console.error(error);
+        console.error(
+            error
+        );
 
         return;
+
     }
 
 
@@ -364,141 +615,242 @@ async function loadOfficers() {
             'No officers found.';
 
         return;
+
     }
 
 
-    list.innerHTML = data
-        .filter(officer => officer.id !== currentUser.id)
-        .map(officer => `
+    list.innerHTML =
+        data
+            .filter(
+                officer =>
+                    officer.id !== currentUser.id
+            )
+            .map(
+                officer => `
 
-            <label class="officer">
+                    <label class="officer">
 
-                <input
-                    type="checkbox"
-                    value="${officer.id}"
-                    class="officer-checkbox"
-                >
+                        <input
+                            type="checkbox"
+                            value="${officer.id}"
+                            class="officer-checkbox"
+                        >
 
-                <div class="officer-info">
+                        <div class="officer-info">
 
-                    <div class="callsign">
-                        ${escapeHtml(officer.callsign || 'UNASSIGNED')}
-                    </div>
+                            <div class="callsign">
+                                ${escapeHtml(
+                                    officer.callsign
+                                    ||
+                                    'UNASSIGNED'
+                                )}
+                            </div>
 
-                    <div class="rank">
-                        ${escapeHtml(officer.full_name || '')}
-                        —
-                        ${escapeHtml(officer.rank || 'Officer')}
-                    </div>
+                            <div class="rank">
 
-                </div>
+                                ${escapeHtml(
+                                    officer.full_name
+                                    ||
+                                    ''
+                                )}
 
-            </label>
+                                —
 
-        `).join('');
+                                ${escapeHtml(
+                                    officer.rank
+                                    ||
+                                    'Officer'
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </label>
+
+                `
+            )
+            .join('');
 
 }
 
-        document
+
+/* =========================
+   CREATE CASE
+========================= */
+
+document
     .getElementById('caseForm')
-    .addEventListener('submit', async function(event) {
+    .addEventListener(
+        'submit',
+        async function(event) {
 
-        event.preventDefault();
+            event.preventDefault();
 
-        const caseName =
-            document.getElementById('caseName')
-                .value.trim();
 
-        const description =
-            document.getElementById('description')
-                .value.trim();
+            const caseName =
+                document.getElementById(
+                    'caseName'
+                )
+                .value
+                .trim();
 
-        const classification =
-            document.getElementById('classification')
+
+            const description =
+                document.getElementById(
+                    'description'
+                )
+                .value
+                .trim();
+
+
+            const classification =
+                document.getElementById(
+                    'classification'
+                )
                 .value;
 
-        const selectedOfficers =
-            Array.from(
-                document.querySelectorAll(
-                    '.officer-checkbox:checked'
+
+            const selectedOfficers =
+                Array.from(
+                    document.querySelectorAll(
+                        '.officer-checkbox:checked'
+                    )
                 )
-            ).map(checkbox => checkbox.value);
+                .map(
+                    checkbox =>
+                        checkbox.value
+                );
 
 
-        /*
-         * Create the case securely through Supabase.
-         */
+            /*
+             * Create the case securely
+             * through Supabase.
+             */
 
-        const {
-            data: newCaseId,
-            error: caseError
-        } = await supabaseClient.rpc('create_case', {
+            const {
+                data: newCaseId,
+                error: caseError
+            } =
+                await supabaseClient.rpc(
+                    'create_case',
+                    {
 
-            p_case_name: caseName,
+                        p_case_name:
+                            caseName,
 
-            p_description: description,
+                        p_description:
+                            description,
 
-            p_classification: classification,
+                        p_classification:
+                            classification,
 
-            p_officer_ids: selectedOfficers
+                        p_officer_ids:
+                            selectedOfficers
 
-        });
+                    }
+                );
 
 
-        if (caseError) {
+            if (caseError) {
+
+                showMessage(
+                    'CASE CREATION FAILED: '
+                    +
+                    caseError.message
+                );
+
+
+                console.error(
+                    caseError
+                );
+
+
+                return;
+
+            }
+
 
             showMessage(
-                'CASE CREATION FAILED: ' +
-                caseError.message
+                'CASE CREATED SUCCESSFULLY'
             );
 
-            console.error(caseError);
 
-            return;
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        'dashboard.html';
+
+                },
+                1200
+            );
+
         }
+    );
 
 
-        showMessage(
-            'CASE CREATED SUCCESSFULLY'
-        );
-
-
-        setTimeout(() => {
-
-            window.location.href =
-                'dashboard.html';
-
-        }, 1200);
-
-    });
+/* =========================
+   MESSAGE
+========================= */
 
 function showMessage(text) {
 
     const message =
-        document.getElementById('message');
+        document.getElementById(
+            'message'
+        );
 
-    message.textContent = text;
 
-    message.style.display = 'block';
+    message.textContent =
+        text;
+
+
+    message.style.display =
+        'block';
 
 }
 
+
+/* =========================
+   HTML ESCAPE
+========================= */
 
 function escapeHtml(value) {
 
     return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+        .replace(
+            /</g,
+            '&lt;'
+        )
+        .replace(
+            />/g,
+            '&gt;'
+        )
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+        .replace(
+            /'/g,
+            '&#039;'
+        );
 
 }
 
+
+/* =========================
+   START
+========================= */
 
 initialise();
 
 </script>
 
 </body>
+
 </html>
