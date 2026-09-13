@@ -1608,44 +1608,61 @@ async function loadIntelCounts(
     }
 
 
-    // --------------------------------------------------
-    // Calculate existing SCU Intel counts
-    // --------------------------------------------------
+   // --------------------------------------------------
+// Calculate Intel counts
+// --------------------------------------------------
+//
+// NEW INTEL
+// = Intel this officer has NOT viewed.
+//
+// OPEN INTEL
+// = All active Intel records.
+//   Viewing Intel does NOT remove it from this count.
+//   It remains counted until the Intel record is deleted.
+//
+// --------------------------------------------------
 
-    let newCount = 0;
+let newCount = 0;
 
-    let openCount = 0;
+let openCount =
+    intel.length;
 
 
-    intel.forEach(
-        item => {
+intel.forEach(
+    item => {
 
-            if (
-                viewedIds.has(
-                    item.id
-                )
-            ) {
+        if (
+            !viewedIds.has(
+                item.id
+            )
+        ) {
 
-                openCount++;
-
-            } else {
-
-                newCount++;
-
-            }
+            newCount++;
 
         }
-    );
+
+    }
+);
+   // --------------------------------------------------
+// Add NON-SCU unassigned reports to NEW INTEL
+// --------------------------------------------------
+
+newCount +=
+    nonScuNewCount;
 
 
-    // --------------------------------------------------
-    // Add NON-SCU unassigned reports to NEW INTEL
-    // --------------------------------------------------
+// --------------------------------------------------
+// Add NON-SCU reports to OPEN INTEL
+// --------------------------------------------------
+//
+// They remain open until the underlying Intel
+// record is deleted.
+//
+// --------------------------------------------------
 
-    newCount +=
-        nonScuNewCount;
-
-
+openCount +=
+    nonScuNewCount;
+   
     // --------------------------------------------------
     // Display counts
     // --------------------------------------------------
