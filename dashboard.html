@@ -29,7 +29,18 @@
             justify-content: space-between;
             align-items: center;
         }
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
 
+.header-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
         .header h1 {
             margin: 0;
             font-size: 21px;
@@ -403,7 +414,14 @@
             .officer-status {
                 font-size: 9px;
             }
+.header-logo {
+    width: 42px;
+    height: 42px;
+}
 
+.header-brand {
+    gap: 10px;
+}
         }
 
     </style>
@@ -414,6 +432,14 @@
 
 <header class="header">
 
+   <div class="header-brand">
+
+    <img
+        class="header-logo"
+        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+        alt="SCU Logo"
+    >
+
     <div>
 
         <h1>SCU CASE MANAGEMENT</h1>
@@ -423,6 +449,8 @@
         </p>
 
     </div>
+
+</div>
 
 
     <div style="display: flex; gap: 10px; align-items: center;">
