@@ -183,14 +183,52 @@
 
         /* ACTIVE CASES */
 
+        .active-cases-card {
+            cursor: pointer;
+            transition:
+                border-color 0.15s ease,
+                background 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        .active-cases-card:hover {
+            border-color: #22c55e;
+            background: #141f1a;
+        }
+
         .active-cases-card .number {
             color: #4ade80;
         }
 
+        .active-cases-card.selected {
+            border-color: #22c55e;
+            background: #141f1a;
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+        }
+
         /* CLOSED CASES */
+
+        .closed-cases-card {
+            cursor: pointer;
+            transition:
+                border-color 0.15s ease,
+                background 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        .closed-cases-card:hover {
+            border-color: #ef4444;
+            background: #211416;
+        }
 
         .closed-cases-card .number {
             color: #ef4444;
+        }
+
+        .closed-cases-card.selected {
+            border-color: #ef4444;
+            background: #211416;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
         }
 
         /* NEW INTEL */
@@ -260,12 +298,51 @@
             margin-top: 0;
         }
 
+        /* CASE FILTER BUTTONS */
+
+        .case-filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .case-filter-button {
+            background: #202c38;
+            color: #dbe3ea;
+            border: 1px solid #354554;
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .case-filter-button:hover {
+            background: #2b3a48;
+        }
+
+        .case-filter-button.active {
+            background: #1d4ed8;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .case-filter-button.closed-filter.active {
+            background: #991b1b;
+            border-color: #ef4444;
+        }
+
         .case-row {
             border-top: 1px solid #293542;
             padding: 16px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .case-row:hover {
+            background: #0d141c;
         }
 
         .case-name {
@@ -446,7 +523,11 @@
 
         <!-- ACTIVE CASES -->
 
-        <div class="card active-cases-card">
+        <div
+            class="card active-cases-card"
+            id="activeCasesCard"
+            onclick="filterCases('active')"
+        >
 
             <div class="card-title">
                 Active Cases
@@ -464,7 +545,11 @@
 
         <!-- CLOSED CASES -->
 
-        <div class="card closed-cases-card">
+        <div
+            class="card closed-cases-card"
+            id="closedCasesCard"
+            onclick="filterCases('closed')"
+        >
 
             <div class="card-title">
                 Closed Cases
@@ -534,6 +619,38 @@
             Accessible Case Files
         </h2>
 
+
+        <div class="case-filter-buttons">
+
+            <button
+                class="case-filter-button active"
+                id="showAllCasesButton"
+                onclick="filterCases('all')"
+            >
+                ALL CASES
+            </button>
+
+
+            <button
+                class="case-filter-button"
+                id="showActiveCasesButton"
+                onclick="filterCases('active')"
+            >
+                ACTIVE CASES
+            </button>
+
+
+            <button
+                class="case-filter-button closed-filter"
+                id="showClosedCasesButton"
+                onclick="filterCases('closed')"
+            >
+                CLOSED CASES
+            </button>
+
+        </div>
+
+
         <div id="caseList">
 
             <div class="empty">
@@ -590,6 +707,15 @@ const fullClosedCaseAccessRoles = [
     'investigator',
     'case_lead'
 ];
+
+
+// ======================================================
+// CASE LIST STATE
+// ======================================================
+
+let accessibleCases = [];
+
+let currentCaseFilter = 'all';
 
 
 // ======================================================
@@ -857,12 +983,9 @@ async function loadCases(
     //
     // Normal officers can see:
     // - Active cases already available to them
-    // - Closed cases where they are the creator/owner
+    // - Closed cases where they are the creator
     //
     // --------------------------------------------------
-
-    let accessibleCases;
-
 
     if (
         hasFullClosedCaseAccess
@@ -888,8 +1011,7 @@ async function loadCases(
                     if (isClosed) {
 
                         return (
-                            caseFile.created_by === userId ||
-                            caseFile.owner_id === userId
+                            caseFile.created_by === userId
                         );
 
                     }
@@ -903,28 +1025,230 @@ async function loadCases(
     }
 
 
+    renderCaseList();
+
+
+    console.log(
+        'Case access:',
+        {
+            totalCases:
+                allCases.length,
+
+            activeCases:
+                activeCases.length,
+
+            closedCases:
+                closedCases.length,
+
+            visibleCases:
+                accessibleCases.length,
+
+            fullClosedCaseAccess:
+                hasFullClosedCaseAccess,
+
+            role:
+                role
+        }
+    );
+
+}
+
+
+// ======================================================
+// FILTER CASES
+// ======================================================
+
+function filterCases(
+    filter
+) {
+
+
+    currentCaseFilter =
+        filter;
+
+
+    // --------------------------------------------------
+    // Update filter button states
+    // --------------------------------------------------
+
+    document
+        .getElementById(
+            'showAllCasesButton'
+        )
+        .classList.toggle(
+            'active',
+            filter === 'all'
+        );
+
+
+    document
+        .getElementById(
+            'showActiveCasesButton'
+        )
+        .classList.toggle(
+            'active',
+            filter === 'active'
+        );
+
+
+    document
+        .getElementById(
+            'showClosedCasesButton'
+        )
+        .classList.toggle(
+            'active',
+            filter === 'closed'
+        );
+
+
+    // --------------------------------------------------
+    // Update dashboard card states
+    // --------------------------------------------------
+
+    document
+        .getElementById(
+            'activeCasesCard'
+        )
+        .classList.toggle(
+            'selected',
+            filter === 'active'
+        );
+
+
+    document
+        .getElementById(
+            'closedCasesCard'
+        )
+        .classList.toggle(
+            'selected',
+            filter === 'closed'
+        );
+
+
+    renderCaseList();
+
+}
+
+
+// ======================================================
+// RENDER CASE LIST
+// ======================================================
+
+function renderCaseList() {
+
+
     const list =
         document.getElementById(
             'caseList'
         );
 
 
-    if (
-        accessibleCases.length === 0
-    ) {
-
-        list.innerHTML =
-            '<div class="empty">No authorised case files found.</div>';
+    if (!list) {
 
         return;
 
     }
 
 
+    let casesToDisplay =
+        accessibleCases || [];
+
+
+    // --------------------------------------------------
+    // ACTIVE FILTER
+    // --------------------------------------------------
+
+    if (
+        currentCaseFilter === 'active'
+    ) {
+
+        casesToDisplay =
+            casesToDisplay.filter(
+                caseFile =>
+                    String(
+                        caseFile.status || ''
+                    )
+                    .trim()
+                    .toLowerCase() === 'active'
+            );
+
+    }
+
+
+    // --------------------------------------------------
+    // CLOSED FILTER
+    // --------------------------------------------------
+
+    if (
+        currentCaseFilter === 'closed'
+    ) {
+
+        casesToDisplay =
+            casesToDisplay.filter(
+                caseFile =>
+                    String(
+                        caseFile.status || ''
+                    )
+                    .trim()
+                    .toLowerCase() === 'closed'
+            );
+
+    }
+
+
+    // --------------------------------------------------
+    // NO CASES
+    // --------------------------------------------------
+
+    if (
+        casesToDisplay.length === 0
+    ) {
+
+
+        let message =
+            'No authorised case files found.';
+
+
+        if (
+            currentCaseFilter === 'active'
+        ) {
+
+            message =
+                'No active cases found.';
+
+        }
+
+
+        if (
+            currentCaseFilter === 'closed'
+        ) {
+
+            message =
+                'No closed cases found.';
+
+        }
+
+
+        list.innerHTML =
+            `<div class="empty">${message}</div>`;
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------
+    // CLEAR EXISTING LIST
+    // --------------------------------------------------
+
     list.innerHTML = '';
 
 
-    accessibleCases.forEach(
+    // --------------------------------------------------
+    // CREATE CASE ROWS
+    // --------------------------------------------------
+
+    casesToDisplay.forEach(
         caseFile => {
 
 
@@ -1003,30 +1327,6 @@ async function loadCases(
                 row
             );
 
-        }
-    );
-
-
-    console.log(
-        'Case access:',
-        {
-            totalCases:
-                allCases.length,
-
-            activeCases:
-                activeCases.length,
-
-            closedCases:
-                closedCases.length,
-
-            visibleCases:
-                accessibleCases.length,
-
-            fullClosedCaseAccess:
-                hasFullClosedCaseAccess,
-
-            role:
-                role
         }
     );
 
@@ -1133,7 +1433,9 @@ async function loadIntelCounts(
 
     // Normal officers only receive their own Intel.
 
-    if (!hasFullIntelAccess) {
+    if (
+        !hasFullIntelAccess
+    ) {
 
         intelQuery =
             intelQuery.eq(
