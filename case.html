@@ -2041,28 +2041,25 @@ document.getElementById(
 
 
         const {
-            error: evidenceError
-        } =
-            await supabaseClient
-                .from('evidence')
-                .insert({
+    error: evidenceError
+} =
+    await supabaseClient
+        .from('evidence')
+        .insert({
 
-                    case_id:
-                        caseId,
+            case_id:
+                caseId,
 
-                    file_name:
-                        file.name,
+            file_name:
+                file.name,
 
-                    file_type:
-                        file.type,
+            file_type:
+                file.type,
 
-                    file_url:
-                        publicData.publicUrl,
+            file_url:
+                publicData.publicUrl
 
-                    created_by:
-                        currentUser.id
-
-                });
+        });
 
 
         if (evidenceError) {
@@ -2128,28 +2125,25 @@ document.getElementById(
 
 
         const {
-            error
-        } =
-            await supabaseClient
-                .from('evidence')
-                .insert({
+    error
+} =
+    await supabaseClient
+        .from('evidence')
+        .insert({
 
-                    case_id:
-                        caseId,
+            case_id:
+                caseId,
 
-                    title:
-                        url,
+            title:
+                url,
 
-                    external_url:
-                        url,
+            external_url:
+                url,
 
-                    file_type:
-                        'External Link',
+            file_type:
+                'External Link'
 
-                    created_by:
-                        currentUser.id
-
-                });
+        });
 
 
         if (error) {
