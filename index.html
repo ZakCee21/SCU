@@ -34,16 +34,25 @@
        SCU BACKGROUND LOGO
     ========================= */
 
-   .background-logo {
+  .background-logo {
     position: fixed;
     top: 50%;
-    left: calc(50% - 380px);
-    transform: translate(-50%, -50%);
     width: 320px;
     max-width: 30vw;
     opacity: 0.5;
+    transform: translateY(-50%);
     z-index: 0;
     pointer-events: none;
+}
+
+.background-logo-left {
+    left: calc(50% - 380px);
+    transform: translate(-50%, -50%);
+}
+
+.background-logo-right {
+    left: calc(50% + 380px);
+    transform: translate(-50%, -50%);
 }
 
     /* =========================
@@ -143,10 +152,11 @@
 <!-- SCU LOGO BEHIND LOGIN BOX -->
 
 <img
-    class="background-logo"
+    class="background-logo background-logo-left"
     src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
     alt=""
 >
+
 <img
     class="background-logo background-logo-right"
     src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
