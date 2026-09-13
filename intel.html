@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,6 +21,11 @@
             background: #080c11;
             color: #e8edf2;
         }
+
+
+        /* ======================================================
+           HEADER
+        ====================================================== */
 
         .header {
             background: #111821;
@@ -50,11 +55,18 @@
             padding: 9px 15px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
         }
 
         .back-button:hover {
             background: #2b3a48;
         }
+
+
+        /* ======================================================
+           PAGE
+        ====================================================== */
 
         .container {
             max-width: 1100px;
@@ -68,29 +80,44 @@
 
         .intro h2 {
             margin: 0 0 6px;
+            font-size: 21px;
         }
 
         .intro p {
             color: #7f8c99;
             margin: 0;
+            font-size: 12px;
         }
+
+
+        /* ======================================================
+           INTEL LIST
+        ====================================================== */
 
         .intel-list {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
+
+
+        /* ======================================================
+           INTEL CARD
+        ====================================================== */
 
         .intel-card {
             background: #111821;
             border: 1px solid #293542;
             border-radius: 8px;
-            padding: 22px;
-            transition: border-color 0.2s, opacity 0.2s;
+            overflow: hidden;
+            transition:
+                border-color 0.2s,
+                box-shadow 0.2s;
         }
 
         .intel-card:hover {
             border-color: #3c4d5d;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
         }
 
         .intel-card.unread {
@@ -106,83 +133,251 @@
             border-color: #79540c;
         }
 
+
+        /* ======================================================
+           INTEL HEADER
+        ====================================================== */
+
         .intel-header {
+            padding: 20px 22px;
+            background: #151e28;
+            border-bottom: 1px solid #293542;
             display: flex;
             justify-content: space-between;
-            gap: 20px;
             align-items: flex-start;
-            margin-bottom: 15px;
+            gap: 20px;
+        }
+
+        .intel-header-left {
+            min-width: 0;
+            flex: 1;
         }
 
         .intel-subject {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: bold;
-            margin-bottom: 7px;
+            line-height: 1.3;
+            color: #f1f5f9;
+            margin-bottom: 8px;
         }
 
-        .intel-meta {
-            color: #7f8c99;
+        .intel-sender {
+            color: #8d9aa7;
             font-size: 11px;
+        }
+
+        .intel-sender strong {
+            color: #b8c3cd;
+        }
+
+        .intel-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .intel-type {
             background: #1d4ed8;
             color: white;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        .status-badge {
-            display: inline-block;
-            margin-top: 9px;
-            padding: 4px 8px;
+            padding: 7px 11px;
             border-radius: 4px;
             font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+
+        /* ======================================================
+           STATUS
+        ====================================================== */
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-new {
             background: #14532d;
             color: #86efac;
+            border: 1px solid #166534;
         }
 
         .status-open {
             background: #172554;
             color: #93c5fd;
+            border: 1px solid #1e3a8a;
         }
 
         .status-unassigned {
             background: #78350f;
             color: #fcd34d;
+            border: 1px solid #92400e;
         }
 
-        .section {
-            margin-top: 16px;
+
+        /* ======================================================
+           CARD BODY
+        ====================================================== */
+
+        .intel-body {
+            padding: 20px 22px;
         }
 
-        .section-title {
-            color: #8996a3;
+
+        /* ======================================================
+           INFORMATION GRID
+        ====================================================== */
+
+        .intel-info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .info-box {
+            background: #0d141c;
+            border: 1px solid #293542;
+            border-radius: 5px;
+            padding: 11px 12px;
+            min-width: 0;
+        }
+
+        .info-label {
+            color: #697784;
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #d7dee5;
             font-size: 11px;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .info-value.blue {
+            color: #60a5fa;
+        }
+
+        .info-value.orange {
+            color: #fbbf24;
+        }
+
+
+        /* ======================================================
+           FINDING
+        ====================================================== */
+
+        .finding-box {
+            background: #0d141c;
+            border: 1px solid #293542;
+            border-left: 3px solid #1d4ed8;
+            border-radius: 5px;
+            padding: 15px 16px;
+            margin-bottom: 14px;
+        }
+
+        .finding-title {
+            color: #8996a3;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 9px;
+        }
+
+        .finding-content {
+            color: #e8edf2;
+            line-height: 1.6;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+
+
+        /* ======================================================
+           OPTIONAL INFORMATION
+        ====================================================== */
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .detail-box {
+            background: #0d141c;
+            border: 1px solid #293542;
+            border-radius: 5px;
+            padding: 13px 14px;
+        }
+
+        .detail-title {
+            color: #8996a3;
+            font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 7px;
         }
 
-        .section-content {
-            color: #e8edf2;
+        .detail-content {
+            color: #d7dee5;
             line-height: 1.5;
-            font-size: 13px;
+            font-size: 12px;
             white-space: pre-wrap;
+            word-break: break-word;
         }
 
+
+        /* ======================================================
+           EVIDENCE
+        ====================================================== */
+
+        .evidence-box {
+            background: #0d141c;
+            border: 1px solid #293542;
+            border-radius: 5px;
+            padding: 13px 14px;
+            margin-top: 12px;
+        }
+
+        .evidence-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #60a5fa;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .evidence-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
+
+        /* ======================================================
+           TRIAGE
+        ====================================================== */
+
         .triage-panel {
-            margin-top: 20px;
-            padding: 18px;
+            margin-top: 18px;
+            padding: 16px;
             background: #17140e;
             border: 1px solid #79540c;
             border-radius: 6px;
@@ -190,11 +385,11 @@
 
         .triage-title {
             color: #fbbf24;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 7px;
         }
 
         .triage-description {
@@ -248,31 +443,42 @@
             cursor: not-allowed;
         }
 
+
+        /* ======================================================
+           ASSIGNED
+        ====================================================== */
+
         .assigned-panel {
             margin-top: 18px;
             padding: 12px 14px;
             background: #101a25;
             border: 1px solid #293542;
+            border-left: 3px solid #3b82f6;
             border-radius: 5px;
         }
 
         .assigned-label {
             color: #7f8c99;
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-bottom: 5px;
         }
 
         .assigned-value {
-            margin-top: 5px;
             color: #60a5fa;
             font-size: 12px;
             font-weight: bold;
         }
 
+
+        /* ======================================================
+           FOOTER
+        ====================================================== */
+
         .intel-footer {
-            margin-top: 20px;
-            padding-top: 15px;
+            padding: 14px 22px;
+            background: #0d141c;
             border-top: 1px solid #293542;
             display: flex;
             justify-content: space-between;
@@ -282,16 +488,7 @@
 
         .date {
             color: #6f7c88;
-            font-size: 11px;
-        }
-
-        .evidence-link {
-            color: #60a5fa;
-            text-decoration: none;
-        }
-
-        .evidence-link:hover {
-            text-decoration: underline;
+            font-size: 10px;
         }
 
         .delete-button {
@@ -301,13 +498,18 @@
             padding: 8px 13px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
         }
 
         .delete-button:hover {
             background: #991b1b;
         }
+
+
+        /* ======================================================
+           EMPTY / LOADING / ERROR
+        ====================================================== */
 
         .empty {
             background: #111821;
@@ -316,6 +518,10 @@
             padding: 45px 25px;
             text-align: center;
             color: #6f7c88;
+        }
+
+        .empty strong {
+            color: #aeb8c2;
         }
 
         .loading {
@@ -328,7 +534,24 @@
             color: #f87171;
             text-align: center;
             padding: 30px;
+            background: #111821;
+            border: 1px solid #7f1d1d;
+            border-radius: 8px;
         }
+
+
+        /* ======================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media (max-width: 850px) {
+
+            .intel-info-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
 
         @media (max-width: 700px) {
 
@@ -349,9 +572,18 @@
                 flex-direction: column;
             }
 
-            .intel-footer {
-                flex-direction: column;
+            .intel-header-right {
                 align-items: flex-start;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .intel-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
             }
 
             .triage-controls {
@@ -361,6 +593,36 @@
 
             .send-button {
                 width: 100%;
+            }
+
+            .intel-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .delete-button {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .intel-body {
+                padding: 15px;
+            }
+
+            .intel-header {
+                padding: 16px;
+            }
+
+            .intel-footer {
+                padding: 13px 15px;
+            }
+
+            .intel-subject {
+                font-size: 17px;
             }
 
         }
@@ -1046,7 +1308,6 @@ async function loadIntel() {
 
             // --------------------------------------------------
             // Triage controls
-            // Only full-access senior roles can assign.
             // --------------------------------------------------
 
             if (
@@ -1060,7 +1321,7 @@ async function loadIntel() {
 
                         <div class="triage-title">
 
-                            ⚠ UNASSIGNED — REQUIRES TRIAGE
+                            ⚠ UNASSIGNED INTELLIGENCE
 
                         </div>
 
@@ -1161,11 +1422,132 @@ async function loadIntel() {
             }
 
 
+            // --------------------------------------------------
+            // Optional details
+            // --------------------------------------------------
+
+            let detailHtml = '';
+
+
+            if (
+                intel.location ||
+                intel.source
+            ) {
+
+                detailHtml = `
+
+                    <div class="detail-grid">
+
+                        ${
+                            intel.location
+                            ? `
+
+                                <div class="detail-box">
+
+                                    <div class="detail-title">
+
+                                        Location
+
+                                    </div>
+
+                                    <div class="detail-content">
+
+                                        ${escapeHtml(
+                                            intel.location
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+                            `
+                            : ''
+                        }
+
+
+                        ${
+                            intel.source
+                            ? `
+
+                                <div class="detail-box">
+
+                                    <div class="detail-title">
+
+                                        Source / Context
+
+                                    </div>
+
+                                    <div class="detail-content">
+
+                                        ${escapeHtml(
+                                            intel.source
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+                            `
+                            : ''
+                        }
+
+                    </div>
+
+                `;
+
+            }
+
+
+            // --------------------------------------------------
+            // Evidence
+            // --------------------------------------------------
+
+            let evidenceHtml = '';
+
+
+            if (
+                intel.evidence_link
+            ) {
+
+                evidenceHtml = `
+
+                    <div class="evidence-box">
+
+                        <div class="detail-title">
+
+                            Evidence / Document
+
+                        </div>
+
+                        <a
+                            class="evidence-link"
+                            href="${escapeAttribute(
+                                intel.evidence_link
+                            )}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+
+                            ↗ Open supporting evidence
+
+                        </a>
+
+                    </div>
+
+                `;
+
+            }
+
+
             card.innerHTML = `
+
+                <!-- ==============================
+                     INTEL HEADER
+                =============================== -->
 
                 <div class="intel-header">
 
-                    <div>
+                    <div class="intel-header-left">
 
                         <div class="intel-subject">
 
@@ -1176,11 +1558,24 @@ async function loadIntel() {
                         </div>
 
 
-                        <div class="intel-meta">
+                        <div class="intel-sender">
 
-                            From:
+                            <strong>FROM:</strong>
                             ${escapeHtml(
                                 senderName
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="intel-header-right">
+
+                        <div class="intel-type">
+
+                            ${escapeHtml(
+                                intel.intel_type
                             )}
 
                         </div>
@@ -1218,143 +1613,160 @@ async function loadIntel() {
 
                     </div>
 
-
-                    <div class="intel-type">
-
-                        ${escapeHtml(
-                            intel.intel_type
-                        )}
-
-                    </div>
-
                 </div>
 
 
-                <div class="section">
+                <!-- ==============================
+                     INTEL BODY
+                =============================== -->
 
-                    <div class="section-title">
-
-                        Finding / Intelligence
-
-                    </div>
+                <div class="intel-body">
 
 
-                    <div class="section-content">
+                    <!-- INFORMATION -->
 
-                        ${escapeHtml(
-                            intel.finding
-                        )}
+                    <div class="intel-info-grid">
 
-                    </div>
+                        <div class="info-box">
 
-                </div>
+                            <div class="info-label">
 
-
-                ${
-                    intel.location
-                    ? `
-
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Location
+                                Intel Type
 
                             </div>
 
-
-                            <div class="section-content">
+                            <div class="info-value blue">
 
                                 ${escapeHtml(
-                                    intel.location
+                                    intel.intel_type || 'Not specified'
                                 )}
 
                             </div>
 
                         </div>
 
-                    `
-                    : ''
-                }
 
+                        <div class="info-box">
 
-                ${
-                    intel.source
-                    ? `
+                            <div class="info-label">
 
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Source / Context
+                                Submitted By
 
                             </div>
 
-
-                            <div class="section-content">
+                            <div class="info-value">
 
                                 ${escapeHtml(
-                                    intel.source
+                                    senderName
                                 )}
 
                             </div>
 
                         </div>
 
-                    `
-                    : ''
-                }
 
+                        <div class="info-box">
 
-                ${
-                    intel.evidence_link
-                    ? `
+                            <div class="info-label">
 
-                        <div class="section">
-
-                            <div class="section-title">
-
-                                Evidence / Document
+                                Recipient
 
                             </div>
 
+                            <div class="info-value ${
+                                isUnassigned
+                                    ? 'orange'
+                                    : ''
+                            }">
 
-                            <div class="section-content">
-
-                                <a
-                                    class="evidence-link"
-                                    href="${escapeAttribute(
-                                        intel.evidence_link
-                                    )}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-
-                                    Open supporting evidence
-
-                                </a>
+                                ${escapeHtml(
+                                    recipientName
+                                )}
 
                             </div>
 
                         </div>
 
-                    `
-                    : ''
-                }
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+
+                                Received
+
+                            </div>
+
+                            <div class="info-value">
+
+                                ${escapeHtml(
+                                    formattedDate
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
 
-                ${assignedHtml}
+                    <!-- FINDING -->
+
+                    <div class="finding-box">
+
+                        <div class="finding-title">
+
+                            Finding / Intelligence
+
+                        </div>
 
 
-                ${triageHtml}
+                        <div class="finding-content">
 
+                            ${escapeHtml(
+                                intel.finding
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OPTIONAL DETAILS -->
+
+                    ${detailHtml}
+
+
+                    <!-- EVIDENCE -->
+
+                    ${evidenceHtml}
+
+
+                    <!-- ASSIGNED -->
+
+                    ${assignedHtml}
+
+
+                    <!-- TRIAGE -->
+
+                    ${triageHtml}
+
+
+                </div>
+
+
+                <!-- ==============================
+                     FOOTER
+                =============================== -->
 
                 <div class="intel-footer">
 
                     <div class="date">
 
-                        Received:
-                        ${formattedDate}
+                        SCU INTELLIGENCE RECORD
+                        •
+                        RECEIVED ${escapeHtml(
+                            formattedDate
+                        )}
 
                     </div>
 
@@ -1531,8 +1943,6 @@ async function assignIntel(
         'Intelligence sent successfully.'
     );
 
-
-    // Reload the page data.
 
     loadIntel();
 
@@ -1728,4 +2138,4 @@ checkLogin();
 </body>
 
 </html>
-```
+
