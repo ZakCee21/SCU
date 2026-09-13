@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
 
 ```
@@ -23,9 +24,9 @@
     }
 
     .header {
-        background: #111821;
-        border-bottom: 1px solid #293542;
-        padding: 18px 30px;
+        background: #0d131a;
+        border-bottom: 1px solid #202933;
+        padding: 18px 25px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -34,13 +35,14 @@
     .header h1 {
         margin: 0;
         font-size: 21px;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
     }
 
     .header p {
         margin: 5px 0 0;
         color: #7f8c99;
         font-size: 11px;
+        letter-spacing: 1px;
     }
 
     .officer-info {
@@ -60,210 +62,160 @@
         color: #7f8c99;
     }
 
+    .profile-button,
     .logout {
-        background: #202c38;
-        color: white;
-        border: 1px solid #354554;
-        padding: 9px 15px;
-        border-radius: 5px;
+        border: 1px solid #303a45;
+        background: #111820;
+        color: #e8edf2;
+        padding: 9px 13px;
         cursor: pointer;
-    }
-
-    .profile-button {
-        background: #263746;
-        color: white;
-        border: 1px solid #354554;
-        padding: 9px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .profile-button:hover {
-        background: #32495c;
-    }
-
-    .logout:hover {
-        background: #2b3a48;
-    }
-
-    .container {
-        max-width: 1400px;
-        margin: auto;
-        padding: 30px;
-    }
-
-    .welcome {
-        margin-bottom: 25px;
-    }
-
-    .welcome h2 {
-        margin: 0 0 6px;
-    }
-
-    .welcome p {
-        color: #7f8c99;
-        margin: 0;
-    }
-
-    .dashboard-buttons {
-        margin-bottom: 25px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .dashboard-button {
-        color: white;
-        padding: 12px 20px;
-        border-radius: 5px;
-        cursor: pointer;
+        font-size: 11px;
         font-weight: bold;
     }
 
-    .create-case-button {
-        background: #1d4ed8;
-        border: none;
+    .profile-button:hover,
+    .logout:hover {
+        background: #18212b;
     }
 
-    .create-case-button:hover {
-        background: #2563eb;
+    .logout {
+        border-color: #6f2424;
+        color: #ffb5b5;
     }
 
-    .documents-button {
-        background: #263746;
-        border: 1px solid #354554;
+    .logout:hover {
+        background: #301515;
     }
 
-    .documents-button:hover {
-        background: #32495c;
+    .container {
+        padding: 25px;
+        max-width: 1500px;
+        margin: auto;
     }
 
-    .intel-button {
-        background: #166534;
-        border: 1px solid #22c55e;
-    }
-
-    .intel-button:hover {
-        background: #15803d;
-    }
-
-    .cards {
+    .stats {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        gap: 18px;
-        margin-bottom: 30px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
     }
 
-    .card {
-        background: #111821;
-        border: 1px solid #293542;
-        border-radius: 8px;
-        padding: 20px;
+    .stat-card {
+        background: #0d131a;
+        border: 1px solid #202933;
+        padding: 18px;
     }
 
-    .card-title {
-        color: #8996a3;
-        font-size: 12px;
+    .stat-title {
+        color: #7f8c99;
+        font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
 
-    .number {
-        font-size: 30px;
+    .stat-number {
+        margin-top: 8px;
+        font-size: 28px;
         font-weight: bold;
-        margin-top: 10px;
     }
 
-    .intel-card {
-        cursor: pointer;
-        transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .intel-card:hover {
-        border-color: #22c55e;
-        background: #141f1a;
-    }
-
-    .intel-card .number {
-        color: #4ade80;
-    }
-
-    .open-intel-card {
-        cursor: pointer;
-        transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .open-intel-card:hover {
-        border-color: #3b82f6;
-        background: #141b27;
-    }
-
-    .open-intel-card .number {
-        color: #60a5fa;
+    .sections {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
     }
 
     .panel {
-        background: #111821;
-        border: 1px solid #293542;
-        border-radius: 8px;
-        padding: 22px;
+        background: #0d131a;
+        border: 1px solid #202933;
     }
 
-    .panel h2 {
-        margin-top: 0;
-    }
-
-    .case-row {
-        border-top: 1px solid #293542;
-        padding: 16px 0;
+    .panel-header {
+        padding: 15px 18px;
+        border-bottom: 1px solid #202933;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
-    .case-name {
-        font-weight: bold;
+    .panel-header h2 {
+        margin: 0;
+        font-size: 14px;
+        letter-spacing: 1px;
     }
 
-    .case-number {
-        color: #7f8c99;
-        font-size: 12px;
-        margin-top: 5px;
-    }
-
-    .status {
-        padding: 5px 9px;
-        background: #1c2935;
-        border-radius: 4px;
+    .panel-header a {
+        color: #9fb2c5;
+        text-decoration: none;
         font-size: 11px;
     }
 
-    .empty {
-        color: #6f7c88;
-        text-align: center;
-        padding: 30px;
+    .panel-header a:hover {
+        color: #ffffff;
     }
 
-    @media (max-width: 700px) {
+    .panel-body {
+        padding: 10px;
+    }
+
+    .case-row {
+        border-bottom: 1px solid #1b232c;
+        padding: 14px 10px;
+    }
+
+    .case-row:last-child {
+        border-bottom: none;
+    }
+
+    .case-title {
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .case-meta {
+        color: #7f8c99;
+        font-size: 11px;
+        line-height: 1.6;
+    }
+
+    .empty {
+        padding: 25px 10px;
+        text-align: center;
+        color: #66727e;
+        font-size: 12px;
+    }
+
+    @media (max-width: 900px) {
+
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .sections {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 600px) {
 
         .header {
-            padding: 16px;
-        }
-
-        .header h1 {
-            font-size: 17px;
-        }
-
-        .container {
-            padding: 20px 15px;
-        }
-
-        .case-row {
+            align-items: flex-start;
             gap: 15px;
         }
 
-        .officer-info {
-            display: none;
+        .header > div:last-child {
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .stats {
+            grid-template-columns: 1fr;
+        }
+
+        .container {
+            padding: 15px;
         }
 
     }
@@ -279,36 +231,16 @@
 
 ```
 <div>
-
     <h1>SCU CASE MANAGEMENT</h1>
-
-    <p>
-        STREET CRIMES UNIT • SECURE OPERATIONS
-    </p>
-
+    <p>STREET CRIMES UNIT • SECURE OPERATIONS</p>
 </div>
-
 
 <div style="display: flex; gap: 10px; align-items: center;">
 
     <div class="officer-info">
-
-        <div
-            class="officer-name"
-            id="officerName"
-        >
-            Loading...
-        </div>
-
-        <div
-            class="officer-rank"
-            id="officerRank"
-        >
-            Loading...
-        </div>
-
+        <div class="officer-name" id="officerName">Loading...</div>
+        <div class="officer-rank" id="officerRank">Loading...</div>
     </div>
-
 
     <button
         class="profile-button"
@@ -316,7 +248,6 @@
     >
         PROFILE
     </button>
-
 
     <button
         class="logout"
@@ -330,189 +261,115 @@
 
 </header>
 
-<main class="container">
+<div class="container">
 
 ```
-<section class="welcome">
+<div class="stats">
 
-    <h2>
-        SCU Dashboard
-    </h2>
+    <div class="stat-card">
+        <div class="stat-title">Active Cases</div>
+        <div class="stat-number" id="activeCases">0</div>
+    </div>
 
-    <p>
-        Authorised officer access.
-    </p>
+    <div class="stat-card">
+        <div class="stat-title">My Cases</div>
+        <div class="stat-number" id="myCases">0</div>
+    </div>
 
-</section>
+    <div class="stat-card">
+        <div class="stat-title">Open Intel</div>
+        <div class="stat-number" id="openIntel">0</div>
+    </div>
 
-
-<!-- DASHBOARD ACTIONS -->
-
-<div class="dashboard-buttons">
-
-    <button
-        class="dashboard-button create-case-button"
-        onclick="window.location.href='create-case.html'"
-    >
-        + CREATE NEW CASE
-    </button>
-
-
-    <button
-        class="dashboard-button documents-button"
-        onclick="window.location.href='documents.html'"
-    >
-        DOCUMENTS & TEMPLATES
-    </button>
-
-
-    <button
-        class="dashboard-button intel-button"
-        onclick="window.location.href='submit-intel.html'"
-    >
-        SUBMIT SCU INTEL
-    </button>
+    <div class="stat-card">
+        <div class="stat-title">New Intel</div>
+        <div class="stat-number" id="newIntel">0</div>
+    </div>
 
 </div>
 
 
-<!-- DASHBOARD CARDS -->
+<div class="sections">
 
-<section class="cards">
+    <div class="panel">
 
+        <div class="panel-header">
 
-    <!-- ACTIVE CASES -->
+            <h2>RECENT CASES</h2>
 
-    <div class="card">
+            <a href="cases.html">
+                VIEW ALL
+            </a>
 
-        <div class="card-title">
-            Active Cases
         </div>
 
-        <div
-            class="number"
-            id="activeCases"
-        >
-            0
-        </div>
+        <div class="panel-body" id="casesList">
 
-    </div>
+            <div class="empty">
+                Loading cases...
+            </div>
 
-
-    <!-- MY CASES -->
-
-    <div class="card">
-
-        <div class="card-title">
-            My Cases
-        </div>
-
-        <div
-            class="number"
-            id="myCases"
-        >
-            0
         </div>
 
     </div>
 
 
-    <!-- EVIDENCE -->
+    <div class="panel">
 
-    <div class="card">
+        <div class="panel-header">
 
-        <div class="card-title">
-            Evidence
+            <h2>INTELLIGENCE</h2>
+
+            <a href="intel.html">
+                VIEW INTEL
+            </a>
+
         </div>
 
-        <div
-            class="number"
-            id="evidenceCount"
-        >
-            0
-        </div>
+        <div class="panel-body">
 
-    </div>
+            <div class="case-row">
 
+                <div class="case-title">
+                    Open Intelligence
+                </div>
 
-    <!-- NEW INTEL -->
+                <div class="case-meta">
+                    Intelligence currently requiring attention:
+                    <strong id="intelSummary">0</strong>
+                </div>
 
-    <div
-        class="card intel-card"
-        onclick="window.location.href='intel.html'"
-    >
+            </div>
 
-        <div class="card-title">
-            New Intel
-        </div>
+            <div class="case-row">
 
-        <div
-            class="number"
-            id="newIntel"
-        >
-            0
-        </div>
+                <div class="case-title">
+                    New Intelligence
+                </div>
 
-    </div>
+                <div class="case-meta">
+                    New intelligence submissions:
+                    <strong id="newIntelSummary">0</strong>
+                </div>
 
+            </div>
 
-    <!-- OPEN INTEL -->
-
-    <div
-        class="card open-intel-card"
-        onclick="window.location.href='intel.html'"
-    >
-
-        <div class="card-title">
-            Open Intel
-        </div>
-
-        <div
-            class="number"
-            id="openIntel"
-        >
-            0
         </div>
 
     </div>
 
-
-</section>
-
-
-<!-- CASE FILES -->
-
-<section class="panel">
-
-    <h2>
-        Accessible Case Files
-    </h2>
-
-    <div id="caseList">
-
-        <div class="empty">
-            Loading case files...
-        </div>
-
-    </div>
-
-</section>
+</div>
 ```
 
-</main>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
 
-const SUPABASE_URL =
-    'https://mtlozyseibrefhxnocvb.supabase.co';
-
-
-const SUPABASE_KEY =
-    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
-
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
 const supabaseClient =
     window.supabase.createClient(
@@ -521,12 +378,7 @@ const supabaseClient =
     );
 
 
-// ======================================================
-// CHECK LOGIN
-// ======================================================
-
 async function checkLogin() {
-
 
     const {
         data: {
@@ -534,68 +386,34 @@ async function checkLogin() {
         }
     } = await supabaseClient.auth.getSession();
 
-
     if (!session) {
 
-        window.location.href =
-            'index.html';
+        window.location.href = 'index.html';
 
         return;
 
     }
 
+    const userId = session.user.id;
 
-    const userId =
-        session.user.id;
+    await loadOfficerDetails(userId);
 
+    await loadCases(userId);
 
-    // Load logged-in officer details
-
-    loadOfficerDetails(
-        userId
-    );
-
-
-    // Load existing cases
-
-    loadCases(
-        userId
-    );
-
-
-    // Load Intel counters
-
-    loadIntelCounts(
-        userId
-    );
+    await loadIntelCounts(userId);
 
 }
 
 
-// ======================================================
-// LOAD LOGGED-IN OFFICER DETAILS
-// ======================================================
-
-async function loadOfficerDetails(
-    userId
-) {
+async function loadOfficerDetails(userId) {
 
     const {
         data: officer,
         error
     } = await supabaseClient
-
         .from('officers')
-
-        .select(
-            'name, rank'
-        )
-
-        .eq(
-            'uuid',
-            userId
-        )
-
+        .select('full_name, rank')
+        .eq('id', userId)
         .single();
 
 
@@ -606,230 +424,175 @@ async function loadOfficerDetails(
             error
         );
 
-        document
-            .getElementById('officerName')
-            .textContent =
-                'Unknown Officer';
+        document.getElementById('officerName').textContent =
+            'Unknown Officer';
 
-        document
-            .getElementById('officerRank')
-            .textContent =
-                '';
+        document.getElementById('officerRank').textContent =
+            '';
 
         return;
 
     }
 
 
-    document
-        .getElementById('officerName')
-        .textContent =
-            officer.name || 'Unknown Officer';
+    document.getElementById('officerName').textContent =
+        officer.full_name || 'Unknown Officer';
 
-
-    document
-        .getElementById('officerRank')
-        .textContent =
-            officer.rank || '';
+    document.getElementById('officerRank').textContent =
+        officer.rank || '';
 
 }
 
 
-// ======================================================
-// LOAD AUTHORISED CASES
-// ======================================================
-
-async function loadCases(
-    userId
-) {
-
+async function loadCases(userId) {
 
     const {
-        data,
+        data: cases,
         error
     } = await supabaseClient
-
         .from('cases')
-
         .select('*')
-
-        .order(
-            'created_at',
-            {
-                ascending: false
-            }
-        );
+        .order('created_at', {
+            ascending: false
+        });
 
 
     if (error) {
 
-        document
-            .getElementById('caseList')
-            .innerHTML =
-                '<div class="empty">Unable to load case files.</div>';
-
-        console.error(error);
-
-        return;
-
-    }
-
-
-    const list =
-        document.getElementById(
-            'caseList'
+        console.error(
+            'Load cases error:',
+            error
         );
 
-
-    document
-        .getElementById('activeCases')
-        .textContent =
-            data.filter(
-                c => c.status === 'active'
-            ).length;
-
-
-    // --------------------------------------------------
-    // My Cases
-    // --------------------------------------------------
-
-    const myCaseCount =
-        data.filter(
-            c =>
-                c.created_by === userId ||
-                c.owner_id === userId
-        ).length;
-
-
-    document
-        .getElementById('myCases')
-        .textContent =
-            myCaseCount;
-
-
-    // --------------------------------------------------
-    // Evidence
-    // --------------------------------------------------
-
-    document
-        .getElementById('evidenceCount')
-        .textContent =
-            0;
-
-
-    if (!data.length) {
-
-        list.innerHTML =
-            '<div class="empty">No authorised case files found.</div>';
+        document.getElementById('casesList').innerHTML =
+            '<div class="empty">Unable to load cases.</div>';
 
         return;
 
     }
 
 
-    list.innerHTML = '';
+    const allCases = cases || [];
 
 
-    data.forEach(
-        caseFile => {
+    const activeCases = allCases.filter(caseItem => {
+
+        const status =
+            String(caseItem.status || '').toLowerCase();
+
+        return ![
+            'closed',
+            'completed',
+            'archived'
+        ].includes(status);
+
+    });
 
 
-            const row =
-                document.createElement(
-                    'div'
+    const myCases = allCases.filter(caseItem => {
+
+        return (
+            caseItem.created_by === userId ||
+            caseItem.owner_id === userId
+        );
+
+    });
+
+
+    document.getElementById('activeCases').textContent =
+        activeCases.length;
+
+    document.getElementById('myCases').textContent =
+        myCases.length;
+
+
+    const casesList =
+        document.getElementById('casesList');
+
+
+    if (allCases.length === 0) {
+
+        casesList.innerHTML =
+            '<div class="empty">No cases found.</div>';
+
+        return;
+
+    }
+
+
+    const recentCases =
+        allCases.slice(0, 8);
+
+
+    casesList.innerHTML =
+        recentCases.map(caseItem => {
+
+            const title =
+                escapeHtml(
+                    caseItem.title ||
+                    caseItem.case_name ||
+                    caseItem.name ||
+                    'Untitled Case'
                 );
 
 
-            row.className =
-                'case-row';
+            const status =
+                escapeHtml(
+                    caseItem.status ||
+                    'Unknown'
+                );
 
 
-            row.style.cursor =
-                'pointer';
+            let createdText = '';
+
+            if (caseItem.created_at) {
+
+                const date =
+                    new Date(caseItem.created_at);
+
+                if (!isNaN(date.getTime())) {
+
+                    createdText =
+                        date.toLocaleDateString(
+                            'en-GB'
+                        );
+
+                }
+
+            }
 
 
-            row.onclick =
-                function() {
+            return `
 
-                    window.location.href =
-                        `case.html?id=${caseFile.id}`;
+                <div class="case-row">
 
-                };
-
-
-            row.innerHTML = `
-
-                <div>
-
-                    <div class="case-name">
-
-                        ${escapeHtml(
-                            caseFile.case_name
-                        )}
-
+                    <div class="case-title">
+                        ${title}
                     </div>
 
-                    <div class="case-number">
-
-                        ${escapeHtml(
-                            caseFile.case_number
-                        )}
-
+                    <div class="case-meta">
+                        Status: ${status}
+                        ${createdText ? ' • Created: ' + createdText : ''}
                     </div>
-
-                </div>
-
-
-                <div class="status">
-
-                    ${escapeHtml(
-                        caseFile.status
-                    )}
 
                 </div>
 
             `;
 
-
-            list.appendChild(
-                row
-            );
-
-        }
-    );
+        }).join('');
 
 }
 
 
-// ======================================================
-// LOAD INTEL COUNTS
-// ======================================================
-
-async function loadIntelCounts(
-    userId
-) {
-
-
-    // --------------------------------------------------
-    // Get officer role
-    // --------------------------------------------------
+async function loadIntelCounts(userId) {
 
     const {
         data: officer,
         error: officerError
     } = await supabaseClient
-
         .from('officers')
-
-        .select(
-            'role, active'
-        )
-
-        .eq(
-            'uuid',
-            userId
-        )
-
+        .select('role, active')
+        .eq('id', userId)
         .single();
 
 
@@ -846,16 +609,16 @@ async function loadIntelCounts(
 
 
     const role =
-        String(
-            officer.role || ''
-        )
-        .trim()
-        .toLowerCase();
+        officer.role;
 
 
-    // --------------------------------------------------
-    // Full Intel access roles
-    // --------------------------------------------------
+    /*
+        Masters, Head of Drugs and Head of Weapons
+        have full historical Intel access.
+
+        Detective/officer users only see Intel
+        assigned to them.
+    */
 
     const fullIntelAccessRoles = [
         'master',
@@ -865,32 +628,16 @@ async function loadIntelCounts(
 
 
     const hasFullIntelAccess =
-        fullIntelAccessRoles.includes(
-            role
-        );
+        fullIntelAccessRoles.includes(role);
 
-
-    // --------------------------------------------------
-    // Load Intel
-    // --------------------------------------------------
 
     let intelQuery =
         supabaseClient
-
-            .from(
-                'intel_submissions'
-            )
-
-            .select(
-                'id'
-            );
+            .from('intel_submissions')
+            .select('id, status, created_at');
 
 
-    // Normal officers only receive Intel sent to them.
-
-    if (
-        !hasFullIntelAccess
-    ) {
+    if (!hasFullIntelAccess) {
 
         intelQuery =
             intelQuery.eq(
@@ -902,7 +649,7 @@ async function loadIntelCounts(
 
 
     const {
-        data: intelData,
+        data: intel,
         error: intelError
     } = await intelQuery;
 
@@ -910,230 +657,144 @@ async function loadIntelCounts(
     if (intelError) {
 
         console.error(
-            'Load Intel records error:',
+            'Load Intel counts error:',
             intelError
         );
 
-        document
-            .getElementById('newIntel')
-            .textContent =
-                '0';
-
-        document
-            .getElementById('openIntel')
-            .textContent =
-                '0';
-
         return;
 
     }
 
 
-    const intel =
-        intelData || [];
+    const intelRows =
+        intel || [];
 
 
-    // --------------------------------------------------
-    // No Intel
-    // --------------------------------------------------
+    /*
+        Open Intel:
+        Anything that isn't completed,
+        closed or archived.
+    */
 
-    if (
-        intel.length === 0
-    ) {
+    const openIntel =
+        intelRows.filter(item => {
 
-        document
-            .getElementById('newIntel')
-            .textContent =
-                '0';
+            const status =
+                String(
+                    item.status || ''
+                ).toLowerCase();
 
-        document
-            .getElementById('openIntel')
-            .textContent =
-                '0';
+            return ![
+                'completed',
+                'closed',
+                'archived'
+            ].includes(status);
 
-        return;
-
-    }
-
-
-    // --------------------------------------------------
-    // Get this user's viewed Intel
-    // --------------------------------------------------
-
-    const intelIds =
-        intel.map(
-            item =>
-                item.id
-        );
+        });
 
 
-    const {
-        data: viewData,
-        error: viewError
-    } = await supabaseClient
+    /*
+        New Intel:
+        Count is based on intel_views.
 
-        .from('intel_views')
+        This keeps the existing behaviour where
+        each officer's viewed/unviewed state is
+        independent.
+    */
 
-        .select(
-            'intel_id'
-        )
-
-        .eq(
-            'user_id',
-            userId
-        )
-
-        .in(
-            'intel_id',
-            intelIds
-        );
+    let newIntelCount = 0;
 
 
-    if (viewError) {
+    if (intelRows.length > 0) {
 
-        console.error(
-            'Load Intel views error:',
-            viewError
-        );
-
-        return;
-
-    }
+        const intelIds =
+            intelRows.map(
+                item => item.id
+            );
 
 
-    const viewedIds =
-        new Set(
-            (viewData || [])
-                .map(
-                    view =>
-                        view.intel_id
-                )
-        );
+        const {
+            data: views,
+            error: viewsError
+        } = await supabaseClient
+            .from('intel_views')
+            .select('intel_id')
+            .eq('user_id', userId)
+            .in(
+                'intel_id',
+                intelIds
+            );
 
 
-    // --------------------------------------------------
-    // Calculate counts
-    // --------------------------------------------------
+        if (viewsError) {
 
-    let newCount = 0;
-    let openCount = 0;
+            console.error(
+                'Load Intel views error:',
+                viewsError
+            );
+
+            /*
+                If the views query fails,
+                don't prevent the rest of
+                the dashboard loading.
+            */
+
+            newIntelCount =
+                intelRows.length;
+
+        } else {
+
+            const viewedIds =
+                new Set(
+                    (views || []).map(
+                        view => view.intel_id
+                    )
+                );
 
 
-    intel.forEach(
-        item => {
-
-            if (
-                viewedIds.has(
-                    item.id
-                )
-            ) {
-
-                openCount++;
-
-            } else {
-
-                newCount++;
-
-            }
+            newIntelCount =
+                intelRows.filter(
+                    item => !viewedIds.has(item.id)
+                ).length;
 
         }
-    );
+
+    }
 
 
-    // --------------------------------------------------
-    // Display counts
-    // --------------------------------------------------
-
-    document
-        .getElementById('newIntel')
-        .textContent =
-            newCount;
+    document.getElementById('openIntel').textContent =
+        openIntel.length;
 
 
-    document
-        .getElementById('openIntel')
-        .textContent =
-            openCount;
+    document.getElementById('newIntel').textContent =
+        newIntelCount;
 
 
-    console.log(
-        'Intel counts:',
-        {
-            newIntel:
-                newCount,
+    document.getElementById('intelSummary').textContent =
+        openIntel.length;
 
-            openIntel:
-                openCount,
 
-            total:
-                intel.length,
-
-            fullIntelAccess:
-                hasFullIntelAccess
-        }
-    );
+    document.getElementById('newIntelSummary').textContent =
+        newIntelCount;
 
 }
 
 
-// ======================================================
-// HTML SECURITY
-// ======================================================
-
-function escapeHtml(
-    value
-) {
-
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-
-        return '';
-
-    }
-
+function escapeHtml(value) {
 
     return String(value)
-
-        .replace(
-            /&/g,
-            '&amp;'
-        )
-
-        .replace(
-            /</g,
-            '&lt;'
-        )
-
-        .replace(
-            />/g,
-            '&gt;'
-        )
-
-        .replace(
-            /"/g,
-            '&quot;'
-        )
-
-        .replace(
-            /'/g,
-            '&#039;'
-        );
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 
 }
 
-
-// ======================================================
-// LOGOUT
-// ======================================================
 
 async function logout() {
 
-
     await supabaseClient.auth.signOut();
-
 
     window.location.href =
         'index.html';
@@ -1141,12 +802,7 @@ async function logout() {
 }
 
 
-// ======================================================
-// START
-// ======================================================
-
 checkLogin();
-
 
 </script>
 
