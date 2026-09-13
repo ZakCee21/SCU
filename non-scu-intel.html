@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Non-SCU Member Intel Report</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #080c11;
+        color: #e8edf2;
+    }
+
+    /* ==================================================
+       HEADER
+       ================================================== */
+
+    .header {
+        background: #111821;
+        border-bottom: 1px solid #293542;
+        padding: 18px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .header-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .header-logo {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 21px;
+        letter-spacing: 1.5px;
+    }
+
+    .header p {
+        margin: 5px 0 0;
+        color: #7f8c99;
+        font-size: 11px;
+    }
+
+
+    /* ==================================================
+       BACKGROUND LOGOS
+       ================================================== */
+
+    .background-logo {
+        position: fixed;
+        top: 50%;
+        width: 275px;
+        height: 275px;
+        object-fit: contain;
+        opacity: 0.5;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .background-logo-left {
+        left: 80px;
+        transform: translateY(-50%);
+    }
+
+    .background-logo-right {
+        right: 80px;
+        transform: translateY(-50%);
+    }
+
+
+    /* ==================================================
+       BACK BUTTON
+       ================================================== */
+
+    .back-button {
+        background: #111820;
+        color: #cfd7df;
+        border: 1px solid #354554;
+        padding: 10px 16px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+    }
+
+    .back-button:hover {
+        background: #1a2530;
+        border-color: #4b6070;
+    }
+
+
+    /* ==================================================
+       MAIN CONTAINER
+       ================================================== */
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+        padding: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+
+    /* ==================================================
+       INTRO
+       ================================================== */
+
+    .intro {
+        margin-bottom: 25px;
+    }
+
+    .intro h2 {
+        margin: 0 0 6px;
+    }
+
+    .intro p {
+        color: #7f8c99;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+
+    /* ==================================================
+       FORM PANEL
+       ================================================== */
+
+    .form-panel {
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 8px;
+        padding: 25px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        color: #aeb8c2;
+        margin-bottom: 7px;
+    }
+
+    .required {
+        color: #f87171;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        background: #080c11;
+        color: white;
+        border: 1px solid #354554;
+        border-radius: 5px;
+        padding: 11px;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #1d4ed8;
+    }
+
+    textarea {
+        min-height: 150px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    .small-text {
+        color: #6f7c88;
+        font-size: 11px;
+        margin-top: 6px;
+        line-height: 1.4;
+    }
+
+    .triage-note {
+        margin-top: 8px;
+        padding: 10px 12px;
+        background: #17202a;
+        border: 1px solid #354554;
+        border-radius: 5px;
+        color: #9aa8b5;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+
+    /* ==================================================
+       PUBLIC REPORT NOTICE
+       ================================================== */
+
+    .public-notice {
+        margin-bottom: 25px;
+        padding: 12px 14px;
+        background: #17202a;
+        border: 1px solid #354554;
+        border-radius: 5px;
+        color: #9aa8b5;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .public-notice strong {
+        color: #dbe1e7;
+    }
+
+
+    /* ==================================================
+       SUBMIT BUTTON
+       ================================================== */
+
+    .submit-button {
+        background: #1d4ed8;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .submit-button:hover {
+        background: #2563eb;
+    }
+
+    .submit-button:disabled {
+        background: #263746;
+        cursor: not-allowed;
+    }
+
+
+    /* ==================================================
+       MESSAGE
+       ================================================== */
+
+    .message {
+        margin-top: 15px;
+        font-size: 12px;
+    }
+
+    .success {
+        color: #4ade80;
+    }
+
+    .error {
+        color: #f87171;
+    }
+
+
+    /* ==================================================
+       MOBILE
+       ================================================== */
+
+    @media (max-width: 650px) {
+
+        .header {
+            padding: 14px 18px;
+        }
+
+        .header-logo {
+            width: 42px;
+            height: 42px;
+        }
+
+        .header-brand {
+            gap: 10px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+        }
+
+        .header p {
+            font-size: 9px;
+        }
+
+        .back-button {
+            padding: 8px 10px;
+            font-size: 10px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .background-logo {
+            width: 130px;
+            height: 130px;
+            opacity: 0.25;
+        }
+
+        .background-logo-left {
+            left: -45px;
+        }
+
+        .background-logo-right {
+            right: -45px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ==================================================
+     BACKGROUND LOGOS
+     ================================================== -->
+
+<img
+class="background-logo background-logo-left"
+src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+alt=""
+
+>
+
+<img
+class="background-logo background-logo-right"
+src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+alt=""
+
+>
+
+<!-- ==================================================
+     HEADER
+     ================================================== -->
+
+<header class="header">
+
+```
+<div class="header-brand">
+
+    <img
+        class="header-logo"
+        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+        alt="SCU Logo"
+    >
+
+    <div>
+
+        <h1>NON-SCU MEMBER INTEL REPORT</h1>
+
+        <p>
+            STREET CRIMES UNIT • PUBLIC INTELLIGENCE REPORTING
+        </p>
+
+    </div>
+
+</div>
+
+
+<button
+    class="back-button"
+    onclick="window.location.href='index.html'"
+>
+    BACK TO SIGN IN
+</button>
+```
+
+</header>
+
+<!-- ==================================================
+     MAIN
+     ================================================== -->
+
+<main class="container">
+
+<section class="intro">
+
+```
+<h2>
+    Submit Intelligence Finding
+</h2>
+
+<p>
+    Use this form to report information or findings directly to the Street Crimes Unit.
+    Your report will be reviewed by an SCU senior member and directed to the appropriate officer.
+</p>
+```
+
+</section>
+
+<section class="form-panel">
+
+```
+<!-- PUBLIC NOTICE -->
+
+<div class="public-notice">
+
+    <strong>Non-SCU Member Report</strong><br>
+
+    You do not need an SCU account to submit intelligence.
+    Please provide your name and call sign so the SCU can identify the source of the report.
+
+</div>
+
+
+<!-- REPORTER NAME -->
+
+<div class="form-group">
+
+    <label for="reporterName">
+        Your Name <span class="required">*</span>
+    </label>
+
+    <input
+        type="text"
+        id="reporterName"
+        placeholder="Enter your name"
+    >
+
+</div>
+
+
+<!-- REPORTER CALL SIGN -->
+
+<div class="form-group">
+
+    <label for="reporterCallsign">
+        Your Call Sign <span class="required">*</span>
+    </label>
+
+    <input
+        type="text"
+        id="reporterCallsign"
+        placeholder="Enter your call sign"
+    >
+
+</div>
+
+
+<!-- INTEL TYPE -->
+
+<div class="form-group">
+
+    <label for="intelType">
+        Intel Type <span class="required">*</span>
+    </label>
+
+    <select id="intelType">
+
+        <option value="">
+            Select intel type
+        </option>
+
+        <option value="Drugs">
+            Drugs
+        </option>
+
+        <option value="Weapons">
+            Weapons
+        </option>
+
+        <option value="Organised Crime">
+            Organised Crime
+        </option>
+
+        <option value="Violence">
+            Violence
+        </option>
+
+        <option value="County Lines">
+            County Lines
+        </option>
+
+        <option value="Vehicles">
+            Vehicles
+        </option>
+
+        <option value="Persons">
+            Persons
+        </option>
+
+        <option value="Locations">
+            Locations
+        </option>
+
+        <option value="General Intelligence">
+            General Intelligence
+        </option>
+
+        <option value="Other">
+            Other
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- SUBJECT -->
+
+<div class="form-group">
+
+    <label for="subject">
+        Subject / Brief Title <span class="required">*</span>
+    </label>
+
+    <input
+        type="text"
+        id="subject"
+        placeholder="e.g. Suspected weapon storage location"
+    >
+
+</div>
+
+
+<!-- FINDING -->
+
+<div class="form-group">
+
+    <label for="finding">
+        Finding / Intelligence <span class="required">*</span>
+    </label>
+
+    <textarea
+        id="finding"
+        placeholder="Enter the information or intelligence you have obtained..."
+    ></textarea>
+
+</div>
+
+
+<!-- LOCATION -->
+
+<div class="form-group">
+
+    <label for="location">
+        Location
+    </label>
+
+    <input
+        type="text"
+        id="location"
+        placeholder="Optional"
+    >
+
+</div>
+
+
+<!-- SOURCE -->
+
+<div class="form-group">
+
+    <label for="source">
+        Source / Context
+    </label>
+
+    <textarea
+        id="source"
+        style="min-height: 100px;"
+        placeholder="Optional information about the source or circumstances surrounding the finding..."
+    ></textarea>
+
+</div>
+
+
+<!-- EVIDENCE LINK -->
+
+<div class="form-group">
+
+    <label for="evidenceLink">
+        Evidence / Document Link
+    </label>
+
+    <input
+        type="url"
+        id="evidenceLink"
+        placeholder="https://..."
+    >
+
+    <div class="small-text">
+        Optional link to supporting evidence or a document.
+    </div>
+
+</div>
+
+
+<!-- SUBMIT -->
+
+<button
+    class="submit-button"
+    id="submitButton"
+    onclick="submitIntel()"
+>
+    SUBMIT INTELLIGENCE
+</button>
+
+
+<div
+    class="message"
+    id="message"
+></div>
+```
+
+</section>
+
+</main>
+
+<!-- ==================================================
+     SUPABASE
+     ================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+
+const SUPABASE_URL =
+    'https://mtlozyseibrefhxnocvb.supabase.co';
+
+
+const SUPABASE_KEY =
+    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+// ======================================================
+// SUBMIT INTELLIGENCE
+// ======================================================
+
+async function submitIntel() {
+
+
+    const reporterName =
+        document
+            .getElementById('reporterName')
+            .value
+            .trim();
+
+
+    const reporterCallsign =
+        document
+            .getElementById('reporterCallsign')
+            .value
+            .trim();
+
+
+    const intelType =
+        document
+            .getElementById('intelType')
+            .value;
+
+
+    const subject =
+        document
+            .getElementById('subject')
+            .value
+            .trim();
+
+
+    const finding =
+        document
+            .getElementById('finding')
+            .value
+            .trim();
+
+
+    const location =
+        document
+            .getElementById('location')
+            .value
+            .trim();
+
+
+    const source =
+        document
+            .getElementById('source')
+            .value
+            .trim();
+
+
+    const evidenceLink =
+        document
+            .getElementById('evidenceLink')
+            .value
+            .trim();
+
+
+    const message =
+        document
+            .getElementById('message');
+
+
+    const submitButton =
+        document
+            .getElementById('submitButton');
+
+
+    message.className =
+        'message';
+
+
+    message.textContent =
+        '';
+
+
+    // ==================================================
+    // VALIDATION
+    // ==================================================
+
+    if (!reporterName) {
+
+        message.classList.add(
+            'error'
+        );
+
+        message.textContent =
+            'Please enter your name.';
+
+        return;
+
+    }
+
+
+    if (!reporterCallsign) {
+
+        message.classList.add(
+            'error'
+        );
+
+        message.textContent =
+            'Please enter your call sign.';
+
+        return;
+
+    }
+
+
+    if (!intelType) {
+
+        message.classList.add(
+            'error'
+        );
+
+        message.textContent =
+            'Please select an intel type.';
+
+        return;
+
+    }
+
+
+    if (!subject) {
+
+        message.classList.add(
+            'error'
+        );
+
+        message.textContent =
+            'Please enter a subject.';
+
+        return;
+
+    }
+
+
+    if (!finding) {
+
+        message.classList.add(
+            'error'
+        );
+
+        message.textContent =
+            'Please enter the intelligence finding.';
+
+        return;
+
+    }
+
+
+    submitButton.disabled =
+        true;
+
+
+    submitButton.textContent =
+        'SUBMITTING...';
+
+
+    // ==================================================
+    // SECURE PUBLIC SUBMISSION
+    // ==================================================
+
+    const {
+        data,
+        error
+    } = await supabaseClient.rpc(
+        'submit_non_scu_intel',
+        {
+            p_reporter_name:
+                reporterName,
+
+            p_reporter_callsign:
+                reporterCallsign,
+
+            p_intel_type:
+                intelType,
+
+            p_finding:
+                `${subject}\n\n${finding}`,
+
+            p_location:
+                location || null,
+
+            p_source:
+                source || null,
+
+            p_evidence:
+                evidenceLink || null
+        }
+    );
+
+
+    if (error) {
+
+        console.error(
+            'Submit non-SCU intel error:',
+            error
+        );
+
+
+        message.classList.add(
+            'error'
+        );
+
+
+        message.textContent =
+            'Unable to submit intelligence. Please try again.';
+
+
+        submitButton.disabled =
+            false;
+
+
+        submitButton.textContent =
+            'SUBMIT INTELLIGENCE';
+
+
+        return;
+
+    }
+
+
+    // ==================================================
+    // SUCCESS
+    // ==================================================
+
+    message.classList.add(
+        'success'
+    );
+
+
+    message.textContent =
+        'Intelligence submitted successfully. Thank you for providing this information to the Street Crimes Unit.';
+
+
+    // ==================================================
+    // CLEAR FORM
+    // ==================================================
+
+    document
+        .getElementById('reporterName')
+        .value = '';
+
+
+    document
+        .getElementById('reporterCallsign')
+        .value = '';
+
+
+    document
+        .getElementById('intelType')
+        .value = '';
+
+
+    document
+        .getElementById('subject')
+        .value = '';
+
+
+    document
+        .getElementById('finding')
+        .value = '';
+
+
+    document
+        .getElementById('location')
+        .value = '';
+
+
+    document
+        .getElementById('source')
+        .value = '';
+
+
+    document
+        .getElementById('evidenceLink')
+        .value = '';
+
+
+    submitButton.disabled =
+        false;
+
+
+    submitButton.textContent =
+        'SUBMIT INTELLIGENCE';
+
+}
+
+</script>
+
+</body>
+
+</html>
