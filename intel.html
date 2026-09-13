@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -472,38 +471,38 @@ async function loadIntel() {
             .select('*');
 
 
-// --------------------------------------------------
-// FULL INTELLIGENCE ACCESS
-// --------------------------------------------------
+    // --------------------------------------------------
+    // FULL INTELLIGENCE ACCESS
+    // --------------------------------------------------
 
-if (
-    [
-    'master',
-    'investigator',
-    'case lead'
-].includes(
-    currentUserRole
-)
- {
+    if (
+        [
+            'master',
+            'investigator',
+            'case lead'
+        ].includes(
+            currentUserRole
+        )
+    ) {
 
-    console.log(
-        'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
-    );
-
-} else {
-
-    console.log(
-        'STANDARD ACCESS: Loading received intelligence only'
-    );
-
-
-    query =
-        query.eq(
-            'recipient_id',
-            currentUser.id
+        console.log(
+            'FULL INTELLIGENCE ACCESS: Loading ALL intelligence'
         );
 
-}
+    } else {
+
+        console.log(
+            'STANDARD ACCESS: Loading received intelligence only'
+        );
+
+
+        query =
+            query.eq(
+                'recipient_id',
+                currentUser.id
+            );
+
+    }
 
 
     const {
@@ -634,19 +633,6 @@ if (
 
     // --------------------------------------------------
     // Get this user's viewed records
-    // --------------------------------------------------
-    //
-    // IMPORTANT:
-    //
-    // intel_views belongs to the USER.
-    //
-    // Therefore:
-    //
-    // Master viewing an Intel only marks it as
-    // viewed for that Master.
-    //
-    // It does NOT mark it viewed for the recipient.
-    //
     // --------------------------------------------------
 
     const intelIds =
@@ -933,24 +919,24 @@ if (
                 }
 
 
-             <div class="intel-footer">
+                <div class="intel-footer">
 
-    <div class="date">
+                    <div class="date">
 
-        Received:
-        ${formattedDate}
+                        Received:
+                        ${formattedDate}
 
-    </div>
+                    </div>
 
 
-    <button
-        class="delete-button"
-        onclick="deleteIntel('${intel.id}')"
-    >
-        DELETE INTEL
-    </button>
+                    <button
+                        class="delete-button"
+                        onclick="deleteIntel('${intel.id}')"
+                    >
+                        DELETE INTEL
+                    </button>
 
-</div>
+                </div>
 
             `;
 
@@ -962,16 +948,6 @@ if (
 
             // --------------------------------------------------
             // Automatically mark as viewed
-            // --------------------------------------------------
-            //
-            // We do this AFTER displaying the card.
-            //
-            // This means opening the Intel page counts it
-            // as viewed.
-            //
-            // The view is stored against the logged-in user's
-            // ID, not the recipient ID.
-            //
             // --------------------------------------------------
 
             if (
@@ -1173,4 +1149,3 @@ checkLogin();
 </body>
 
 </html>
-```
