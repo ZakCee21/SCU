@@ -84,6 +84,11 @@
             text-transform: uppercase;
         }
 
+        .status.closed {
+            background: #7f1d1d;
+            color: #fecaca;
+        }
+
         .section {
             background: #111827;
             border: 1px solid #1f2937;
@@ -143,6 +148,52 @@
             border-radius: 5px;
         }
 
+        .case-action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .delete-case-button {
+            background: #991b1b;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete-case-button:hover {
+            background: #b91c1c;
+        }
+
+        .close-case-button {
+            background: #b91c1c;
+            color: white;
+            border: 1px solid #ef4444;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .close-case-button:hover {
+            background: #dc2626;
+        }
+
+        .closed-notice {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: #2a1114;
+            border: 1px solid #7f1d1d;
+            border-radius: 5px;
+            color: #fca5a5;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
     </style>
 
 </head>
@@ -182,6 +233,14 @@
             <span class="status" id="caseStatus">
                 ACTIVE
             </span>
+
+            <div
+                id="closedNotice"
+                class="closed-notice"
+                style="display:none;"
+            >
+                THIS CASE IS CLOSED
+            </div>
 
         </div>
 
@@ -243,176 +302,183 @@
             <button id="saveCase">
                 SAVE CHANGES
             </button>
-<button
-    id="deleteCase"
-    style="
-        margin-top:15px;
-        background:#991b1b;
-        color:white;
-        border:none;
-        padding:12px 20px;
-        border-radius:5px;
-        cursor:pointer;
-        font-weight:bold;
-    "
->
-    DELETE CASE
-</button>
-            
+
+
+            <div class="case-action-buttons">
+
+                <button
+                    id="closeCase"
+                    class="close-case-button"
+                    style="display:none;"
+                >
+                    CLOSE CASE
+                </button>
+
+
+                <button
+                    id="deleteCase"
+                    class="delete-case-button"
+                >
+                    DELETE CASE
+                </button>
+
+            </div>
+
         </div>
 
 
-    <div class="section">
+        <div class="section">
 
-    <h2>OFFICER ACCESS</h2>
+            <h2>OFFICER ACCESS</h2>
 
-    <p style="color:#9ca3af;">
-        Select which officers are authorised to access this case.
-        Case Masters and the case creator always retain access.
-    </p>
+            <p style="color:#9ca3af;">
+                Select which officers are authorised to access this case.
+                Case Masters and the case creator always retain access.
+            </p>
 
-    <div id="caseOfficerList">
+            <div id="caseOfficerList">
+                Loading officers...
+            </div>
 
-        Loading officers...
+            <button
+                id="saveAccess"
+                style="margin-top:20px;"
+            >
+                SAVE ACCESS CHANGES
+            </button>
 
-    </div>
-
-    <button
-        id="saveAccess"
-        style="margin-top:20px;"
-    >
-        SAVE ACCESS CHANGES
-    </button>
-
-</div>
-
-<div class="section">
-
-    <h2>EVIDENCE & DOCUMENTS</h2>
-
-    <p style="color:#9ca3af;">
-        Upload case documents or attach external links.
-        Evidence is restricted to authorised personnel.
-    </p>
+        </div>
 
 
-    <!-- UPLOAD DOCUMENT -->
+        <div class="section">
 
-    <h3 style="color:#e5e7eb; margin-top:25px;">
-        UPLOAD DOCUMENT
-    </h3>
+            <h2>EVIDENCE & DOCUMENTS</h2>
 
-    <div style="
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-        max-width:700px;
-        margin-top:15px;
-    ">
-
-        <input
-            type="file"
-            id="evidenceFile"
-        >
-
-        <input
-            type="text"
-            id="evidenceTitle"
-            placeholder="Evidence title"
-        >
-
-        <textarea
-            id="evidenceDescription"
-            placeholder="Description / notes"
-            style="
-                min-height:120px;
-                resize:vertical;
-            "
-        ></textarea>
-
-        <button
-            id="uploadEvidence"
-            style="
-                align-self:flex-start;
-                margin-top:4px;
-            "
-        >
-            UPLOAD DOCUMENT
-        </button>
-
-    </div>
+            <p style="color:#9ca3af;">
+                Upload case documents or attach external links.
+                Evidence is restricted to authorised personnel.
+            </p>
 
 
-    <!-- EXTERNAL LINK -->
+            <!-- UPLOAD DOCUMENT -->
 
-    <h3 style="color:#e5e7eb; margin-top:40px;">
-        ADD EXTERNAL LINK
-    </h3>
+            <h3 style="color:#e5e7eb; margin-top:25px;">
+                UPLOAD DOCUMENT
+            </h3>
 
-    <div style="
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-        max-width:700px;
-        margin-top:15px;
-    ">
+            <div style="
+                display:flex;
+                flex-direction:column;
+                gap:12px;
+                max-width:700px;
+                margin-top:15px;
+            ">
 
-        <input
-            type="text"
-            id="evidenceLinkTitle"
-            placeholder="Link title"
-        >
+                <input
+                    type="file"
+                    id="evidenceFile"
+                >
 
-        <input
-            type="url"
-            id="evidenceLink"
-            placeholder="https://..."
-        >
+                <input
+                    type="text"
+                    id="evidenceTitle"
+                    placeholder="Evidence title"
+                >
 
-        <textarea
-            id="evidenceLinkDescription"
-            placeholder="Description / notes"
-            style="
-                min-height:120px;
-                resize:vertical;
-            "
-        ></textarea>
+                <textarea
+                    id="evidenceDescription"
+                    placeholder="Description / notes"
+                    style="
+                        min-height:120px;
+                        resize:vertical;
+                    "
+                ></textarea>
 
-        <button
-            id="addEvidenceLink"
-            style="
-                align-self:flex-start;
-                margin-top:4px;
-            "
-        >
-            ADD LINK
-        </button>
+                <button
+                    id="uploadEvidence"
+                    style="
+                        align-self:flex-start;
+                        margin-top:4px;
+                    "
+                >
+                    UPLOAD DOCUMENT
+                </button>
 
-    </div>
+            </div>
 
 
-    <!-- ATTACHED EVIDENCE -->
+            <!-- EXTERNAL LINK -->
 
-    <h3 style="color:#e5e7eb; margin-top:40px;">
-        ATTACHED EVIDENCE
-    </h3>
+            <h3 style="color:#e5e7eb; margin-top:40px;">
+                ADD EXTERNAL LINK
+            </h3>
 
-    <div id="evidenceList">
-        Loading evidence...
-    </div>
+            <div style="
+                display:flex;
+                flex-direction:column;
+                gap:12px;
+                max-width:700px;
+                margin-top:15px;
+            ">
 
-</div>
-<div class="section">
+                <input
+                    type="text"
+                    id="evidenceLinkTitle"
+                    placeholder="Link title"
+                >
 
-    <h2>CASE INFORMATION — MORE TO COME</h2>
+                <input
+                    type="url"
+                    id="evidenceLink"
+                    placeholder="https://..."
+                >
 
-    <p style="color:#9ca3af;">
-        Suspects, intelligence, surveillance,
-        evidence, documents, links and activity
-        history will be added here.
-    </p>
+                <textarea
+                    id="evidenceLinkDescription"
+                    placeholder="Description / notes"
+                    style="
+                        min-height:120px;
+                        resize:vertical;
+                    "
+                ></textarea>
 
-</div>
+                <button
+                    id="addEvidenceLink"
+                    style="
+                        align-self:flex-start;
+                        margin-top:4px;
+                    "
+                >
+                    ADD LINK
+                </button>
+
+            </div>
+
+
+            <!-- ATTACHED EVIDENCE -->
+
+            <h3 style="color:#e5e7eb; margin-top:40px;">
+                ATTACHED EVIDENCE
+            </h3>
+
+            <div id="evidenceList">
+                Loading evidence...
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <h2>CASE INFORMATION — MORE TO COME</h2>
+
+            <p style="color:#9ca3af;">
+                Suspects, intelligence, surveillance,
+                evidence, documents, links and activity
+                history will be added here.
+            </p>
+
+        </div>
 
     </div>
 
@@ -424,9 +490,11 @@
 
 <script>
 
-const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+const SUPABASE_URL =
+    'https://mtlozyseibrefhxnocvb.supabase.co';
 
-const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+const SUPABASE_KEY =
+    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
 
 const supabaseClient =
@@ -436,22 +504,39 @@ const supabaseClient =
     );
 
 
-// Get case ID from the URL
+// ======================================================
+// GET CASE ID
+// ======================================================
 
 const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
 
 const caseId =
     params.get('id');
+
+
+// ======================================================
+// ESCAPE HTML
+// ======================================================
+
 function escapeHtml(text) {
 
-    const div = document.createElement('div');
+    const div =
+        document.createElement('div');
 
-    div.textContent = text ?? '';
+    div.textContent =
+        text ?? '';
 
     return div.innerHTML;
 
 }
+
+
+// ======================================================
+// LOAD CASE
+// ======================================================
 
 async function loadCase() {
 
@@ -469,9 +554,16 @@ async function loadCase() {
         data,
         error
     } = await supabaseClient
+
         .from('cases')
+
         .select('*')
-        .eq('id', caseId)
+
+        .eq(
+            'id',
+            caseId
+        )
+
         .single();
 
 
@@ -485,127 +577,509 @@ async function loadCase() {
         );
 
         return;
+
     }
 
 
-    document.getElementById('caseNumber')
+    document
+        .getElementById('caseNumber')
         .textContent =
-        data.case_number;
+            data.case_number;
 
 
-    document.getElementById('caseTitle')
+    document
+        .getElementById('caseTitle')
         .textContent =
-        data.case_name;
+            data.case_name;
 
 
-    document.getElementById('caseStatus')
-        .textContent =
-        data.status;
+    const statusElement =
+        document.getElementById(
+            'caseStatus'
+        );
 
 
-    document.getElementById('caseName')
+    const currentStatus =
+        String(
+            data.status || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    statusElement.textContent =
+        data.status || 'active';
+
+
+    if (
+        currentStatus === 'closed'
+    ) {
+
+        statusElement.classList.add(
+            'closed'
+        );
+
+        document
+            .getElementById('closedNotice')
+            .style.display =
+                'block';
+
+    } else {
+
+        statusElement.classList.remove(
+            'closed'
+        );
+
+        document
+            .getElementById('closedNotice')
+            .style.display =
+                'none';
+
+    }
+
+
+    document
+        .getElementById('caseName')
         .value =
-        data.case_name || '';
+            data.case_name || '';
 
 
-    document.getElementById('classification')
+    document
+        .getElementById('classification')
         .value =
-        data.classification || 'CONFIDENTIAL';
+            data.classification ||
+            'CONFIDENTIAL';
 
 
-    document.getElementById('description')
+    document
+        .getElementById('description')
         .value =
-        data.description || '';
+            data.description || '';
 
 
-    document.getElementById('loading')
-        .style.display = 'none';
+    document
+        .getElementById('loading')
+        .style.display =
+            'none';
 
 
-    document.getElementById('caseContent')
-        .style.display = 'block';
+    document
+        .getElementById('caseContent')
+        .style.display =
+            'block';
+
+
+    // Check whether current user can close cases.
+
+    setupCloseCase(
+        currentStatus
+    );
 
 }
 
+
+// ======================================================
+// SHOW ERROR
+// ======================================================
 
 function showError(message) {
 
-    document.getElementById('loading')
-        .style.display = 'none';
+    document
+        .getElementById('loading')
+        .style.display =
+            'none';
+
 
     const error =
-        document.getElementById('error');
+        document.getElementById(
+            'error'
+        );
 
-    error.textContent = message;
 
-    error.style.display = 'block';
+    error.textContent =
+        message;
+
+
+    error.style.display =
+        'block';
 
 }
 
 
-document.getElementById('saveCase')
-    .addEventListener('click', async function() {
+// ======================================================
+// SAVE CASE
+// ======================================================
 
-        const caseName =
-            document.getElementById('caseName')
-                .value.trim();
-
-        const classification =
-            document.getElementById('classification')
-                .value;
-
-        const description =
-            document.getElementById('description')
-                .value.trim();
+document
+    .getElementById('saveCase')
+    .addEventListener(
+        'click',
+        async function() {
 
 
-        const {
-            error
-        } = await supabaseClient
-            .from('cases')
-            .update({
-                case_name: caseName,
-                classification: classification,
-                description: description,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', caseId);
+            const caseName =
+                document
+                    .getElementById(
+                        'caseName'
+                    )
+                    .value
+                    .trim();
 
 
-        if (error) {
+            const classification =
+                document
+                    .getElementById(
+                        'classification'
+                    )
+                    .value;
+
+
+            const description =
+                document
+                    .getElementById(
+                        'description'
+                    )
+                    .value
+                    .trim();
+
+
+            const {
+                error
+            } = await supabaseClient
+
+                .from('cases')
+
+                .update({
+
+                    case_name:
+                        caseName,
+
+                    classification:
+                        classification,
+
+                    description:
+                        description,
+
+                    updated_at:
+                        new Date()
+                            .toISOString()
+
+                })
+
+                .eq(
+                    'id',
+                    caseId
+                );
+
+
+            if (error) {
+
+                alert(
+                    'SAVE FAILED: ' +
+                    error.message
+                );
+
+                console.error(error);
+
+                return;
+
+            }
+
+
+            document
+                .getElementById(
+                    'caseTitle'
+                )
+                .textContent =
+                    caseName;
+
 
             alert(
-                'SAVE FAILED: ' +
-                error.message
+                'CASE UPDATED SUCCESSFULLY'
             );
 
-            console.error(error);
-
-            return;
         }
+    );
 
 
-        document.getElementById('caseTitle')
-            .textContent =
-            caseName;
+// ======================================================
+// CLOSE CASE
+// ======================================================
+//
+// Allowed backend roles:
+//
+// master
+// investigator
+// case_lead
+//
+// master covers:
+// Head of SCU
+// Assistant Head of SCU
+// High Command
+// GOV
+//
+// investigator = Head of Drugs
+// case_lead = Head of Weapons
+//
+// ======================================================
+
+async function setupCloseCase(
+    currentStatus
+) {
+
+    const closeButton =
+        document.getElementById(
+            'closeCase'
+        );
 
 
-        alert('CASE UPDATED SUCCESSFULLY');
+    if (!closeButton) {
 
-    });
+        console.error(
+            'CLOSE CASE BUTTON NOT FOUND'
+        );
 
-        
+        return;
+
+    }
+
+
+    // Already closed.
+
+    if (
+        currentStatus === 'closed'
+    ) {
+
+        closeButton.style.display =
+            'none';
+
+        return;
+
+    }
+
+
+    const {
+        data: {
+            user
+        }
+    } = await supabaseClient.auth.getUser();
+
+
+    if (!user) {
+
+        closeButton.style.display =
+            'none';
+
+        return;
+
+    }
+
+
+    const {
+        data: officer,
+        error
+    } = await supabaseClient
+
+        .from('officers')
+
+        .select(
+            'role'
+        )
+
+        .eq(
+            'id',
+            user.id
+        )
+
+        .single();
+
+
+    if (error || !officer) {
+
+        console.error(
+            'CLOSE CASE PERMISSION CHECK FAILED:',
+            error
+        );
+
+        closeButton.style.display =
+            'none';
+
+        return;
+
+    }
+
+
+    const closeCaseRoles = [
+        'master',
+        'investigator',
+        'case_lead'
+    ];
+
+
+    const canCloseCase =
+        closeCaseRoles.includes(
+            String(
+                officer.role || ''
+            )
+            .trim()
+            .toLowerCase()
+        );
+
+
+    if (!canCloseCase) {
+
+        closeButton.style.display =
+            'none';
+
+        return;
+
+    }
+
+
+    closeButton.style.display =
+        'inline-block';
+
+
+    closeButton.addEventListener(
+        'click',
+        async function() {
+
+
+            const confirmed =
+                confirm(
+                    'CLOSE CASE?\n\n' +
+                    'This will move the case from ACTIVE CASES to CLOSED CASES for all officers involved.\n\n' +
+                    'The case will remain accessible to authorised officers.\n\n' +
+                    'Are you sure you want to close this case?'
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            closeButton.disabled =
+                true;
+
+
+            closeButton.textContent =
+                'CLOSING CASE...';
+
+
+            const {
+                error: closeError
+            } = await supabaseClient
+
+                .from('cases')
+
+                .update({
+
+                    status:
+                        'closed',
+
+                    updated_at:
+                        new Date()
+                            .toISOString()
+
+                })
+
+                .eq(
+                    'id',
+                    caseId
+                );
+
+
+            if (closeError) {
+
+                alert(
+                    'CASE COULD NOT BE CLOSED:\n\n' +
+                    closeError.message
+                );
+
+                console.error(
+                    closeError
+                );
+
+                closeButton.disabled =
+                    false;
+
+                closeButton.textContent =
+                    'CLOSE CASE';
+
+                return;
+
+            }
+
+
+            alert(
+                'CASE CLOSED SUCCESSFULLY'
+            );
+
+
+            // Update the page immediately.
+
+            const statusElement =
+                document.getElementById(
+                    'caseStatus'
+                );
+
+
+            statusElement.textContent =
+                'closed';
+
+
+            statusElement.classList.add(
+                'closed'
+            );
+
+
+            document
+                .getElementById(
+                    'closedNotice'
+                )
+                .style.display =
+                    'block';
+
+
+            closeButton.style.display =
+                'none';
+
+
+            closeButton.disabled =
+                false;
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// LOAD CASE OFFICERS
+// ======================================================
+
 async function loadCaseOfficers() {
 
     const {
-        data: { user }
+        data: {
+            user
+        }
     } = await supabaseClient.auth.getUser();
 
+
     const list =
-        document.getElementById('caseOfficerList');
+        document.getElementById(
+            'caseOfficerList'
+        );
+
 
     const saveAccessButton =
-        document.getElementById('saveAccess');
+        document.getElementById(
+            'saveAccess'
+        );
 
 
     if (!user) {
@@ -613,51 +1087,75 @@ async function loadCaseOfficers() {
         list.innerHTML =
             'You must be logged in to view officer access.';
 
-        saveAccessButton.style.display = 'none';
+        saveAccessButton.style.display =
+            'none';
 
         return;
+
     }
 
 
     // Get the current user's role
+
     const {
         data: currentOfficer,
         error: currentOfficerError
     } = await supabaseClient
+
         .from('officers')
-        .select('role')
-        .eq('id', user.id)
+
+        .select(
+            'role'
+        )
+
+        .eq(
+            'id',
+            user.id
+        )
+
         .single();
 
 
-    if (currentOfficerError || !currentOfficer) {
+    if (
+        currentOfficerError ||
+        !currentOfficer
+    ) {
 
-        console.error(currentOfficerError);
+        console.error(
+            currentOfficerError
+        );
 
         list.innerHTML =
             'Unable to determine your permissions.';
 
-        saveAccessButton.style.display = 'none';
+        saveAccessButton.style.display =
+            'none';
 
         return;
+
     }
 
 
- const canManageAccess =
-    ['master', 'officer', 'investigator', 'case_lead'].includes(
-        currentOfficer.role
-    );
+    const canManageAccess =
+        [
+            'master',
+            'officer',
+            'investigator',
+            'case_lead'
+        ].includes(
+            currentOfficer.role
+        );
 
 
-    // Officers can view the access list,
-    // but only Masters and Case Leads can change it.
     if (!canManageAccess) {
 
-        saveAccessButton.style.display = 'none';
+        saveAccessButton.style.display =
+            'none';
 
     } else {
 
-        saveAccessButton.style.display = 'inline-block';
+        saveAccessButton.style.display =
+            'inline-block';
 
     }
 
@@ -666,179 +1164,245 @@ async function loadCaseOfficers() {
         data: officers,
         error: officersError
     } = await supabaseClient
+
         .from('officers')
+
         .select(
             'id, callsign, full_name, rank, role'
         )
-        .eq('active', true)
-        .order('callsign');
+
+        .eq(
+            'active',
+            true
+        )
+
+        .order(
+            'callsign'
+        );
 
 
     const {
         data: access,
         error: accessError
     } = await supabaseClient
+
         .from('case_access')
+
         .select(
             'officer_id, permission'
         )
-        .eq('case_id', caseId);
+
+        .eq(
+            'case_id',
+            caseId
+        );
 
 
-    if (officersError || accessError) {
+    if (
+        officersError ||
+        accessError
+    ) {
 
         console.error(
-            officersError || accessError
+            officersError ||
+            accessError
         );
 
         list.innerHTML =
             'Unable to load officer access.';
 
         return;
+
     }
 
 
-    const accessMap = new Map(
-        access.map(item => [
-            item.officer_id,
-            item.permission
-        ])
-    );
+    const accessMap =
+        new Map(
+            access.map(
+                item => [
+                    item.officer_id,
+                    item.permission
+                ]
+            )
+        );
 
 
-    list.innerHTML = officers
+    list.innerHTML =
+        officers
 
-        .filter(
-            officer =>
-                officer.role !== 'master'
-        )
+            .filter(
+                officer =>
+                    officer.role !== 'master'
+            )
 
-        .map(officer => {
+            .map(
+                officer => {
 
-            const hasAccess =
-                accessMap.has(
-                    officer.id
-                );
+                    const hasAccess =
+                        accessMap.has(
+                            officer.id
+                        );
 
 
-            return `
+                    return `
 
-                <label style="
-                    display:flex;
-                    align-items:center;
-                    gap:12px;
-                    padding:12px;
-                    border-bottom:1px solid #1f2937;
-                    cursor:${canManageAccess ? 'pointer' : 'default'};
-                    opacity:${canManageAccess ? '1' : '0.8'};
-                ">
-
-                    <input
-                        type="checkbox"
-                        class="case-officer-checkbox"
-                        value="${officer.id}"
-                        ${hasAccess ? 'checked' : ''}
-                        ${canManageAccess ? '' : 'disabled'}
-                    >
-
-                    <div>
-
-                        <div style="font-weight:bold;">
-                            ${escapeHtml(
-                                officer.callsign ||
-                                'UNASSIGNED'
-                            )}
-                        </div>
-
-                        <div style="
-                            color:#9ca3af;
-                            font-size:12px;
-                            margin-top:3px;
+                        <label style="
+                            display:flex;
+                            align-items:center;
+                            gap:12px;
+                            padding:12px;
+                            border-bottom:1px solid #1f2937;
+                            cursor:${canManageAccess ? 'pointer' : 'default'};
+                            opacity:${canManageAccess ? '1' : '0.8'};
                         ">
 
-                            ${escapeHtml(
-                                officer.full_name ||
-                                ''
-                            )}
+                            <input
+                                type="checkbox"
+                                class="case-officer-checkbox"
+                                value="${officer.id}"
+                                ${hasAccess ? 'checked' : ''}
+                                ${canManageAccess ? '' : 'disabled'}
+                            >
 
-                            —
+                            <div>
 
-                            ${escapeHtml(
-                                officer.rank ||
-                                'Officer'
-                            )}
+                                <div style="font-weight:bold;">
 
-                        </div>
+                                    ${escapeHtml(
+                                        officer.callsign ||
+                                        'UNASSIGNED'
+                                    )}
 
-                    </div>
+                                </div>
 
-                </label>
+                                <div style="
+                                    color:#9ca3af;
+                                    font-size:12px;
+                                    margin-top:3px;
+                                ">
 
-            `;
+                                    ${escapeHtml(
+                                        officer.full_name ||
+                                        ''
+                                    )}
 
-        })
+                                    —
 
-        .join('');
+                                    ${escapeHtml(
+                                        officer.rank ||
+                                        'Officer'
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        </label>
+
+                    `;
+
+                }
+            )
+            .join('');
 
 }
 
+
+// ======================================================
+// SAVE OFFICER ACCESS
+// ======================================================
+
 document
     .getElementById('saveAccess')
-    .addEventListener('click', async function() {
+    .addEventListener(
+        'click',
+        async function() {
 
-        const selectedOfficers =
-            Array.from(
-                document.querySelectorAll(
-                    '.case-officer-checkbox:checked'
+
+            const selectedOfficers =
+                Array.from(
+                    document.querySelectorAll(
+                        '.case-officer-checkbox:checked'
+                    )
                 )
-            )
-            .map(checkbox => checkbox.value);
+                .map(
+                    checkbox =>
+                        checkbox.value
+                );
 
 
-        const {
-            error
-        } = await supabaseClient.rpc(
-            'update_case_access',
-            {
-                p_case_id: caseId,
-                p_officer_ids: selectedOfficers
-            }
-        );
+            const {
+                error
+            } = await supabaseClient.rpc(
+                'update_case_access',
+                {
+                    p_case_id:
+                        caseId,
 
-
-        if (error) {
-
-            alert(
-                'ACCESS UPDATE FAILED: ' +
-                error.message
+                    p_officer_ids:
+                        selectedOfficers
+                }
             );
 
-            console.error(error);
 
-            return;
+            if (error) {
+
+                alert(
+                    'ACCESS UPDATE FAILED: ' +
+                    error.message
+                );
+
+                console.error(error);
+
+                return;
+
+            }
+
+
+            alert(
+                'OFFICER ACCESS UPDATED SUCCESSFULLY'
+            );
+
+
+            loadCaseOfficers();
+
         }
+    );
 
 
-        alert(
-            'OFFICER ACCESS UPDATED SUCCESSFULLY'
-        );
+// ======================================================
+// LOAD EVIDENCE
+// ======================================================
 
-        loadCaseOfficers();
-
-    });
-   async function loadEvidence() {
+async function loadEvidence() {
 
     const {
         data,
         error
     } = await supabaseClient
+
         .from('evidence')
+
         .select('*')
-        .eq('case_id', caseId)
-        .order('created_at', { ascending: false });
+
+        .eq(
+            'case_id',
+            caseId
+        )
+
+        .order(
+            'created_at',
+            {
+                ascending: false
+            }
+        );
+
 
     const list =
-        document.getElementById('evidenceList');
+        document.getElementById(
+            'evidenceList'
+        );
+
 
     if (error) {
 
@@ -848,452 +1412,775 @@ document
             '<div style="color:#fca5a5;">Unable to load evidence.</div>';
 
         return;
+
     }
 
-    if (!data || data.length === 0) {
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         list.innerHTML =
             '<div style="color:#9ca3af;">No evidence attached to this case yet.</div>';
 
         return;
+
     }
 
-    list.innerHTML = data.map(item => `
 
-        <div style="
-            border:1px solid #26313c;
-            border-radius:6px;
-            padding:15px;
-            margin-top:10px;
-            background:#0b0f14;
-        ">
+    list.innerHTML =
+        data.map(
+            item => `
 
-            <div style="
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                gap:10px;
-            ">
-
-                <strong>
-                    ${escapeHtml(item.title || 'Untitled Evidence')}
-                </strong>
-
-                <span style="
-                    color:#7dd3fc;
-                    font-size:11px;
-                    text-transform:uppercase;
+                <div style="
+                    border:1px solid #26313c;
+                    border-radius:6px;
+                    padding:15px;
+                    margin-top:10px;
+                    background:#0b0f14;
                 ">
-                    ${escapeHtml(item.evidence_type || 'evidence')}
-                </span>
 
-            </div>
-
-            ${
-                item.description
-                ? `
                     <div style="
-                        color:#9ca3af;
-                        font-size:13px;
-                        margin-top:8px;
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        gap:10px;
                     ">
-                        ${escapeHtml(item.description)}
-                    </div>
-                `
-                : ''
-            }
 
-            ${
-                item.file_url
-                ? `
-                    <div style="margin-top:12px;">
+                        <strong>
+                            ${escapeHtml(
+                                item.title ||
+                                'Untitled Evidence'
+                            )}
+                        </strong>
 
-                        <button
-                            class="open-evidence-button"
-                            data-evidence-id="${item.id}"
-                            style="
-                                background:#1d4ed8;
-                                color:white;
-                                border:none;
-                                padding:8px 14px;
-                                border-radius:5px;
-                                cursor:pointer;
-                                font-weight:bold;
-                            "
-                        >
-                            ${
-                                item.evidence_type === 'document'
-                                ? 'OPEN DOCUMENT'
-                                : 'OPEN LINK'
-                            }
-                        </button>
+                        <span style="
+                            color:#7dd3fc;
+                            font-size:11px;
+                            text-transform:uppercase;
+                        ">
+
+                            ${escapeHtml(
+                                item.evidence_type ||
+                                'evidence'
+                            )}
+
+                        </span>
 
                     </div>
-                `
-                : ''
-            }
 
-        </div>
 
-    `).join('');
+                    ${
+                        item.description
+                        ? `
+
+                            <div style="
+                                color:#9ca3af;
+                                font-size:13px;
+                                margin-top:8px;
+                            ">
+
+                                ${escapeHtml(
+                                    item.description
+                                )}
+
+                            </div>
+
+                        `
+                        : ''
+                    }
+
+
+                    ${
+                        item.file_url
+                        ? `
+
+                            <div style="margin-top:12px;">
+
+                                <button
+                                    class="open-evidence-button"
+                                    data-evidence-id="${item.id}"
+                                    style="
+                                        background:#1d4ed8;
+                                        color:white;
+                                        border:none;
+                                        padding:8px 14px;
+                                        border-radius:5px;
+                                        cursor:pointer;
+                                        font-weight:bold;
+                                    "
+                                >
+
+                                    ${
+                                        item.evidence_type === 'document'
+                                        ? 'OPEN DOCUMENT'
+                                        : 'OPEN LINK'
+                                    }
+
+                                </button>
+
+                            </div>
+
+                        `
+                        : ''
+                    }
+
+                </div>
+
+            `
+        )
+        .join('');
 
 }
-loadCase();
 
-loadCaseOfficers();
 
-loadEvidence();
+// ======================================================
+// ADD EXTERNAL LINK
+// ======================================================
+
 document
     .getElementById('addEvidenceLink')
-    .addEventListener('click', async function() {
-
-        const title =
-            document.getElementById('evidenceLinkTitle')
-                .value.trim();
-
-        const url =
-            document.getElementById('evidenceLink')
-                .value.trim();
-
-        const description =
-            document.getElementById('evidenceLinkDescription')
-                .value.trim();
+    .addEventListener(
+        'click',
+        async function() {
 
 
-        if (!title || !url) {
+            const title =
+                document
+                    .getElementById(
+                        'evidenceLinkTitle'
+                    )
+                    .value
+                    .trim();
+
+
+            const url =
+                document
+                    .getElementById(
+                        'evidenceLink'
+                    )
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById(
+                        'evidenceLinkDescription'
+                    )
+                    .value
+                    .trim();
+
+
+            if (
+                !title ||
+                !url
+            ) {
+
+                alert(
+                    'Please enter a title and link.'
+                );
+
+                return;
+
+            }
+
+
+            const {
+                data: {
+                    user
+                }
+            } = await supabaseClient.auth.getUser();
+
+
+            if (!user) {
+
+                alert(
+                    'You are not logged in.'
+                );
+
+                return;
+
+            }
+
+
+            const {
+                error
+            } = await supabaseClient
+
+                .from('evidence')
+
+                .insert({
+
+                    case_id:
+                        caseId,
+
+                    officer_id:
+                        user.id,
+
+                    evidence_type:
+                        'link',
+
+                    title:
+                        title,
+
+                    description:
+                        description,
+
+                    file_url:
+                        url
+
+                });
+
+
+            if (error) {
+
+                alert(
+                    'LINK COULD NOT BE ADDED: ' +
+                    error.message
+                );
+
+                console.error(error);
+
+                return;
+
+            }
+
+
+            document
+                .getElementById(
+                    'evidenceLinkTitle'
+                )
+                .value = '';
+
+
+            document
+                .getElementById(
+                    'evidenceLink'
+                )
+                .value = '';
+
+
+            document
+                .getElementById(
+                    'evidenceLinkDescription'
+                )
+                .value = '';
+
 
             alert(
-                'Please enter a title and link.'
+                'LINK ADDED SUCCESSFULLY'
             );
 
-            return;
+
+            loadCase();
+
+            loadCaseOfficers();
+
+            loadEvidence();
+
         }
+    );
 
 
-        const {
-            data: { user }
-        } = await supabaseClient.auth.getUser();
+// ======================================================
+// UPLOAD EVIDENCE
+// ======================================================
 
-
-        if (!user) {
-
-            alert('You are not logged in.');
-
-            return;
-        }
-
-
-        const {
-            error
-        } = await supabaseClient
-            .from('evidence')
-            .insert({
-                case_id: caseId,
-                officer_id: user.id,
-                evidence_type: 'link',
-                title: title,
-                description: description,
-                file_url: url
-            });
-
-
-        if (error) {
-
-            alert(
-                'LINK COULD NOT BE ADDED: ' +
-                error.message
-            );
-
-            console.error(error);
-
-            return;
-        }
-
-
-        document.getElementById('evidenceLinkTitle')
-            .value = '';
-
-        document.getElementById('evidenceLink')
-            .value = '';
-
-        document.getElementById('evidenceLinkDescription')
-            .value = '';
-
-
-        alert('LINK ADDED SUCCESSFULLY');
-        
-        
-loadCase();
-
-loadCaseOfficers();
-
-loadEvidence();
-        
-    });
 document
     .getElementById('uploadEvidence')
-    .addEventListener('click', async function() {
+    .addEventListener(
+        'click',
+        async function() {
 
-        const fileInput =
-            document.getElementById('evidenceFile');
 
-        const title =
-            document.getElementById('evidenceTitle')
-                .value.trim();
+            const fileInput =
+                document.getElementById(
+                    'evidenceFile'
+                );
 
-        const description =
-            document.getElementById('evidenceDescription')
-                .value.trim();
 
-        const file = fileInput.files[0];
+            const title =
+                document
+                    .getElementById(
+                        'evidenceTitle'
+                    )
+                    .value
+                    .trim();
 
-        if (!file) {
-            alert('Please select a document to upload.');
-            return;
-        }
 
-        if (!title) {
-            alert('Please enter an evidence title.');
-            return;
-        }
+            const description =
+                document
+                    .getElementById(
+                        'evidenceDescription'
+                    )
+                    .value
+                    .trim();
 
-        const {
-            data: { user }
-        } = await supabaseClient.auth.getUser();
 
-        if (!user) {
-            alert('You are not logged in.');
-            return;
-        }
+            const file =
+                fileInput.files[0];
 
-        const safeFileName =
-            file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
 
-        const filePath =
-            `${caseId}/${Date.now()}-${safeFileName}`;
+            if (!file) {
 
-        const {
-            error: uploadError
-        } = await supabaseClient
-            .storage
-            .from('case-evidence')
-            .upload(filePath, file);
+                alert(
+                    'Please select a document to upload.'
+                );
 
-        if (uploadError) {
+                return;
+
+            }
+
+
+            if (!title) {
+
+                alert(
+                    'Please enter an evidence title.'
+                );
+
+                return;
+
+            }
+
+
+            const {
+                data: {
+                    user
+                }
+            } = await supabaseClient.auth.getUser();
+
+
+            if (!user) {
+
+                alert(
+                    'You are not logged in.'
+                );
+
+                return;
+
+            }
+
+
+            const safeFileName =
+                file.name.replace(
+                    /[^a-zA-Z0-9._-]/g,
+                    '_'
+                );
+
+
+            const filePath =
+                `${caseId}/${Date.now()}-${safeFileName}`;
+
+
+            const {
+                error: uploadError
+            } = await supabaseClient
+
+                .storage
+
+                .from(
+                    'case-evidence'
+                )
+
+                .upload(
+                    filePath,
+                    file
+                );
+
+
+            if (uploadError) {
+
+                alert(
+                    'DOCUMENT UPLOAD FAILED: ' +
+                    uploadError.message
+                );
+
+                console.error(
+                    uploadError
+                );
+
+                return;
+
+            }
+
+
+            const {
+                error: evidenceError
+            } = await supabaseClient
+
+                .from('evidence')
+
+                .insert({
+
+                    case_id:
+                        caseId,
+
+                    officer_id:
+                        user.id,
+
+                    evidence_type:
+                        'document',
+
+                    title:
+                        title,
+
+                    description:
+                        description,
+
+                    file_url:
+                        filePath
+
+                });
+
+
+            if (evidenceError) {
+
+                alert(
+                    'DOCUMENT RECORD COULD NOT BE SAVED: ' +
+                    evidenceError.message
+                );
+
+                console.error(
+                    evidenceError
+                );
+
+                return;
+
+            }
+
+
+            fileInput.value = '';
+
+
+            document
+                .getElementById(
+                    'evidenceTitle'
+                )
+                .value = '';
+
+
+            document
+                .getElementById(
+                    'evidenceDescription'
+                )
+                .value = '';
+
 
             alert(
-                'DOCUMENT UPLOAD FAILED: ' +
-                uploadError.message
+                'DOCUMENT UPLOADED SUCCESSFULLY'
             );
 
-            console.error(uploadError);
+
+            loadEvidence();
+
+        }
+    );
+
+
+// ======================================================
+// OPEN EVIDENCE
+// ======================================================
+
+document.addEventListener(
+    'click',
+    async function(event) {
+
+
+        const button =
+            event.target.closest(
+                '.open-evidence-button'
+            );
+
+
+        if (!button) {
 
             return;
+
         }
 
+
+        const evidenceId =
+            button.dataset.evidenceId;
+
+
         const {
+            data: evidence,
             error: evidenceError
         } = await supabaseClient
+
             .from('evidence')
-            .insert({
-                case_id: caseId,
-                officer_id: user.id,
-                evidence_type: 'document',
-                title: title,
-                description: description,
-                file_url: filePath
-            });
 
-        if (evidenceError) {
+            .select('*')
+
+            .eq(
+                'id',
+                evidenceId
+            )
+
+            .single();
+
+
+        if (
+            evidenceError ||
+            !evidence
+        ) {
 
             alert(
-                'DOCUMENT RECORD COULD NOT BE SAVED: ' +
-                evidenceError.message
+                'Unable to find this evidence.'
             );
 
-            console.error(evidenceError);
+            console.error(
+                evidenceError
+            );
 
             return;
+
         }
 
-        fileInput.value = '';
 
-        document.getElementById('evidenceTitle')
-            .value = '';
+        // External link
 
-        document.getElementById('evidenceDescription')
-            .value = '';
+        if (
+            evidence.evidence_type ===
+            'link'
+        ) {
 
-        alert('DOCUMENT UPLOADED SUCCESSFULLY');
-
-        loadEvidence();
-
-    });
-
-    document.addEventListener('click', async function(event) {
-
-    const button =
-        event.target.closest('.open-evidence-button');
-
-    if (!button) {
-        return;
-    }
-
-    const evidenceId =
-        button.dataset.evidenceId;
-
-    const {
-        data: evidence,
-        error: evidenceError
-    } = await supabaseClient
-        .from('evidence')
-        .select('*')
-        .eq('id', evidenceId)
-        .single();
-
-    if (evidenceError || !evidence) {
-        alert('Unable to find this evidence.');
-        console.error(evidenceError);
-        return;
-    }
-
-    // External link
-    if (evidence.evidence_type === 'link') {
-
-        window.open(
-            evidence.file_url,
-            '_blank',
-            'noopener,noreferrer'
-        );
-
-        return;
-    }
-
-    // Uploaded document
-    if (evidence.evidence_type === 'document') {
-
-        const {
-            data: signedUrl,
-            error: signedUrlError
-        } = await supabaseClient
-            .storage
-            .from('case-evidence')
-            .createSignedUrl(
+            window.open(
                 evidence.file_url,
-                600
+                '_blank',
+                'noopener,noreferrer'
             );
-
-        if (signedUrlError) {
-
-            alert(
-                'Unable to open document: ' +
-                signedUrlError.message
-            );
-
-            console.error(signedUrlError);
 
             return;
+
         }
 
-        window.open(
-            signedUrl.signedUrl,
-            '_blank',
-            'noopener,noreferrer'
-        );
+
+        // Uploaded document
+
+        if (
+            evidence.evidence_type ===
+            'document'
+        ) {
+
+            const {
+                data: signedUrl,
+                error: signedUrlError
+            } = await supabaseClient
+
+                .storage
+
+                .from(
+                    'case-evidence'
+                )
+
+                .createSignedUrl(
+                    evidence.file_url,
+                    600
+                );
+
+
+            if (signedUrlError) {
+
+                alert(
+                    'Unable to open document: ' +
+                    signedUrlError.message
+                );
+
+                console.error(
+                    signedUrlError
+                );
+
+                return;
+
+            }
+
+
+            window.open(
+                signedUrl.signedUrl,
+                '_blank',
+                'noopener,noreferrer'
+            );
+
+        }
 
     }
+);
 
-});
-    async function setupDeleteCase() {
+
+// ======================================================
+// DELETE CASE
+// ======================================================
+
+async function setupDeleteCase() {
 
     const deleteButton =
-        document.getElementById('deleteCase');
+        document.getElementById(
+            'deleteCase'
+        );
+
 
     if (!deleteButton) {
-        console.error('DELETE CASE BUTTON NOT FOUND');
+
+        console.error(
+            'DELETE CASE BUTTON NOT FOUND'
+        );
+
         return;
+
     }
+
 
     const {
-        data: { user }
+        data: {
+            user
+        }
     } = await supabaseClient.auth.getUser();
 
+
     if (!user) {
-        deleteButton.style.display = 'none';
+
+        deleteButton.style.display =
+            'none';
+
         return;
+
     }
+
 
     const {
         data: officer,
         error
     } = await supabaseClient
+
         .from('officers')
-        .select('role')
-        .eq('id', user.id)
+
+        .select(
+            'role'
+        )
+
+        .eq(
+            'id',
+            user.id
+        )
+
         .single();
 
+
     if (error) {
-        console.error('MASTER CHECK FAILED:', error);
-        deleteButton.style.display = 'none';
+
+        console.error(
+            'MASTER CHECK FAILED:',
+            error
+        );
+
+        deleteButton.style.display =
+            'none';
+
         return;
+
     }
 
- if (
-    !officer ||
-    !['master', 'investigator', 'case_lead'].includes(officer.role)
-) {
-    deleteButton.style.display = 'none';
-    return;
-}
-    deleteButton.addEventListener('click', async function() {
 
-        const confirmed = confirm(
-            'WARNING!\n\n' +
-            'Are you sure you want to permanently DELETE this case?\n\n' +
-            'This will remove the case and all associated case data.\n\n' +
-            'THIS ACTION CANNOT BE UNDONE.'
-        );
+    if (
+        !officer ||
+        ![
+            'master',
+            'investigator',
+            'case_lead'
+        ].includes(
+            String(
+                officer.role || ''
+            )
+            .trim()
+            .toLowerCase()
+        )
+    ) {
 
-        if (!confirmed) {
-            return;
-        }
+        deleteButton.style.display =
+            'none';
 
-        const {
-            error: deleteError
-        } = await supabaseClient.rpc(
-            'delete_case',
-            {
-                p_case_id: caseId
+        return;
+
+    }
+
+
+    deleteButton.addEventListener(
+        'click',
+        async function() {
+
+
+            const confirmed =
+                confirm(
+                    'WARNING!\n\n' +
+                    'Are you sure you want to permanently DELETE this case?\n\n' +
+                    'This will remove the case and all associated case data.\n\n' +
+                    'THIS ACTION CANNOT BE UNDONE.'
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
             }
-        );
 
-        if (deleteError) {
 
-            alert(
-                'CASE COULD NOT BE DELETED:\n\n' +
-                deleteError.message
+            const {
+                error: deleteError
+            } = await supabaseClient.rpc(
+                'delete_case',
+                {
+                    p_case_id:
+                        caseId
+                }
             );
 
-            console.error(deleteError);
 
-            return;
+            if (deleteError) {
+
+                alert(
+                    'CASE COULD NOT BE DELETED:\n\n' +
+                    deleteError.message
+                );
+
+                console.error(
+                    deleteError
+                );
+
+                return;
+
+            }
+
+
+            alert(
+                'CASE DELETED SUCCESSFULLY'
+            );
+
+
+            window.location.href =
+                'dashboard.html';
+
         }
-
-        alert('CASE DELETED SUCCESSFULLY');
-
-        window.location.href = 'dashboard.html';
-
-    });
+    );
 
 }
-    setupDeleteCase();
+
+
+// ======================================================
+// START
+// ======================================================
 
 loadCase();
 
 loadCaseOfficers();
 
 loadEvidence();
-    
+
+setupDeleteCase();
+
 </script>
 
 </body>
