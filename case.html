@@ -437,6 +437,24 @@
             background: #202c38;
         }
 
+        .evidence-delete {
+            background: #7f1d1d;
+            border: 1px solid #991b1b;
+            color: white;
+            padding: 7px 10px;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .evidence-delete:hover {
+            background: #991b1b;
+        }
+
+        .evidence-delete:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         /* =========================
            GENERAL
         ========================= */
@@ -800,10 +818,6 @@
             <div class="section-body">
 
 
-                <!-- =========================
-                     EVIDENCE TITLE
-                ========================= -->
-
                 <div class="field">
 
                     <label>
@@ -819,10 +833,6 @@
                 </div>
 
 
-                <!-- =========================
-                     EVIDENCE DESCRIPTION
-                ========================= -->
-
                 <div class="field">
 
                     <label>
@@ -836,10 +846,6 @@
 
                 </div>
 
-
-                <!-- =========================
-                     FILE UPLOAD
-                ========================= -->
 
                 <div class="field">
 
@@ -875,10 +881,6 @@
                 ></div>
 
 
-                <!-- =========================
-                     EXTERNAL LINK
-                ========================= -->
-
                 <div class="field">
 
                     <label>
@@ -905,10 +907,6 @@
 
                 </div>
 
-
-                <!-- =========================
-                     EVIDENCE LIST
-                ========================= -->
 
                 <div
                     id="evidenceList"
@@ -945,6 +943,7 @@ let currentUser = null;
 let currentOfficer = null;
 let caseData = null;
 let canManageAccess = false;
+let canDeleteEvidence = false;
 
 
 const closeCaseRoles = [
@@ -1302,6 +1301,12 @@ function updateAccessPermission(
         );
 
 
+    canDeleteEvidence =
+        Boolean(
+            isInvolvedOfficer
+        );
+
+
     canManageAccess =
         Boolean(
             isCaseCreator ||
@@ -1395,6 +1400,8 @@ async function loadOfficerAccess() {
                 Failed to load case access.
             </div>
         `;
+
+        canDeleteEvidence = false;
 
         return;
 
@@ -1734,6 +1741,8 @@ document.getElementById(
 
 
         await loadOfficerAccess();
+
+        await loadEvidence();
 
     }
 );
@@ -2339,6 +2348,202 @@ document.getElementById(
 
 
 /* =========================
+   DELETE EVIDENCE
+========================= */
+
+async function deleteEvidence(
+    item,
+    deleteButton
+) {
+
+    const confirmed =
+        confirm(
+            'Are you sure you want to permanently delete this evidence? This cannot be undone.'
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    deleteButton.disabled =
+        true;
+
+
+    deleteButton.textContent =
+        'DELETING...';
+
+
+    try {
+
+        /*
+         * The database RLS policy is the
+         * final permission check.
+         *
+         * The frontend only shows this
+         * button to officers currently
+         * attached to the case.
+         */
+
+
+        /* =========================
+           DELETE STORAGE FILE
+        ========================= */
+
+        if (
+            item.file_url &&
+            String(
+                item.evidence_type || ''
+            ).toUpperCase()
+            === 'FILE'
+        ) {
+
+            try {
+
+                const publicUrl =
+                    item.file_url;
+
+
+                const bucketMarker =
+                    '/storage/v1/object/public/case-evidence/';
+
+
+                const markerIndex =
+                    publicUrl.indexOf(
+                        bucketMarker
+                    );
+
+
+                if (
+                    markerIndex !== -1
+                ) {
+
+                    const filePath =
+                        publicUrl.substring(
+                            markerIndex
+                            +
+                            bucketMarker.length
+                        );
+
+
+                    const {
+                        error:
+                            storageError
+                    } =
+                        await supabaseClient
+                            .storage
+                            .from(
+                                'case-evidence'
+                            )
+                            .remove(
+                                [filePath]
+                            );
+
+
+                    if (
+                        storageError
+                    ) {
+
+                        console.warn(
+                            'Storage file could not be deleted:',
+                            storageError
+                        );
+
+                    }
+
+                }
+
+            } catch (
+                storageError
+            ) {
+
+                console.warn(
+                    'Storage deletion failed:',
+                    storageError
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           DELETE DATABASE RECORD
+        ========================= */
+
+        const {
+            error:
+                deleteError
+        } =
+            await supabaseClient
+                .from('evidence')
+                .delete()
+                .eq(
+                    'id',
+                    item.id
+                )
+                .eq(
+                    'case_id',
+                    caseId
+                );
+
+
+        if (deleteError) {
+
+            console.error(
+                deleteError
+            );
+
+            alert(
+                'Failed to delete evidence: '
+                +
+                deleteError.message
+            );
+
+            deleteButton.disabled =
+                false;
+
+            deleteButton.textContent =
+                'DELETE';
+
+            return;
+
+        }
+
+
+        alert(
+            'Evidence deleted successfully.'
+        );
+
+
+        await loadEvidence();
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+        alert(
+            'Failed to delete evidence: '
+            +
+            error.message
+        );
+
+
+        deleteButton.disabled =
+            false;
+
+        deleteButton.textContent =
+            'DELETE';
+
+    }
+
+}
+
+
+/* =========================
    LOAD EVIDENCE
 ========================= */
 
@@ -2437,22 +2642,7 @@ async function loadEvidence() {
 
             name.textContent =
                 item.title ||
-                'Evidence';
-
-
-            const description =
-                document.createElement(
-                    'div'
-                );
-
-
-            description.className =
-                'evidence-description';
-
-
-            description.textContent =
-                item.description ||
-                'No description provided.';
+                'Untitled Evidence';
 
 
             const type =
@@ -2476,14 +2666,36 @@ async function loadEvidence() {
 
 
             info.appendChild(
-                description
-            );
-
-
-            info.appendChild(
                 type
             );
 
+
+            if (item.description) {
+
+                const description =
+                    document.createElement(
+                        'div'
+                    );
+
+
+                description.className =
+                    'evidence-description';
+
+
+                description.textContent =
+                    item.description;
+
+
+                info.appendChild(
+                    description
+                );
+
+            }
+
+
+            /* =========================
+               OPEN BUTTON
+            ========================= */
 
             const openButton =
                 document.createElement(
@@ -2503,7 +2715,9 @@ async function loadEvidence() {
                 'click',
                 function () {
 
-                    if (item.file_url) {
+                    if (
+                        item.file_url
+                    ) {
 
                         window.open(
                             item.file_url,
@@ -2524,6 +2738,48 @@ async function loadEvidence() {
             row.appendChild(
                 openButton
             );
+
+
+            /* =========================
+               DELETE BUTTON
+            ========================= */
+
+            if (
+                canDeleteEvidence
+            ) {
+
+                const deleteButton =
+                    document.createElement(
+                        'button'
+                    );
+
+
+                deleteButton.className =
+                    'evidence-delete';
+
+
+                deleteButton.textContent =
+                    'DELETE';
+
+
+                deleteButton.addEventListener(
+                    'click',
+                    function () {
+
+                        deleteEvidence(
+                            item,
+                            deleteButton
+                        );
+
+                    }
+                );
+
+
+                row.appendChild(
+                    deleteButton
+                );
+
+            }
 
 
             list.appendChild(
