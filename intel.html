@@ -1206,7 +1206,7 @@
                     data: groupRows,
                     error: groupError
                 } = await supabaseClient
-\                    .from('intel_submissions')
+                    .from('intel_submissions')
                     .select('*')
                     .in(
                         'intel_group_id',
