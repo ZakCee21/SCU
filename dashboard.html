@@ -1665,7 +1665,11 @@ let openCount =
 intelGroups.forEach(
     groupRows => {
 
-        const isViewed =
+        // The Intel is NEW only if this user
+        // has not viewed any of their own
+        // records within the group.
+
+        const isViewedByCurrentUser =
             groupRows.some(
                 row =>
                     viewedIds.has(
@@ -1675,7 +1679,7 @@ intelGroups.forEach(
 
 
         if (
-            !isViewed
+            !isViewedByCurrentUser
         ) {
 
             newCount++;
