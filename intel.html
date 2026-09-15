@@ -865,13 +865,14 @@
 
             const rankOrder = {
 
-                'Head of SCU': 1,
-                'Assistant Head of SCU': 2,
-                'Head of Weapons': 3,
-                'Head of Drugs': 4,
-                'Detective': 5
+    'Head of SCU': 1,
+    'Assistant Head of SCU': 2,
+    'Head of Weapons': 3,
+    'Head of Drugs': 4,
+    'Head of Gangs': 5,
+    'Detective': 6
 
-            };
+};
 
 
             const filteredAgents =
@@ -1337,72 +1338,17 @@
 
                 }
 
-            }const ownUnreadRows =
-    scuIntel.filter(
-        row =>
-            row.recipient_id === currentUser.id &&
-            !viewedIds.has(row.id)
-    );
+/* ================================================== */
+/* DO NOT AUTO-MARK INTEL AS VIEWED                   */
+/* ================================================== */
 
+/*
+    Intel remains NEW until the user explicitly opens
+    or reads it.
 
-if (
-    ownUnreadRows.length > 0
-) {
-
-    const viewResults =
-    await Promise.all(
-        ownUnreadRows.map(
-            async row => {
-
-                const result =
-                    await supabaseClient
-                        .rpc(
-                            'mark_intel_viewed',
-                            {
-                                p_intel_id:
-                                    row.id
-                            }
-                        );
-
-                console.log(
-                    'VIEW SAVED:',
-                    row.id,
-                    result
-                );
-
-                return result;
-
-            }
-        )
-    );
-
-    viewResults.forEach(
-        result => {
-
-            if (result.error) {
-
-                console.error(
-                    'View tracking error:',
-                    result.error
-                );
-
-            }
-
-        }
-    );
-
-
-    ownUnreadRows.forEach(
-        row => {
-
-            viewedIds.add(
-                row.id
-            );
-
-        }
-    );
-
-}
+    Do not mark unread intelligence as viewed simply
+    because the Intel page has loaded.
+*/
 
             const intelGroups = {};
 
