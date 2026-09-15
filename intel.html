@@ -1428,11 +1428,11 @@
                         ) || null;
 
 
-                    const isViewed =
-    viewedIds.has(
-        displayRecord.id
+        const isViewed =
+    groupRows.some(
+        row =>
+            viewedIds.has(row.id)
     );
-
 
                     const viewRecord =
                         ownIntelRecord ||
