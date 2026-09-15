@@ -204,7 +204,7 @@
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 10px;
             margin-bottom: 17px;
-            align-items: start;
+            align-items: stretch;
         }
 
         .info-box {
@@ -268,8 +268,6 @@
             text-align: left;
             margin: 0;
             min-height: 42px;
-            display: block;
-            width: 100%;
         }
 
         .non-scu-reporter {
@@ -666,6 +664,7 @@
             return fullAccessRoles.includes(
                 currentRole
             );
+
         }
 
 
@@ -681,6 +680,7 @@
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
+
         }
 
 
@@ -691,12 +691,7 @@
                 .replace(/"/g, '&quot;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
-        }
 
-
-        function cleanIntelText(value) {
-
-            return String(value ?? '').trim();
         }
 
 
@@ -719,6 +714,7 @@
                 window.location.href = 'index.html';
 
                 return false;
+
             }
 
 
@@ -737,6 +733,7 @@
                 );
 
                 return false;
+
             }
 
 
@@ -781,6 +778,7 @@
                 `;
 
                 return false;
+
             }
 
 
@@ -808,6 +806,7 @@
 
 
             return true;
+
         }
 
 
@@ -849,19 +848,16 @@
                 scaAgents = [];
 
                 return;
+
             }
 
 
             const rankOrder = {
 
                 'Head of SCU': 1,
-
                 'Assistant Head of SCU': 2,
-
                 'Head of Weapons': 3,
-
                 'Head of Drugs': 4,
-
                 'Detective': 5
 
             };
@@ -903,6 +899,7 @@
                     ) {
 
                         return rankDifference;
+
                     }
 
 
@@ -910,6 +907,7 @@
                         (a.full_name || '')
                             .trim()
                             .toLowerCase();
+
 
                     const nameB =
                         (b.full_name || '')
@@ -945,6 +943,7 @@
             ) {
 
                 return;
+
             }
 
 
@@ -989,6 +988,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -1007,19 +1007,11 @@
             selectedRecipientIds = []
         ) {
 
-            if (
-                !Array.isArray(selectedRecipientIds)
-            ) {
-
-                selectedRecipientIds =
-                    selectedRecipientIds
-                        ? [selectedRecipientIds]
-                        : [];
-
-            }
-
-
             const agentsPerColumn = 8;
+
+            const selectedIds = Array.isArray(selectedRecipientIds)
+                ? selectedRecipientIds
+                : (selectedRecipientIds ? [selectedRecipientIds] : []);
 
             const numberOfColumns =
                 Math.max(
@@ -1084,7 +1076,7 @@
                                                     value="${escapeAttribute(agent.id)}"
                                                     data-intel-id="${escapeAttribute(reportId)}"
                                                     ${
-                                                        selectedRecipientIds.includes(agent.id)
+                                                        selectedIds.includes(agent.id)
                                                             ? 'checked'
                                                             : ''
                                                     }
@@ -1111,7 +1103,6 @@
                 .join('');
 
         }
-
 
         /* ================================================== */
         /* LOAD INTELLIGENCE */
@@ -1188,86 +1179,60 @@
 
 
             /*
-             * For normal recipients, load the other copies
-             * belonging to the same intel group so the card
-             * can show every recipient.
+             * Build the complete recipient groups. Full-access users already
+             * receive all copies. Normal recipients first receive their own
+             * copy, then we attempt to load the other copies in the same group
+             * so the complete recipient list can be displayed.
              */
+
+            const groupIds = [
+                ...new Set(
+                    scuIntel
+                        .map(
+                            intel =>
+                                intel.intel_group_id
+                        )
+                        .filter(Boolean)
+                )
+            ];
+
+
             if (
                 !hasFullIntelAccess() &&
-                scuIntel.length > 0
+                groupIds.length > 0
             ) {
 
-                const groupIds =
-                    [
-                        ...new Set(
-                            scuIntel
-                                .map(
-                                    intel =>
-                                        intel.intel_group_id
-                                )
-                                .filter(Boolean)
+                const {
+                    data: groupRows,
+                    error: groupError
+                } = await supabaseClient
+\                    .from('intel_submissions')
+                    .select('*')
+                    .in(
+                        'intel_group_id',
+                        groupIds
+                    );
+
+
+                if (!groupError && groupRows) {
+
+                    const existingIds = new Set(
+                        scuIntel.map(
+                            intel => intel.id
                         )
-                    ];
+                    );
 
+                    groupRows.forEach(
+                        row => {
 
-                if (
-                    groupIds.length > 0
-                ) {
+                            if (!existingIds.has(row.id)) {
 
-                    const {
-                        data: groupRows,
-                        error: groupError
-                    } = await supabaseClient
+                                scuIntel.push(row);
 
-                        .from('intel_submissions')
+                            }
 
-                        .select('*')
-
-                        .in(
-                            'intel_group_id',
-                            groupIds
-                        );
-
-
-                    if (!groupError) {
-
-                        const existingIds =
-                            new Set(
-                                scuIntel.map(
-                                    intel =>
-                                        intel.id
-                                )
-                            );
-
-
-                        (groupRows || [])
-                            .forEach(
-                                row => {
-
-                                    if (
-                                        !existingIds.has(
-                                            row.id
-                                        )
-                                    ) {
-
-                                        scuIntel.push(
-                                            row
-                                        );
-
-                                    }
-
-                                }
-                            );
-
-                    }
-                    else {
-
-                        console.error(
-                            'Intel group loading error:',
-                            groupError
-                        );
-
-                    }
+                        }
+                    );
 
                 }
 
@@ -1416,6 +1381,32 @@
             }
 
 
+            const intelGroups = {};
+
+
+            scuIntel.forEach(
+                intel => {
+
+                    const groupId =
+                        intel.intel_group_id ||
+                        intel.id;
+
+
+                    if (!intelGroups[groupId]) {
+
+                        intelGroups[groupId] = [];
+
+                    }
+
+
+                    intelGroups[groupId].push(
+                        intel
+                    );
+
+                }
+            );
+
+
             intelList.innerHTML = '';
 
 
@@ -1437,61 +1428,9 @@
             }
 
 
-            /*
-             * GROUP ALL NORMAL INTELLIGENCE BY intel_group_id.
-             *
-             * If intel_group_id is missing, the row itself is
-             * treated as its own group.
-             */
-            const groupedIntel = new Map();
+            Object.entries(intelGroups).forEach(
+                ([groupId, groupRows]) => {
 
-
-            scuIntel.forEach(
-                intel => {
-
-                    const groupId =
-                        intel.intel_group_id ||
-                        intel.id;
-
-
-                    if (
-                        !groupedIntel.has(groupId)
-                    ) {
-
-                        groupedIntel.set(
-                            groupId,
-                            []
-                        );
-
-                    }
-
-
-                    groupedIntel
-                        .get(groupId)
-                        .push(intel);
-
-                }
-            );
-
-
-            groupedIntel.forEach(
-                (
-                    groupRows,
-                    groupId
-                ) => {
-
-                    if (
-                        groupRows.length === 0
-                    ) {
-
-                        return;
-                    }
-
-
-                    /*
-                     * Use the newest/source row for the
-                     * actual intel information.
-                     */
                     const intel =
                         groupRows[0];
 
@@ -1519,45 +1458,31 @@
                     ];
 
 
-                    const recipients =
-                        recipientIdList
-                            .map(
-                                id =>
-                                    officersMap[id]
-                            )
-                            .filter(Boolean);
-
-
                     const isUnassigned =
                         recipientIdList.length === 0;
 
 
-                    /*
-                     * For the current recipient, use their
-                     * own row when determining view/delete.
-                     */
-                    const ownRow =
+                    const ownIntelRecord =
                         groupRows.find(
                             row =>
-                                row.recipient_id ===
-                                currentUser.id
-                        );
-
-
-                    const viewRow =
-                        ownRow ||
-                        groupRows[0];
+                                row.recipient_id === currentUser.id
+                        ) || null;
 
 
                     const isViewed =
-                        viewedIds.has(
-                            viewRow.id
+                        groupRows.some(
+                            row =>
+                                viewedIds.has(row.id)
                         );
 
 
+                    const viewRecord =
+                        ownIntelRecord ||
+                        intel;
+
+
                     if (
-                        !isViewed &&
-                        viewRow
+                        !viewedIds.has(viewRecord.id)
                     ) {
 
                         supabaseClient
@@ -1565,7 +1490,7 @@
                             .upsert(
                                 {
                                     intel_id:
-                                        viewRow.id,
+                                        viewRecord.id,
                                     user_id:
                                         currentUser.id
                                 },
@@ -1670,17 +1595,18 @@
                             : 'Unknown';
 
 
-                    let recipientDisplay = 'No recipient assigned';
-
-
-                    if (
-                        recipients.length > 0
-                    ) {
-
-                        recipientDisplay =
-                            recipients
+                    const recipientDisplay =
+                        recipientIdList.length > 0
+                            ? recipientIdList
                                 .map(
-                                    recipient => {
+                                    recipientId => {
+
+                                        const recipient =
+                                            officersMap[recipientId];
+
+                                        if (!recipient) {
+                                            return 'Unknown SCU Officer';
+                                        }
 
                                         const name =
                                             `${recipient.rank || ''} ${recipient.full_name || ''}`.trim();
@@ -1689,9 +1615,11 @@
 
                                     }
                                 )
-                                .join('<br>');
-
-                    }
+                                .map(
+                                    name => escapeHtml(name)
+                                )
+                                .join('<br>')
+                            : 'No recipient assigned';
 
 
                     let triageHtml = '';
@@ -1724,7 +1652,7 @@
                                     ${
                                         isUnassigned
                                             ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
-                                            : 'Select one or more SCU officers below. The intelligence will be attached to every selected officer.'
+                                            : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
                                     }
                                 </div>
 
@@ -1788,11 +1716,7 @@
                     const canDeleteThisIntel =
                         hasFullIntelAccess()
                         ||
-                        Boolean(
-                            ownRow &&
-                            ownRow.recipient_id ===
-                            currentUser.id
-                        );
+                        Boolean(ownIntelRecord);
 
 
                     let deleteHtml = '';
@@ -1804,8 +1728,8 @@
 
                         const deleteId =
                             hasFullIntelAccess()
-                                ? groupRows[0].id
-                                : ownRow.id;
+                                ? intel.id
+                                : ownIntelRecord.id;
 
 
                         deleteHtml = `
@@ -1900,11 +1824,7 @@
                                     Evidence
                                 </div>
 
-                                <div class="section-content">${escapeHtml(
-                                    cleanIntelText(
-                                        intel.evidence
-                                    )
-                                )}</div>
+                                <div class="section-content">${escapeHtml(intel.evidence)}</div>
 
                             </div>
 
@@ -1983,19 +1903,6 @@
                                 <div class="info-box">
 
                                     <div class="info-label">
-                                        Recipient
-                                    </div>
-
-                                    <div class="info-value">
-                                        ${recipientDisplay}
-                                    </div>
-
-                                </div>
-
-
-                                <div class="info-box">
-
-                                    <div class="info-label">
                                         Received
                                     </div>
 
@@ -2052,7 +1959,6 @@
 
         }
 
-
         /* ================================================== */
         /* RENDER NON-SCU REPORT */
         /* ================================================== */
@@ -2091,8 +1997,7 @@
 
             const agentColumnsHtml =
                 buildAgentList(
-                    `public-${report.id}`,
-                    []
+                    `public-${report.id}`
                 );
 
 
@@ -2104,21 +2009,10 @@
             ) {
 
                 locationHtml = `
-
                     <div class="section">
-
-                        <div class="section-title">
-                            Location
-                        </div>
-
-                        <div class="section-content">${escapeHtml(
-                            cleanIntelText(
-                                report.location
-                            )
-                        )}</div>
-
+                        <div class="section-title">Location</div>
+                        <div class="section-content">${escapeHtml(report.location)}</div>
                     </div>
-
                 `;
 
             }
@@ -2132,21 +2026,10 @@
             ) {
 
                 sourceHtml = `
-
                     <div class="section">
-
-                        <div class="section-title">
-                            Source / Context
-                        </div>
-
-                        <div class="section-content">${escapeHtml(
-                            cleanIntelText(
-                                report.source
-                            )
-                        )}</div>
-
+                        <div class="section-title">Source / Context</div>
+                        <div class="section-content">${escapeHtml(report.source)}</div>
                     </div>
-
                 `;
 
             }
@@ -2160,21 +2043,10 @@
             ) {
 
                 evidenceHtml = `
-
                     <div class="section">
-
-                        <div class="section-title">
-                            Evidence
-                        </div>
-
-                        <div class="section-content">${escapeHtml(
-                            cleanIntelText(
-                                report.evidence
-                            )
-                        )}</div>
-
+                        <div class="section-title">Evidence</div>
+                        <div class="section-content">${escapeHtml(report.evidence)}</div>
                     </div>
-
                 `;
 
             }
@@ -2298,10 +2170,8 @@
                         </div>
 
                         <div class="section-content">${escapeHtml(
-                            cleanIntelText(
-                                report.finding ||
-                                'No finding provided.'
-                            )
+                            report.finding ||
+                            'No finding provided.'
                         )}</div>
 
                     </div>
@@ -2321,7 +2191,7 @@
                         </div>
 
                         <div class="triage-description">
-                            This intelligence was submitted by a person outside the SCU. Select one or more appropriate SCU officers below. Once sent, it will be converted into normal SCU intelligence submissions and delivered through the officer's existing New Intel system.
+                            This intelligence was submitted by a person outside the SCU. Select the appropriate SCU officer below. Once sent, it will be converted into a normal SCU intelligence submission and delivered through the officer's existing New Intel system.
                         </div>
 
 
@@ -2342,7 +2212,6 @@
                             >
                                 SEND INTEL
                             </button>
-
 
                             <button
                                 class="delete-non-scu-button"
@@ -2368,6 +2237,20 @@
 
 
         /* ================================================== */
+        /* HANDLE CHECKBOX SELECTION */
+        /* ================================================== */
+
+        function handleReassignSelection(
+            intelId,
+            selectedCheckbox
+        ) {
+
+            /* Multiple officers can remain selected. */
+
+        }
+
+
+        /* ================================================== */
         /* ASSIGN EXISTING SCU INTEL */
         /* ================================================== */
 
@@ -2387,10 +2270,6 @@
             }
 
 
-            /*
-             * IMPORTANT:
-             * Get EVERY checked officer, not just one.
-             */
             const selectedCheckboxes =
                 Array.from(
                     document.querySelectorAll(
@@ -2399,21 +2278,8 @@
                 );
 
 
-            const recipientIds =
-                [
-                    ...new Set(
-                        selectedCheckboxes
-                            .map(
-                                checkbox =>
-                                    checkbox.value
-                            )
-                            .filter(Boolean)
-                    )
-                ];
-
-
             if (
-                recipientIds.length === 0
+                selectedCheckboxes.length === 0
             ) {
 
                 alert(
@@ -2424,16 +2290,17 @@
             }
 
 
+            const recipientIds =
+                selectedCheckboxes.map(
+                    checkbox => checkbox.value
+                );
+
+
             const selectedAgents =
-                recipientIds
-                    .map(
-                        id =>
-                            scaAgents.find(
-                                agent =>
-                                    agent.id === id
-                            )
-                    )
-                    .filter(Boolean);
+                scaAgents.filter(
+                    agent =>
+                        recipientIds.includes(agent.id)
+                );
 
 
             const recipientNames =
@@ -2441,16 +2308,13 @@
                     .map(
                         agent =>
                             `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}`.trim()
-                    );
-
-
-            const recipientText =
-                recipientNames.join(', ');
+                    )
+                    .join(', ');
 
 
             if (
                 !confirm(
-                    `Send this intelligence to:\n\n${recipientText}?`
+                    `Send this intelligence to ${recipientNames || 'the selected officers'}?`
                 )
             ) {
 
@@ -2472,9 +2336,6 @@
             }
 
 
-            /*
-             * Find the original row.
-             */
             let sourceRow = null;
 
 
@@ -2495,27 +2356,17 @@
                 .maybeSingle();
 
 
-            if (
-                directRow
-            ) {
+            if (!directError && directRow) {
 
-                sourceRow =
-                    directRow;
+                sourceRow = directRow;
 
             }
 
-
-            /*
-             * If intelId is the group ID rather than the
-             * actual row ID, find a row belonging to that group.
-             */
-            if (
-                !sourceRow
-            ) {
+            else {
 
                 const {
-                    data: groupSourceRows,
-                    error: groupSourceError
+                    data: groupRows,
+                    error: groupError
                 } = await supabaseClient
 
                     .from('intel_submissions')
@@ -2530,78 +2381,38 @@
                     .limit(1);
 
 
-                if (
-                    groupSourceError
-                ) {
+                if (!groupError && groupRows && groupRows.length > 0) {
 
-                    console.error(
-                        'Unable to locate intel group:',
-                        groupSourceError
-                    );
+                    sourceRow = groupRows[0];
 
-                    alert(
-                        `Unable to locate the intelligence group.\n\n${groupSourceError.message || groupSourceError}`
-                    );
-
-                    if (button) {
-
-                        button.disabled = false;
-                        button.textContent = 'REASSIGN INTEL';
-
-                    }
-
-                    return;
                 }
-
-
-                sourceRow =
-                    groupSourceRows &&
-                    groupSourceRows[0]
-                        ? groupSourceRows[0]
-                        : null;
 
             }
 
 
-            if (
-                !sourceRow
-            ) {
+            if (!sourceRow) {
 
                 alert(
-                    'Unable to locate the intelligence to assign.'
+                    'Unable to find the intelligence to assign.'
                 );
 
                 if (button) {
-
                     button.disabled = false;
                     button.textContent = 'REASSIGN INTEL';
-
                 }
 
                 return;
             }
 
 
-            /*
-             * Every copy of this intel must use the same group ID.
-             *
-             * If the original row has no group ID, its own ID
-             * becomes the group ID.
-             */
             const groupId =
                 sourceRow.intel_group_id ||
                 sourceRow.id;
 
 
-            /*
-             * Load every existing copy in the group.
-             */
-            let existingRows = [];
-
-
             const {
-                data: groupRows,
-                error: groupRowsError
+                data: existingRows,
+                error: existingError
             } = await supabaseClient
 
                 .from('intel_submissions')
@@ -2614,80 +2425,133 @@
                 );
 
 
-            if (
-                groupRowsError
-            ) {
+            if (existingError) {
 
                 console.error(
-                    'Existing intel group loading error:',
-                    groupRowsError
+                    'Intel group loading error:',
+                    existingError
                 );
 
-                /*
-                 * If this is an old single row without a
-                 * group ID, continue using the source row.
-                 */
-                existingRows =
-                    [sourceRow];
+                alert(
+                    `Unable to load the existing recipients.\n\n${existingError.message || existingError}`
+                );
 
-            }
-            else {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'REASSIGN INTEL';
+                }
 
-                existingRows =
-                    groupRows || [];
-
+                return;
             }
 
 
-            /*
-             * Make sure the source row is included.
-             */
+            let rows =
+                existingRows || [];
+
+
             if (
-                !existingRows.some(
+                rows.length === 0
+            ) {
+
+                rows = [sourceRow];
+
+            }
+
+
+            const existingRecipientIds =
+                rows
+                    .map(
+                        row => row.recipient_id
+                    )
+                    .filter(Boolean);
+
+
+            const sourceCopy = {
+                ...sourceRow
+            };
+
+
+            delete sourceCopy.id;
+
+
+            const sourceRecipientId =
+                sourceRow.recipient_id;
+
+
+            if (
+                !sourceRecipientId &&
+                recipientIds.length > 0
+            ) {
+
+                const firstRecipientId =
+                    recipientIds[0];
+
+
+                const {
+                    error: sourceUpdateError
+                } = await supabaseClient
+
+                    .from('intel_submissions')
+
+                    .update({
+                        recipient_id:
+                            firstRecipientId,
+                        intel_group_id:
+                            groupId
+                    })
+
+                    .eq(
+                        'id',
+                        sourceRow.id
+                    );
+
+
+                if (sourceUpdateError) {
+
+                    console.error(
+                        'Intel source assignment error:',
+                        sourceUpdateError
+                    );
+
+                    alert(
+                        `Unable to assign intelligence.\n\n${sourceUpdateError.message || sourceUpdateError}`
+                    );
+
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = 'SEND INTEL';
+                    }
+
+                    return;
+                }
+
+            }
+
+
+            const rowsAfterSourceUpdate =
+                rows.map(
                     row =>
                         row.id === sourceRow.id
-                )
-            ) {
-
-                existingRows.push(
-                    sourceRow
+                            ? {
+                                ...row,
+                                recipient_id:
+                                    row.recipient_id || recipientIds[0],
+                                intel_group_id:
+                                    groupId
+                            }
+                            : row
                 );
 
-            }
 
-
-            /*
-             * Remove recipients that have been unticked.
-             *
-             * This makes REASSIGN work properly:
-             *
-             * Old:
-             * Detective 1
-             * Detective 2
-             *
-             * New selection:
-             * Detective 2
-             * Detective 3
-             *
-             * Result:
-             * Detective 1 removed
-             * Detective 2 retained
-             * Detective 3 added
-             */
-            const rowsToRemove =
-                existingRows.filter(
+            const rowsToDelete =
+                rowsAfterSourceUpdate.filter(
                     row =>
                         row.recipient_id &&
-                        !recipientIds.includes(
-                            row.recipient_id
-                        )
+                        !recipientIds.includes(row.recipient_id)
                 );
 
 
-            for (
-                const row
-                of rowsToRemove
-            ) {
+            for (const row of rowsToDelete) {
 
                 const {
                     error: deleteError
@@ -2703,12 +2567,10 @@
                     );
 
 
-                if (
-                    deleteError
-                ) {
+                if (deleteError) {
 
                     console.error(
-                        'Removing old intel recipient failed:',
+                        'Intel recipient removal error:',
                         deleteError
                     );
 
@@ -2717,10 +2579,8 @@
                     );
 
                     if (button) {
-
                         button.disabled = false;
                         button.textContent = 'REASSIGN INTEL';
-
                     }
 
                     return;
@@ -2729,158 +2589,25 @@
             }
 
 
-            /*
-             * Existing recipients that are still selected.
-             */
-            const existingRecipientIds =
-                [
-                    ...new Set(
-                        existingRows
-                            .map(
-                                row =>
-                                    row.recipient_id
-                            )
-                            .filter(
-                                recipientId =>
-                                    recipientId &&
-                                    recipientIds.includes(
-                                        recipientId
-                                    )
+            const remainingRecipientIds =
+                rowsAfterSourceUpdate
+                    .filter(
+                        row =>
+                            row.recipient_id &&
+                            !rowsToDelete.some(
+                                deleted =>
+                                    deleted.id === row.id
                             )
                     )
-                ];
-
-
-            /*
-             * If the source row has no recipient, use it as
-             * the first selected recipient rather than leaving
-             * an unwanted unassigned copy behind.
-             */
-            if (
-                !sourceRow.recipient_id
-            ) {
-
-                const firstRecipient =
-                    recipientIds[0];
-
-
-                const {
-                    error: updateSourceError
-                } = await supabaseClient
-
-                    .from('intel_submissions')
-
-                    .update({
-
-                        recipient_id:
-                            firstRecipient,
-
-                        intel_group_id:
-                            groupId
-
-                    })
-
-                    .eq(
-                        'id',
-                        sourceRow.id
+                    .map(
+                        row => row.recipient_id
                     );
 
 
-                if (
-                    updateSourceError
-                ) {
-
-                    console.error(
-                        'Source intel assignment error:',
-                        updateSourceError
-                    );
-
-                    alert(
-                        `Unable to assign intelligence.\n\n${updateSourceError.message || updateSourceError}`
-                    );
-
-                    if (button) {
-
-                        button.disabled = false;
-                        button.textContent = 'SEND INTEL';
-
-                    }
-
-                    return;
-                }
-
-
-                existingRecipientIds.push(
-                    firstRecipient
-                );
-
-            }
-            else {
-
-                /*
-                 * Ensure the source row has the correct group ID.
-                 */
-                await supabaseClient
-
-                    .from('intel_submissions')
-
-                    .update({
-                        intel_group_id:
-                            groupId
-                    })
-
-                    .eq(
-                        'id',
-                        sourceRow.id
-                    );
-
-            }
-
-
-            /*
-             * Make sure every retained row has the group ID.
-             */
-            const retainedRows =
-                existingRows.filter(
-                    row =>
-                        row.recipient_id &&
-                        recipientIds.includes(
-                            row.recipient_id
-                        )
-                );
-
-
-            for (
-                const row
-                of retainedRows
-            ) {
-
-                await supabaseClient
-
-                    .from('intel_submissions')
-
-                    .update({
-                        intel_group_id:
-                            groupId
-                    })
-
-                    .eq(
-                        'id',
-                        row.id
-                    );
-
-            }
-
-
-            /*
-             * Add a new copy for every newly selected officer.
-             */
             const missingRecipientIds =
                 recipientIds.filter(
                     recipientId =>
-                        !existingRecipientIds.includes(
-                            recipientId
-                        )
+                        !remainingRecipientIds.includes(recipientId)
                 );
 
 
@@ -2888,25 +2615,19 @@
                 missingRecipientIds.length > 0
             ) {
 
-                const rowsToInsert =
+                const newRows =
                     missingRecipientIds.map(
                         recipientId => {
 
                             const newRow = {
-                                ...sourceRow
+                                ...sourceCopy,
+                                recipient_id:
+                                    recipientId,
+                                intel_group_id:
+                                    groupId
                             };
 
-
                             delete newRow.id;
-
-
-                            newRow.recipient_id =
-                                recipientId;
-
-
-                            newRow.intel_group_id =
-                                groupId;
-
 
                             return newRow;
 
@@ -2921,28 +2642,24 @@
                     .from('intel_submissions')
 
                     .insert(
-                        rowsToInsert
+                        newRows
                     );
 
 
-                if (
-                    insertError
-                ) {
+                if (insertError) {
 
                     console.error(
-                        'Adding new intel recipients failed:',
+                        'Intel recipient insert error:',
                         insertError
                     );
 
                     alert(
-                        `Unable to add one or more recipients.\n\n${insertError.message || insertError}`
+                        `Unable to add the selected recipients.\n\n${insertError.message || insertError}`
                     );
 
                     if (button) {
-
                         button.disabled = false;
                         button.textContent = 'REASSIGN INTEL';
-
                     }
 
                     return;
@@ -2954,7 +2671,6 @@
             await loadIntel();
 
         }
-
 
         /* ================================================== */
         /* ASSIGN NON-SCU INTEL */
@@ -3011,9 +2727,6 @@
             }
 
 
-            /*
-             * Get EVERY selected officer.
-             */
             const selectedCheckboxes =
                 Array.from(
                     document.querySelectorAll(
@@ -3022,21 +2735,8 @@
                 );
 
 
-            const recipientIds =
-                [
-                    ...new Set(
-                        selectedCheckboxes
-                            .map(
-                                checkbox =>
-                                    checkbox.value
-                            )
-                            .filter(Boolean)
-                    )
-                ];
-
-
             if (
-                recipientIds.length === 0
+                selectedCheckboxes.length === 0
             ) {
 
                 alert(
@@ -3047,16 +2747,17 @@
             }
 
 
+            const recipientIds =
+                selectedCheckboxes.map(
+                    checkbox => checkbox.value
+                );
+
+
             const selectedAgents =
-                recipientIds
-                    .map(
-                        id =>
-                            scaAgents.find(
-                                agent =>
-                                    agent.id === id
-                            )
-                    )
-                    .filter(Boolean);
+                scaAgents.filter(
+                    agent =>
+                        recipientIds.includes(agent.id)
+                );
 
 
             const recipientNames =
@@ -3064,12 +2765,13 @@
                     .map(
                         agent =>
                             `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}`.trim()
-                    );
+                    )
+                    .join(', ');
 
 
             if (
                 !confirm(
-                    `Send this NON-SCU intelligence to:\n\n${recipientNames.join(', ')}?`
+                    `Send this NON-SCU intelligence to ${recipientNames || 'the selected officers'}?`
                 )
             ) {
 
@@ -3095,11 +2797,14 @@
                 currentOfficer.id;
 
 
-            /*
-             * Create ONE group ID for the whole NON-SCU report.
-             */
             const groupId =
                 crypto.randomUUID();
+
+
+            const reporterSource =
+                report.source
+                    ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
+                    : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`;
 
 
             const rowsToInsert =
@@ -3131,23 +2836,10 @@
                             null,
 
                         source:
-                            report.source
-                                ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
-                                : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`
+                            reporterSource
 
                     })
                 );
-
-
-            console.log(
-                'NON-SCU CONVERSION',
-                {
-                    senderId,
-                    recipientIds,
-                    reportId,
-                    groupId
-                }
-            );
 
 
             const {
@@ -3173,11 +2865,9 @@
                     insertError
                 );
 
-
                 alert(
                     `Unable to send NON-SCU intelligence.\n\n${insertError.message || insertError}`
                 );
-
 
                 if (button) {
 
@@ -3236,7 +2926,6 @@
 
         }
 
-
         /* ================================================== */
         /* DELETE EXISTING SCU INTEL */
         /* ================================================== */
@@ -3279,6 +2968,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -3298,6 +2988,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -3308,6 +2999,7 @@
             ) {
 
                 return;
+
             }
 
 
@@ -3337,6 +3029,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -3362,6 +3055,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -3379,6 +3073,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -3389,6 +3084,7 @@
             ) {
 
                 return;
+
             }
 
 
@@ -3418,6 +3114,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -3439,6 +3136,7 @@
             if (!userLoaded) {
 
                 return;
+
             }
 
 
