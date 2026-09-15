@@ -910,139 +910,248 @@ async function loadScuAgents() {
         }
 
 
-        /* ================================================== */
-        /* LOAD INTELLIGENCE */
-        /* ================================================== */
-
         async function loadIntel() {
 
-            const intelList =
-                document.getElementById(
-                    'intel-list'
-                );
+    const intelList =
+        document.getElementById(
+            'intel-list'
+        );
 
 
-            intelList.innerHTML = `
-                <div class="loading">
-                    Loading intelligence...
-                </div>
-            `;
+    intelList.innerHTML = `
+        <div class="loading">
+            Loading intelligence...
+        </div>
+    `;
 
 
-            let query =
-                supabaseClient
-                    .from('intel_submissions')
-                    .select('*')
-                    .order(
-                        'created_at',
-                        {
-                            ascending: false
-                        }
-                    );
+    let query =
+        supabaseClient
+            .from('intel_submissions')
+            .select('*')
+            .order(
+                'created_at',
+                {
+                    ascending: false
+                }
+            );
 
 
-            if (
-                !hasFullIntelAccess()
-            ) {
+    if (
+        !hasFullIntelAccess()
+    ) {
 
-                query =
-                    query.eq(
-                        'recipient_id',
-                        currentUser.id
-                    );
+        query =
+            query.eq(
+                'recipient_id',
+                currentUser.id
+            );
 
-            }
-
-
-            const {
-                data: intel,
-                error: intelError
-            } =
-                await query;
+    }
 
 
-            if (intelError) {
+    const {
+        data: intel,
+        error: intelError
+    } =
+        await query;
 
-                console.error(
-                    'Intel load error:',
+
+    if (intelError) {
+
+        console.error(
+            'Intel load error:',
+            intelError
+        );
+
+        intelList.innerHTML = `
+            <div class="error-box">
+                Unable to load intelligence.
+                <br><br>
+                ${escapeHtml(
+                    intelError.message ||
                     intelError
+                )}
+                <br>
+                <button onclick="loadIntel()">
+                    RETRY
+                </button>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    intelRecords =
+        intel || [];
+
+
+    /*
+     * Load the SCU officers who submitted or
+     * received the intelligence.
+     *
+     * This allows the Intel page to display
+     * both:
+     *
+     * SUBMITTED BY
+     * RECIPIENT
+     *
+     * without changing the intel_submissions
+     * table structure.
+     */
+
+    const officerIds = [
+        ...new Set(
+            intelRecords
+                .flatMap(
+                    item => [
+                        item.sender_id,
+                        item.recipient_id
+                    ]
+                )
+                .filter(Boolean)
+                .map(
+                    id => String(id)
+                )
+        )
+    ];
+
+
+    let officerMap = {};
+
+
+    if (
+        officerIds.length
+    ) {
+
+        const {
+            data: officers,
+            error: officerError
+        } =
+            await supabaseClient
+                .from('officers')
+                .select(
+                    'id, full_name, rank, callsign, portal_title'
+                )
+                .in(
+                    'id',
+                    officerIds
                 );
 
-                intelList.innerHTML = `
-                    <div class="error-box">
-                        Unable to load intelligence.
-                        <br><br>
-                        ${escapeHtml(
-                            intelError.message ||
-                            intelError
-                        )}
-                        <br>
-                        <button onclick="loadIntel()">
-                            RETRY
-                        </button>
-                    </div>
-                `;
 
-                return;
+        if (officerError) {
 
-            }
+            console.error(
+                'Intel officer loading error:',
+                officerError
+            );
 
+        } else {
 
-            intelRecords =
-                intel || [];
+            (officers || []).forEach(
+                officer => {
 
-
-            if (
-                hasFullIntelAccess()
-            ) {
-
-                const {
-                    data: publicReports,
-                    error: publicError
-                } =
-                    await supabaseClient
-                        .from(
-                            'non_scu_intel_submissions'
+                    officerMap[
+                        String(
+                            officer.id
                         )
-                        .select('*')
-                        .eq(
-                            'status',
-                            'unassigned'
-                        )
-                        .order(
-                            'created_at',
-                            {
-                                ascending: false
-                            }
-                        );
-
-
-                if (publicError) {
-
-                    console.error(
-                        'NON-SCU load error:',
-                        publicError
-                    );
-
-                    nonScuReports = [];
-
-                } else {
-
-                    nonScuReports =
-                        publicReports || [];
+                    ] =
+                        officer;
 
                 }
-
-            } else {
-
-                nonScuReports = [];
-
-            }
-
-
-            renderIntel();
+            );
 
         }
+
+    }
+
+
+    /*
+     * Store the officer information so
+     * renderScuIntel() can use it.
+     */
+
+    intelRecords =
+        intelRecords.map(
+            item => {
+
+                return {
+                    ...item,
+                    sender_officer:
+                        item.sender_id
+                            ? officerMap[
+                                String(
+                                    item.sender_id
+                                )
+                            ] || null
+                            : null,
+                    recipient_officer:
+                        item.recipient_id
+                            ? officerMap[
+                                String(
+                                    item.recipient_id
+                                )
+                            ] || null
+                            : null
+                };
+
+            }
+        );
+
+
+    if (
+        hasFullIntelAccess()
+    ) {
+
+        const {
+            data: publicReports,
+            error: publicError
+        } =
+            await supabaseClient
+                .from(
+                    'non_scu_intel_submissions'
+                )
+                .select('*')
+                .eq(
+                    'status',
+                    'unassigned'
+                )
+                .order(
+                    'created_at',
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (publicError) {
+
+            console.error(
+                'NON-SCU load error:',
+                publicError
+            );
+
+            nonScuReports = [];
+
+        } else {
+
+            nonScuReports =
+                publicReports || [];
+
+        }
+
+    } else {
+
+        nonScuReports = [];
+
+    }
+
+
+    renderIntel();
+
+}
 
 
         /* ================================================== */
