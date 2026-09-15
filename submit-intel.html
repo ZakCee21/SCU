@@ -800,20 +800,21 @@ async function loadAgents() {
     // RANK ORDER
     // ==================================================
 
-    const rankOrder = {
+  const rankOrder = {
 
-        'Head of SCU': 1,
+    'Head of SCU': 1,
 
-        'Assistant Head of SCU': 2,
+    'Assistant Head of SCU': 2,
 
-        'Head of Weapons': 3,
+    'Head of Weapons': 3,
 
-        'Head of Drugs': 4,
+    'Head of Drugs': 4,
 
-        'Detective': 5
+    'Head of Gangs': 5,
 
-    };
+    'Detective': 6
 
+};
 
     // ==================================================
     // REMOVE HIGH COMMAND / GOV
@@ -1246,57 +1247,32 @@ async function submitIntel() {
         'SUBMITTING...';
 
 
-    // ==================================================
-    // PREPARE SUBMISSIONS
-    // ==================================================
+ // ==================================================
+// PREPARE SUBMISSIONS
+// ==================================================
 
-    const submissions = [];
+// One Intel submission can be sent to multiple
+// recipients. All recipient rows must share the
+// same group ID so they display as ONE Intel.
 
+const intelGroupId =
+    crypto.randomUUID();
 
-    selectedAgents.forEach(
-        agentId => {
+const submissions = [];
 
-            submissions.push({
-
-                sender_id:
-                    currentUser.id,
-
-                recipient_id:
-                    agentId,
-
-                intel_type:
-                    intelType,
-
-                subject:
-                    subject,
-
-                finding:
-                    finding,
-
-                location:
-                    location || null,
-
-                source:
-                    source || null,
-
-                evidence_link:
-                    evidenceLink || null
-
-            });
-
-        }
-    );
-
-
-    if (sendToTriage) {
+selectedAgents.forEach(
+    agentId => {
 
         submissions.push({
+
+            intel_group_id:
+                intelGroupId,
 
             sender_id:
                 currentUser.id,
 
             recipient_id:
-                null,
+                agentId,
 
             intel_type:
                 intelType,
@@ -1319,6 +1295,42 @@ async function submitIntel() {
         });
 
     }
+);
+
+if (sendToTriage) {
+
+    submissions.push({
+
+        intel_group_id:
+            intelGroupId,
+
+        sender_id:
+            currentUser.id,
+
+        recipient_id:
+            null,
+
+        intel_type:
+            intelType,
+
+        subject:
+            subject,
+
+        finding:
+            finding,
+
+        location:
+            location || null,
+
+        source:
+            source || null,
+
+        evidence_link:
+            evidenceLink || null
+
+    });
+
+}
 
 
     // ==================================================
