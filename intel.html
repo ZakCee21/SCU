@@ -204,7 +204,7 @@
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 10px;
             margin-bottom: 17px;
-            align-items: stretch;
+           align-items: start;
         }
 
         .info-box.recipients-box {
@@ -260,19 +260,21 @@
             text-align: left;
         }
 
-        .section-content {
-            background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 12px;
-            color: #d5dbe1;
-            font-size: 13px;
-            line-height: 1.55;
-            white-space: pre-wrap;
-            text-align: left;
-            margin: 0;
-            min-height: 42px;
-        }
+       .section-content {
+    background: #0b1117;
+    border: 1px solid #293542;
+    border-radius: 4px;
+    padding: 12px;
+    color: #d5dbe1;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    text-align: left;
+    margin: 0;
+    min-height: 42px;
+    display: block;
+    vertical-align: top;
+}
 
         .non-scu-reporter {
             background: #160d20;
