@@ -675,103 +675,144 @@
         }
 
 
-        /* ================================================== */
-        /* LOAD SCU AGENTS */
-        /* ================================================== */
+       /* ================================================== */
+/* LOAD ACTIVE SCU AGENTS */
+/* ================================================== */
 
-        async function loadScuAgents() {
+async function loadScuAgents() {
 
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .from('officers')
-                    .select(
-                        'id, full_name, callsign, rank, role, portal_title, active, is_scu_agent'
-                    )
-                    .eq(
-                        'active',
-                        true
-                    )
-                    .eq(
-                        'is_scu_agent',
-                        true
-                    );
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('officers')
+        .select(
+            'id, full_name, rank, callsign, portal_title'
+        )
+        .eq(
+            'is_scu_agent',
+            true
+        )
+        .eq(
+            'active',
+            true
+        );
+
+    if (error) {
+
+        console.error(
+            'SCU agent loading error:',
+            error
+        );
+
+        scaAgents = [];
+
+        return;
+    }
 
 
-            if (error) {
+    const rankOrder = {
 
-                console.error(
-                    'Unable to load SCU agents:',
-                    error
+        'Head of SCU': 1,
+        'Assistant Head of SCU': 2,
+        'Head of Weapons': 3,
+        'Head of Drugs': 4,
+        'Detective': 5
+
+    };
+
+
+    const filteredAgents =
+        (data || []).filter(
+            agent => {
+
+                const rank =
+                    (agent.rank || '').trim();
+
+                const portalTitle =
+                    (agent.portal_title || '').trim();
+
+
+                /*
+                 * GOV and High Command are
+                 * Overseer accounts.
+                 *
+                 * They can see all intelligence,
+                 * but they must NOT appear as
+                 * selectable Intel recipients.
+                 */
+
+                if (
+                    portalTitle === 'GOV' ||
+                    portalTitle === 'High Command'
+                ) {
+
+                    return false;
+
+                }
+
+
+                /*
+                 * Only normal SCU recipient
+                 * ranks are selectable.
+                 */
+
+                return Object.prototype.hasOwnProperty.call(
+                    rankOrder,
+                    rank
                 );
 
-                scaAgents = [];
+            }
+        );
 
-                return;
+
+    filteredAgents.sort(
+        (a, b) => {
+
+            const rankA =
+                (a.rank || '').trim();
+
+            const rankB =
+                (b.rank || '').trim();
+
+
+            const rankDifference =
+                rankOrder[rankA] -
+                rankOrder[rankB];
+
+
+            if (
+                rankDifference !== 0
+            ) {
+
+                return rankDifference;
 
             }
 
 
-            const rankOrder = {
-                'Head of SCU': 1,
-                'Assistant Head of SCU': 2,
-                'Head of Weapons': 3,
-                'Head of Drugs': 4,
-                'Detective': 5
-            };
+            const nameA =
+                (a.full_name || '')
+                    .trim()
+                    .toLowerCase();
+
+            const nameB =
+                (b.full_name || '')
+                    .trim()
+                    .toLowerCase();
 
 
-            scaAgents =
-                (data || []).sort(
-                    (a, b) => {
-
-                        const aRank =
-                            rankOrder[
-                                a.portal_title
-                            ] ||
-                            rankOrder[
-                                a.rank
-                            ] ||
-                            99;
-
-                        const bRank =
-                            rankOrder[
-                                b.portal_title
-                            ] ||
-                            rankOrder[
-                                b.rank
-                            ] ||
-                            99;
-
-                        if (
-                            aRank !==
-                            bRank
-                        ) {
-
-                            return (
-                                aRank -
-                                bRank
-                            );
-
-                        }
-
-                        return String(
-                            a.full_name ||
-                            ''
-                        ).localeCompare(
-                            String(
-                                b.full_name ||
-                                ''
-                            )
-                        );
-
-                    }
-                );
+            return nameA.localeCompare(
+                nameB
+            );
 
         }
+    );
 
+
+    scaAgents =
+        filteredAgents;
+
+}
 
         /* ================================================== */
         /* BUILD AGENT LIST */
