@@ -41,322 +41,419 @@
         }
 
         .header-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 8px;
-            background: #17212b;
-            border: 1px solid #344353;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 19px;
-            font-weight: bold;
-            color: #ffffff;
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            flex-shrink: 0;
         }
 
         .header-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .header-subtitle {
-            margin-top: 3px;
-            font-size: 11px;
-            color: #8d9aaa;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            color: #ffffff;
         }
 
         .back-button {
-            background: #17212b;
-            color: #dbe4ed;
-            border: 1px solid #344353;
-            border-radius: 6px;
-            padding: 9px 14px;
-            font-size: 11px;
-            font-weight: bold;
+            background: #202c38;
+            color: white;
+            border: 1px solid #354554;
+            padding: 9px 15px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
         }
 
         .back-button:hover {
-            background: #202c38;
+            background: #2b3a48;
         }
 
-        .page {
+        .background-logo {
+            position: fixed;
+            top: 50%;
+            width: 275px;
+            height: 275px;
+            object-fit: contain;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .background-logo-left {
+            left: 80px;
+            transform: translateY(-50%);
+        }
+
+        .background-logo-right {
+            right: 80px;
+            transform: translateY(-50%);
+        }
+
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 25px;
+            padding: 30px 20px 50px;
+            position: relative;
+            z-index: 1;
         }
 
-        .page-heading {
-            margin-bottom: 20px;
+        .intro {
+            margin-bottom: 25px;
         }
 
-        .page-title {
-            margin: 0;
-            font-size: 24px;
+        .intro h1 {
+            margin: 0 0 7px;
+            font-size: 25px;
             color: #ffffff;
+            text-align: left;
         }
 
-        .page-description {
-            margin-top: 7px;
-            color: #7f8b99;
-            font-size: 12px;
-            line-height: 1.5;
-        }
-
-        .intel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
+        .intro p {
+            margin: 0;
+            color: #7f8b98;
+            font-size: 13px;
+            text-align: left;
         }
 
         .intel-card {
-            background: #10171f;
+            background: #111821;
             border: 1px solid #293542;
-            border-radius: 9px;
+            border-radius: 6px;
+            margin-bottom: 18px;
             overflow: hidden;
         }
 
-        .intel-card.new {
-            border-left: 4px solid #9b2c2c;
+        .intel-card.unread {
+            border-left: 4px solid #22c55e;
         }
 
-        .intel-card.open {
-            border-left: 4px solid #365f7c;
+        .intel-card.read {
+            border-left: 4px solid #1d4ed8;
+        }
+
+        .intel-card.unassigned {
+            border-left: 4px solid #f59e0b;
         }
 
         .intel-card.non-scu {
-            border-left: 4px solid #7c5a36;
+            border-left: 4px solid #a855f7;
         }
 
         .intel-header {
-            padding: 16px 18px;
-            background: #141d26;
+            padding: 15px 18px;
             border-bottom: 1px solid #293542;
+            background: #0d131a;
             display: flex;
-            align-items: flex-start;
             justify-content: space-between;
+            align-items: flex-start;
             gap: 15px;
         }
 
-        .intel-heading {
-            min-width: 0;
-        }
-
         .intel-subject {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: bold;
             color: #ffffff;
             margin-bottom: 5px;
+            text-align: left;
         }
 
-        .intel-type {
-            color: #91a0b0;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .intel-meta {
+            color: #6f7c88;
+            font-size: 11px;
+            text-align: left;
         }
 
-        .intel-status {
+        .status-badge {
             flex-shrink: 0;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: bold;
-            letter-spacing: 0.6px;
+            padding: 5px 8px;
+            border-radius: 3px;
+            text-transform: uppercase;
         }
 
         .status-new {
-            background: #552020;
-            color: #ffb5b5;
-            border: 1px solid #783232;
+            background: #14532d;
+            color: #86efac;
         }
 
-        .status-open {
-            background: #1c3446;
-            color: #a9d7f5;
-            border: 1px solid #2e536d;
+        .status-read {
+            background: #172554;
+            color: #93c5fd;
         }
 
         .status-unassigned {
-            background: #4c3822;
-            color: #f3c78f;
-            border: 1px solid #73552f;
+            background: #451a03;
+            color: #fbbf24;
+        }
+
+        .status-non-scu {
+            background: #3b0764;
+            color: #d8b4fe;
         }
 
         .intel-body {
             padding: 18px;
+            text-align: left;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-            margin-bottom: 18px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 17px;
+            align-items: stretch;
         }
 
         .info-box {
             background: #0b1117;
-            border: 1px solid #232f3a;
-            border-radius: 6px;
-            padding: 10px 12px;
+            border: 1px solid #293542;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: left;
+            display: block;
+            min-height: 0;
         }
 
         .info-label {
-            color: #687787;
+            color: #667381;
             font-size: 9px;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
-            margin-bottom: 5px;
+            margin: 0 0 5px 0;
+            letter-spacing: .5px;
+            text-align: left;
+            width: 100%;
+            display: block;
         }
 
         .info-value {
-            color: #dbe4ed;
+            color: #dbe1e7;
             font-size: 12px;
-            line-height: 1.45;
-            word-break: break-word;
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+            text-align: left;
+            width: 100%;
+            display: block;
+            white-space: normal;
         }
 
         .section {
-            margin-top: 14px;
-            background: #0b1117;
-            border: 1px solid #232f3a;
-            border-radius: 6px;
-            overflow: hidden;
+            margin-bottom: 15px;
+            text-align: left;
         }
 
         .section-title {
-            padding: 9px 12px;
-            background: #111923;
-            border-bottom: 1px solid #232f3a;
-            color: #8191a1;
-            font-size: 9px;
+            font-size: 10px;
+            color: #667381;
             text-transform: uppercase;
-            letter-spacing: 0.7px;
             font-weight: bold;
+            letter-spacing: .7px;
+            margin-bottom: 6px;
+            text-align: left;
         }
 
         .section-content {
+            background: #0b1117;
+            border: 1px solid #293542;
+            border-radius: 4px;
             padding: 12px;
-            color: #d5dde5;
-            font-size: 12px;
+            color: #d5dbe1;
+            font-size: 13px;
             line-height: 1.55;
             white-space: pre-wrap;
-            word-break: break-word;
+            text-align: left;
+            margin: 0;
+            min-height: 42px;
         }
 
-        .triage-panel {
-            margin-top: 18px;
-            background: #0c141c;
-            border: 1px solid #344353;
-            border-radius: 7px;
-            padding: 16px;
+        .non-scu-reporter {
+            background: #160d20;
+            border: 1px solid #6b21a8;
+            border-radius: 5px;
+            padding: 13px;
+            margin-bottom: 15px;
+            text-align: left;
         }
 
-        .non-scu-triage {
-            border-color: #654a2b;
-            background: #15110c;
-        }
-
-        .triage-title {
+        .non-scu-reporter-title {
+            color: #c084fc;
             font-size: 11px;
             font-weight: bold;
-            color: #e6edf5;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
             margin-bottom: 7px;
         }
 
-        .non-scu-triage .triage-title {
-            color: #efc07b;
+        .non-scu-reporter-name {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .non-scu-reporter-callsign {
+            color: #a78bfa;
+            font-size: 12px;
+        }
+
+        .assigned-panel {
+            background: #0d1720;
+            border: 1px solid #1d4ed8;
+            border-radius: 5px;
+            padding: 13px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .assigned-title {
+            color: #60a5fa;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .assigned-description {
+            color: #8b98a5;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .triage-panel {
+            background: #17130b;
+            border: 1px solid #92400e;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .triage-title {
+            color: #fbbf24;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 6px;
         }
 
         .triage-description {
-            font-size: 11px;
+            color: #a8a29e;
+            font-size: 12px;
             line-height: 1.5;
-            color: #8391a0;
-            margin-bottom: 14px;
+            margin: 0 0 12px 0;
+        }
+
+        .non-scu-triage {
+            background: #160d20;
+            border-color: #6b21a8;
+        }
+
+        .non-scu-triage .triage-title {
+            color: #c084fc;
         }
 
         .agent-list {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
+            gap: 0 20px;
+            background: #080c11;
+            border: 1px solid #354554;
+            border-radius: 5px;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .agent-column {
+            min-width: 0;
         }
 
         .agent-option {
             display: flex;
             align-items: center;
-            gap: 9px;
-            background: #111a23;
-            border: 1px solid #293542;
-            border-radius: 6px;
-            padding: 10px;
+            gap: 10px;
+            padding: 11px 12px;
+            margin: 0;
+            border-bottom: 1px solid #202b36;
             cursor: pointer;
-            transition: 0.15s ease;
+            color: #e8edf2;
+            font-size: 13px;
+            font-weight: normal;
         }
 
         .agent-option:hover {
-            background: #17222d;
-            border-color: #405264;
+            background: #111a23;
         }
 
-        .agent-option input {
-            width: 15px;
-            height: 15px;
+        .agent-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
             margin: 0;
-            accent-color: #4e7696;
-            cursor: pointer;
             flex-shrink: 0;
-        }
-
-        .agent-details {
-            min-width: 0;
+            accent-color: #1d4ed8;
+            cursor: pointer;
         }
 
         .agent-name {
-            color: #dce5ed;
-            font-size: 11px;
-            font-weight: bold;
+            flex: 1;
+            min-width: 0;
         }
 
-        .agent-role {
-            color: #738294;
+        .agent-loading {
+            grid-column: 1 / -1;
+            padding: 12px;
+            color: #6f7c88;
+            font-size: 12px;
+        }
+
+        .recipient-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .recipient-item {
+            background: #0b1117;
+            border: 1px solid #293542;
+            border-radius: 4px;
+            padding: 7px 9px;
+            color: #dbe1e7;
+            font-size: 12px;
+        }
+
+        .recipient-item.current-recipient {
+            border-color: #1d4ed8;
+        }
+
+        .recipient-role {
+            color: #6f7c88;
             font-size: 9px;
             margin-top: 2px;
         }
 
-        .current-recipient {
-            margin-top: 12px;
-            padding: 9px 10px;
-            background: #0b1117;
-            border: 1px solid #232f3a;
-            border-radius: 5px;
-            color: #8b9aaa;
-            font-size: 10px;
-        }
-
         .reassign-button-container {
+            margin-top: 10px;
             display: flex;
-            flex-wrap: wrap;
+            justify-content: flex-end;
             gap: 8px;
-            margin-top: 14px;
         }
 
         .send-button {
-            background: #29485d;
-            border: 1px solid #3b6682;
+            background: #1d4ed8;
             color: #ffffff;
-            padding: 9px 14px;
-            border-radius: 5px;
-            font-size: 10px;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
             font-weight: bold;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .send-button:hover {
-            background: #355d76;
+            background: #2563eb;
         }
 
         .send-button:disabled {
@@ -365,82 +462,92 @@
         }
 
         .delete-button {
-            background: #551f1f;
-            border: 1px solid #793030;
+            background: #7f1d1d;
             color: #ffffff;
-            padding: 9px 14px;
-            border-radius: 5px;
-            font-size: 10px;
+            border: 1px solid #991b1b;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
             font-weight: bold;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .delete-button:hover {
-            background: #6b2929;
+            background: #991b1b;
         }
 
         .delete-non-scu-button {
-            background: #5a2d1e;
-            border: 1px solid #7a412b;
+            background: #581c87;
             color: #ffffff;
-            padding: 9px 14px;
-            border-radius: 5px;
-            font-size: 10px;
+            border: 1px solid #7e22ce;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 11px;
             font-weight: bold;
             cursor: pointer;
+            white-space: nowrap;
         }
 
         .delete-non-scu-button:hover {
-            background: #713923;
+            background: #6b21a8;
         }
 
         .empty-state {
-            background: #10171f;
+            background: #111821;
             border: 1px solid #293542;
-            border-radius: 9px;
-            padding: 45px 20px;
+            border-radius: 6px;
+            padding: 35px 20px;
             text-align: center;
-            color: #6f7d8b;
-            font-size: 12px;
+            color: #6f7c88;
+            font-size: 13px;
         }
 
         .loading {
             padding: 35px;
             text-align: center;
-            color: #788694;
-            font-size: 12px;
+            color: #6f7c88;
+            font-size: 13px;
         }
 
         .error-box {
             background: #241313;
             border: 1px solid #5f2929;
-            border-radius: 7px;
-            padding: 15px;
+            border-radius: 5px;
+            padding: 12px;
             color: #e6a5a5;
             font-size: 12px;
-            line-height: 1.5;
         }
 
-        .error-box button {
-            margin-top: 10px;
-            background: #552020;
-            border: 1px solid #783232;
-            color: #ffffff;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 10px;
-            font-weight: bold;
-        }
+        @media (max-width: 900px) {
 
-        @media (max-width: 700px) {
-
-            .page {
-                padding: 15px;
+            .info-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .background-logo {
+                display: none;
+            }
+
+        }
+
+        @media (max-width: 650px) {
 
             .header {
                 padding: 15px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+
+            .header-logo {
+                width: 44px;
+                height: 44px;
+            }
+
+            .container {
+                padding: 20px 12px 40px;
             }
 
             .info-grid {
@@ -455,6 +562,17 @@
                 flex-direction: column;
             }
 
+            .reassign-button-container {
+                justify-content: stretch;
+                flex-direction: column;
+            }
+
+            .send-button,
+            .delete-button,
+            .delete-non-scu-button {
+                width: 100%;
+            }
+
         }
 
     </style>
@@ -467,18 +585,18 @@
 
         <div class="header-brand">
 
-            <div class="header-logo">
-                SCU
-            </div>
+            <img
+                src="SCU.png"
+                class="header-logo"
+                alt="SCU"
+            >
 
             <div>
+
                 <div class="header-title">
                     SCU INTELLIGENCE
                 </div>
 
-                <div class="header-subtitle">
-                    STREET CRIMES UNIT
-                </div>
             </div>
 
         </div>
@@ -493,26 +611,35 @@
     </div>
 
 
-    <div class="page">
+    <img
+        src="SCU.png"
+        class="background-logo background-logo-left"
+        alt=""
+    >
 
-        <div class="page-heading">
+    <img
+        src="SCU.png"
+        class="background-logo background-logo-right"
+        alt=""
+    >
 
-            <h1 class="page-title">
+
+    <div class="container">
+
+        <div class="intro">
+
+            <h1>
                 Intelligence
             </h1>
 
-            <div
-                class="page-description"
-                id="page-description"
-            >
+            <p id="page-description">
                 Intelligence assigned to you and intelligence requiring review.
-            </div>
+            </p>
 
         </div>
 
 
         <div
-            class="intel-list"
             id="intel-list"
         >
 
@@ -542,6 +669,7 @@
 
         let currentUser = null;
         let currentOfficer = null;
+
         let scaAgents = [];
         let intelRecords = [];
         let nonScuReports = [];
@@ -560,15 +688,38 @@
                 value === null ||
                 value === undefined
             ) {
+
                 return '';
+
             }
 
+
             return String(value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+
+                .replace(
+                    /&/g,
+                    '&amp;'
+                )
+
+                .replace(
+                    /</g,
+                    '&lt;'
+                )
+
+                .replace(
+                    />/g,
+                    '&gt;'
+                )
+
+                .replace(
+                    /"/g,
+                    '&quot;'
+                )
+
+                .replace(
+                    /'/g,
+                    '&#039;'
+                );
 
         }
 
@@ -576,7 +727,10 @@
         function escapeAttribute(value) {
 
             return escapeHtml(value)
-                .replace(/`/g, '&#096;');
+                .replace(
+                    /`/g,
+                    '&#096;'
+                );
 
         }
 
@@ -675,144 +829,143 @@
         }
 
 
-       /* ================================================== */
-/* LOAD ACTIVE SCU AGENTS */
-/* ================================================== */
+        /* ================================================== */
+        /* LOAD ACTIVE SCU AGENTS */
+        /* ================================================== */
 
-async function loadScuAgents() {
+        async function loadScuAgents() {
 
-    const {
-        data,
-        error
-    } = await supabaseClient
-        .from('officers')
-        .select(
-            'id, full_name, rank, callsign, portal_title'
-        )
-        .eq(
-            'is_scu_agent',
-            true
-        )
-        .eq(
-            'active',
-            true
-        );
-
-    if (error) {
-
-        console.error(
-            'SCU agent loading error:',
-            error
-        );
-
-        scaAgents = [];
-
-        return;
-    }
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from('officers')
+                    .select(
+                        'id, full_name, rank, callsign, portal_title'
+                    )
+                    .eq(
+                        'is_scu_agent',
+                        true
+                    )
+                    .eq(
+                        'active',
+                        true
+                    );
 
 
-    const rankOrder = {
+            if (error) {
 
-        'Head of SCU': 1,
-        'Assistant Head of SCU': 2,
-        'Head of Weapons': 3,
-        'Head of Drugs': 4,
-        'Detective': 5
-
-    };
-
-
-    const filteredAgents =
-        (data || []).filter(
-            agent => {
-
-                const rank =
-                    (agent.rank || '').trim();
-
-                const portalTitle =
-                    (agent.portal_title || '').trim();
-
-
-                /*
-                 * GOV and High Command are
-                 * Overseer accounts.
-                 *
-                 * They can see all intelligence,
-                 * but they must NOT appear as
-                 * selectable Intel recipients.
-                 */
-
-                if (
-                    portalTitle === 'GOV' ||
-                    portalTitle === 'High Command'
-                ) {
-
-                    return false;
-
-                }
-
-
-                /*
-                 * Only normal SCU recipient
-                 * ranks are selectable.
-                 */
-
-                return Object.prototype.hasOwnProperty.call(
-                    rankOrder,
-                    rank
+                console.error(
+                    'SCU agent loading error:',
+                    error
                 );
 
-            }
-        );
+                scaAgents = [];
 
-
-    filteredAgents.sort(
-        (a, b) => {
-
-            const rankA =
-                (a.rank || '').trim();
-
-            const rankB =
-                (b.rank || '').trim();
-
-
-            const rankDifference =
-                rankOrder[rankA] -
-                rankOrder[rankB];
-
-
-            if (
-                rankDifference !== 0
-            ) {
-
-                return rankDifference;
+                return;
 
             }
 
 
-            const nameA =
-                (a.full_name || '')
-                    .trim()
-                    .toLowerCase();
+            const rankOrder = {
 
-            const nameB =
-                (b.full_name || '')
-                    .trim()
-                    .toLowerCase();
+                'Head of SCU': 1,
+                'Assistant Head of SCU': 2,
+                'Head of Weapons': 3,
+                'Head of Drugs': 4,
+                'Detective': 5
+
+            };
 
 
-            return nameA.localeCompare(
-                nameB
+            const filteredAgents =
+                (data || []).filter(
+                    agent => {
+
+                        const rank =
+                            (agent.rank || '').trim();
+
+                        const portalTitle =
+                            (agent.portal_title || '').trim();
+
+
+                        /*
+                         * GOV and High Command are
+                         * overseer accounts.
+                         *
+                         * They can see all intelligence,
+                         * but must NOT appear as
+                         * selectable recipients.
+                         */
+
+                        if (
+                            portalTitle === 'GOV' ||
+                            portalTitle === 'High Command'
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        return Object.prototype.hasOwnProperty.call(
+                            rankOrder,
+                            rank
+                        );
+
+                    }
+                );
+
+
+            filteredAgents.sort(
+                (a, b) => {
+
+                    const rankA =
+                        (a.rank || '').trim();
+
+                    const rankB =
+                        (b.rank || '').trim();
+
+
+                    const rankDifference =
+                        rankOrder[rankA] -
+                        rankOrder[rankB];
+
+
+                    if (
+                        rankDifference !== 0
+                    ) {
+
+                        return rankDifference;
+
+                    }
+
+
+                    const nameA =
+                        (a.full_name || '')
+                            .trim()
+                            .toLowerCase();
+
+                    const nameB =
+                        (b.full_name || '')
+                            .trim()
+                            .toLowerCase();
+
+
+                    return nameA.localeCompare(
+                        nameB
+                    );
+
+                }
             );
 
+
+            scaAgents =
+                filteredAgents;
+
         }
-    );
 
-
-    scaAgents =
-        filteredAgents;
-
-}
 
         /* ================================================== */
         /* BUILD AGENT LIST */
@@ -828,7 +981,8 @@ async function loadScuAgents() {
                     selectedRecipientIds
                 )
                     ? selectedRecipientIds.map(
-                        id => String(id)
+                        id =>
+                            String(id)
                     )
                     : (
                         selectedRecipientIds
@@ -860,7 +1014,9 @@ async function loadScuAgents() {
 
                         const checked =
                             selectedIds.includes(
-                                String(agent.id)
+                                String(
+                                    agent.id
+                                )
                             )
                                 ? 'checked'
                                 : '';
@@ -883,20 +1039,18 @@ async function loadScuAgents() {
                                     ${checked}
                                 >
 
-                                <div class="agent-details">
+                                <div class="agent-name">
 
-                                    <div class="agent-name">
-                                        ${escapeHtml(agent.full_name || 'Unknown Officer')}
-                                    </div>
+                                    ${escapeHtml(
+                                        agent.full_name ||
+                                        'Unknown Officer'
+                                    )}
 
-                                    <div class="agent-role">
-                                        ${escapeHtml(displayRole)}
-                                        ${
-                                            agent.callsign
-                                                ? ` — ${escapeHtml(agent.callsign)}`
-                                                : ''
-                                        }
-                                    </div>
+                                    ${
+                                        agent.callsign
+                                            ? ` — ${escapeHtml(agent.callsign)}`
+                                            : ''
+                                    }
 
                                 </div>
 
@@ -910,248 +1064,340 @@ async function loadScuAgents() {
         }
 
 
+        /* ================================================== */
+        /* LOAD INTELLIGENCE */
+        /* ================================================== */
+
         async function loadIntel() {
 
-    const intelList =
-        document.getElementById(
-            'intel-list'
-        );
+            try {
+
+                let query =
+                    supabaseClient
+                        .from('intel_submissions')
+                        .select('*')
+                        .order(
+                            'created_at',
+                            {
+                                ascending: false
+                            }
+                        );
 
 
-    intelList.innerHTML = `
-        <div class="loading">
-            Loading intelligence...
-        </div>
-    `;
+                /*
+                 * Senior users can see all Intel.
+                 *
+                 * Normal SCU recipients only see
+                 * their own copies.
+                 */
 
+                if (
+                    !hasFullIntelAccess()
+                ) {
 
-    let query =
-        supabaseClient
-            .from('intel_submissions')
-            .select('*')
-            .order(
-                'created_at',
-                {
-                    ascending: false
+                    query =
+                        query.eq(
+                            'recipient_id',
+                            currentUser.id
+                        );
+
                 }
-            );
 
 
-    if (
-        !hasFullIntelAccess()
-    ) {
-
-        query =
-            query.eq(
-                'recipient_id',
-                currentUser.id
-            );
-
-    }
+                const {
+                    data: intel,
+                    error
+                } =
+                    await query;
 
 
-    const {
-        data: intel,
-        error: intelError
-    } =
-        await query;
+                if (error) {
+
+                    console.error(
+                        'Error loading intelligence:',
+                        error
+                    );
+
+                    throw error;
+
+                }
 
 
-    if (intelError) {
-
-        console.error(
-            'Intel load error:',
-            intelError
-        );
-
-        intelList.innerHTML = `
-            <div class="error-box">
-                Unable to load intelligence.
-                <br><br>
-                ${escapeHtml(
-                    intelError.message ||
-                    intelError
-                )}
-                <br>
-                <button onclick="loadIntel()">
-                    RETRY
-                </button>
-            </div>
-        `;
-
-        return;
-
-    }
+                intelRecords =
+                    intel || [];
 
 
-    intelRecords =
-        intel || [];
+                /*
+                 * If grouping is enabled, normal recipients
+                 * also try to load the other copies belonging
+                 * to the same Intel groups.
+                 *
+                 * This allows the page to display the full
+                 * recipient list on one card.
+                 */
+
+                const groupIds =
+                    [
+                        ...new Set(
+                            intelRecords
+                                .map(
+                                    item =>
+                                        item.intel_group_id
+                                )
+                                .filter(Boolean)
+                        )
+                    ];
 
 
-    /*
-     * Load the SCU officers who submitted or
-     * received the intelligence.
-     *
-     * This allows the Intel page to display
-     * both:
-     *
-     * SUBMITTED BY
-     * RECIPIENT
-     *
-     * without changing the intel_submissions
-     * table structure.
-     */
+                if (
+                    groupIds.length
+                ) {
 
-    const officerIds = [
-        ...new Set(
-            intelRecords
-                .flatMap(
-                    item => [
-                        item.sender_id,
-                        item.recipient_id
-                    ]
-                )
-                .filter(Boolean)
-                .map(
-                    id => String(id)
-                )
-        )
-    ];
+                    const {
+                        data: groupedCopies,
+                        error: groupedError
+                    } =
+                        await supabaseClient
+                            .from(
+                                'intel_submissions'
+                            )
+                            .select('*')
+                            .in(
+                                'intel_group_id',
+                                groupIds
+                            );
 
 
-    let officerMap = {};
+                    if (!groupedError) {
+
+                        const existingIds =
+                            new Set(
+                                intelRecords.map(
+                                    item =>
+                                        String(
+                                            item.id
+                                        )
+                                )
+                            );
 
 
-    if (
-        officerIds.length
-    ) {
+                        (groupedCopies || []).forEach(
+                            item => {
 
-        const {
-            data: officers,
-            error: officerError
-        } =
-            await supabaseClient
-                .from('officers')
-                .select(
-                    'id, full_name, rank, callsign, portal_title'
-                )
-                .in(
-                    'id',
-                    officerIds
+                                if (
+                                    !existingIds.has(
+                                        String(
+                                            item.id
+                                        )
+                                    )
+                                ) {
+
+                                    intelRecords.push(
+                                        item
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    } else {
+
+                        console.warn(
+                            'Unable to load grouped Intel copies. RLS may restrict access:',
+                            groupedError
+                        );
+
+                    }
+
+                }
+
+
+                /*
+                 * Load officer details.
+                 */
+
+                const officerIds =
+                    [
+                        ...new Set(
+                            intelRecords
+                                .flatMap(
+                                    item => [
+                                        item.sender_id,
+                                        item.recipient_id
+                                    ]
+                                )
+                                .filter(Boolean)
+                                .map(
+                                    id =>
+                                        String(id)
+                                )
+                        )
+                    ];
+
+
+                let officerMap = {};
+
+
+                if (
+                    officerIds.length
+                ) {
+
+                    const {
+                        data: officers,
+                        error: officerError
+                    } =
+                        await supabaseClient
+                            .from('officers')
+                            .select(
+                                'id, full_name, rank, callsign, portal_title'
+                            )
+                            .in(
+                                'id',
+                                officerIds
+                            );
+
+
+                    if (
+                        officerError
+                    ) {
+
+                        console.error(
+                            'Intel officer loading error:',
+                            officerError
+                        );
+
+                    } else {
+
+                        (officers || []).forEach(
+                            officer => {
+
+                                officerMap[
+                                    String(
+                                        officer.id
+                                    )
+                                ] =
+                                    officer;
+
+                            }
+                        );
+
+                    }
+
+                }
+
+
+                intelRecords =
+                    intelRecords.map(
+                        item => ({
+
+                            ...item,
+
+                            sender_officer:
+                                item.sender_id
+                                    ? officerMap[
+                                        String(
+                                            item.sender_id
+                                        )
+                                    ] || null
+                                    : null,
+
+                            recipient_officer:
+                                item.recipient_id
+                                    ? officerMap[
+                                        String(
+                                            item.recipient_id
+                                        )
+                                    ] || null
+                                    : null
+
+                        })
+                    );
+
+
+                /*
+                 * Load NON-SCU intelligence for
+                 * senior users only.
+                 */
+
+                if (
+                    hasFullIntelAccess()
+                ) {
+
+                    const {
+                        data: publicReports,
+                        error: publicError
+                    } =
+                        await supabaseClient
+                            .from(
+                                'non_scu_intel_submissions'
+                            )
+                            .select('*')
+                            .eq(
+                                'status',
+                                'unassigned'
+                            )
+                            .order(
+                                'created_at',
+                                {
+                                    ascending: false
+                                }
+                            );
+
+
+                    if (
+                        publicError
+                    ) {
+
+                        console.error(
+                            'NON-SCU load error:',
+                            publicError
+                        );
+
+                        nonScuReports =
+                            [];
+
+                    } else {
+
+                        nonScuReports =
+                            publicReports || [];
+
+                    }
+
+                } else {
+
+                    nonScuReports =
+                        [];
+
+                }
+
+
+                renderIntel();
+
+            } catch (error) {
+
+                console.error(
+                    'loadIntel failed:',
+                    error
                 );
 
-
-        if (officerError) {
-
-            console.error(
-                'Intel officer loading error:',
-                officerError
-            );
-
-        } else {
-
-            (officers || []).forEach(
-                officer => {
-
-                    officerMap[
-                        String(
-                            officer.id
-                        )
-                    ] =
-                        officer;
-
-                }
-            );
-
-        }
-
-    }
-
-
-    /*
-     * Store the officer information so
-     * renderScuIntel() can use it.
-     */
-
-    intelRecords =
-        intelRecords.map(
-            item => {
-
-                return {
-                    ...item,
-                    sender_officer:
-                        item.sender_id
-                            ? officerMap[
-                                String(
-                                    item.sender_id
-                                )
-                            ] || null
-                            : null,
-                    recipient_officer:
-                        item.recipient_id
-                            ? officerMap[
-                                String(
-                                    item.recipient_id
-                                )
-                            ] || null
-                            : null
-                };
+                document.getElementById(
+                    'intel-list'
+                ).innerHTML = `
+                    <div class="error-box">
+                        Unable to load intelligence.
+                        <br><br>
+                        ${escapeHtml(
+                            error?.message ||
+                            error ||
+                            'Unknown error'
+                        )}
+                    </div>
+                `;
 
             }
-        );
-
-
-    if (
-        hasFullIntelAccess()
-    ) {
-
-        const {
-            data: publicReports,
-            error: publicError
-        } =
-            await supabaseClient
-                .from(
-                    'non_scu_intel_submissions'
-                )
-                .select('*')
-                .eq(
-                    'status',
-                    'unassigned'
-                )
-                .order(
-                    'created_at',
-                    {
-                        ascending: false
-                    }
-                );
-
-
-        if (publicError) {
-
-            console.error(
-                'NON-SCU load error:',
-                publicError
-            );
-
-            nonScuReports = [];
-
-        } else {
-
-            nonScuReports =
-                publicReports || [];
 
         }
-
-    } else {
-
-        nonScuReports = [];
-
-    }
-
-
-    renderIntel();
-
-}
 
 
         /* ================================================== */
@@ -1166,20 +1412,82 @@ async function loadScuAgents() {
                 );
 
 
-            intelList.innerHTML = '';
+            intelList.innerHTML =
+                '';
 
 
-            const combined = [];
+            /*
+             * Group SCU Intel by intel_group_id.
+             *
+             * This means several database copies
+             * become ONE visual Intel card.
+             */
+
+            const groupedScuIntel =
+                new Map();
 
 
             intelRecords.forEach(
                 item => {
 
+                    const groupKey =
+                        item.intel_group_id ||
+                        item.id;
+
+
+                    if (
+                        !groupedScuIntel.has(
+                            groupKey
+                        )
+                    ) {
+
+                        groupedScuIntel.set(
+                            groupKey,
+                            []
+                        );
+
+                    }
+
+
+                    groupedScuIntel
+                        .get(groupKey)
+                        .push(item);
+
+                }
+            );
+
+
+            const combined =
+                [];
+
+
+            groupedScuIntel.forEach(
+                groupItems => {
+
+                    const newest =
+                        [...groupItems]
+                            .sort(
+                                (a, b) =>
+                                    new Date(
+                                        b.created_at
+                                    ) -
+                                    new Date(
+                                        a.created_at
+                                    )
+                            )[0];
+
+
                     combined.push({
-                        type: 'scu',
+
+                        type:
+                            'scu',
+
                         created_at:
-                            item.created_at,
-                        item
+                            newest.created_at,
+
+                        items:
+                            groupItems
+
                     });
 
                 }
@@ -1194,10 +1502,18 @@ async function loadScuAgents() {
                     item => {
 
                         combined.push({
-                            type: 'non-scu',
+
+                            type:
+                                'non-scu',
+
                             created_at:
                                 item.created_at,
-                            item
+
+                            items:
+                                [
+                                    item
+                                ]
+
                         });
 
                     }
@@ -1207,16 +1523,13 @@ async function loadScuAgents() {
 
 
             combined.sort(
-                (a, b) => {
-
-                    return new Date(
+                (a, b) =>
+                    new Date(
                         b.created_at
                     ) -
                     new Date(
                         a.created_at
-                    );
-
-                }
+                    )
             );
 
 
@@ -1239,18 +1552,19 @@ async function loadScuAgents() {
                 entry => {
 
                     if (
-                        entry.type === 'non-scu'
+                        entry.type ===
+                        'non-scu'
                     ) {
 
                         renderNonScuIntel(
-                            entry.item,
+                            entry.items[0],
                             intelList
                         );
 
                     } else {
 
                         renderScuIntel(
-                            entry.item,
+                            entry.items,
                             intelList
                         );
 
@@ -1262,326 +1576,496 @@ async function loadScuAgents() {
         }
 
 
-  function renderScuIntel(
-    intel,
-    intelList
-) {
+        /* ================================================== */
+        /* RENDER SCU INTEL */
+        /* ================================================== */
 
-    const card =
-        document.createElement(
-            'div'
-        );
+        function renderScuIntel(
+            intelItems,
+            intelList
+        ) {
 
+            if (
+                !intelItems ||
+                !intelItems.length
+            ) {
 
-    card.className =
-        'intel-card open';
+                return;
 
-
-    const createdDate =
-        intel.created_at
-            ? new Date(
-                intel.created_at
-            ).toLocaleString(
-                'en-GB'
-            )
-            : 'Unknown';
-
-
-    const isRecipient =
-        intel.recipient_id &&
-        currentUser &&
-        String(
-            intel.recipient_id
-        ) ===
-        String(
-            currentUser.id
-        );
-
-
-    const statusClass =
-        isRecipient
-            ? 'status-new'
-            : 'status-open';
-
-
-    const statusText =
-        isRecipient
-            ? 'NEW'
-            : 'OPEN';
-
-
-    /*
-     * SUBMITTED BY
-     */
-
-    const sender =
-        intel.sender_officer || null;
-
-
-    const senderDisplay =
-        sender
-            ? `${sender.full_name || 'Unknown Officer'}${
-                sender.callsign
-                    ? ` — ${sender.callsign}`
-                    : ''
-            }`
-            : 'Unknown Officer';
-
-
-    /*
-     * RECIPIENT
-     */
-
-    const recipient =
-        intel.recipient_officer || null;
-
-
-    const recipientDisplay =
-        recipient
-            ? `${recipient.full_name || 'Unknown Officer'}${
-                recipient.callsign
-                    ? ` — ${recipient.callsign}`
-                    : ''
-            }`
-            : 'UNASSIGNED';
-
-
-    const locationHtml =
-        intel.location
-            ? `
-                <div class="section">
-
-                    <div class="section-title">
-                        Location
-                    </div>
-
-                    <div class="section-content">${escapeHtml(intel.location)}</div>
-
-                </div>
-            `
-            : '';
-
-
-    const sourceHtml =
-        intel.source
-            ? `
-                <div class="section">
-
-                    <div class="section-title">
-                        Source
-                    </div>
-
-                    <div class="section-content">${escapeHtml(intel.source)}</div>
-
-                </div>
-            `
-            : '';
-
-
-    const evidenceHtml =
-        intel.evidence
-            ? `
-                <div class="section">
-
-                    <div class="section-title">
-                        Evidence
-                    </div>
-
-                    <div class="section-content">${escapeHtml(intel.evidence)}</div>
-
-                </div>
-            `
-            : '';
-
-
-    const selectedRecipientIds =
-        intel.recipient_id
-            ? [
-                intel.recipient_id
-            ]
-            : [];
-
-
-    const agentColumnsHtml =
-        buildAgentList(
-            intel.id,
-            selectedRecipientIds
-        );
-
-
-    card.innerHTML = `
-
-        <div class="intel-header">
-
-            <div class="intel-heading">
-
-                <div class="intel-subject">
-                    ${escapeHtml(
-                        intel.subject ||
-                        'Untitled Intelligence'
-                    )}
-                </div>
-
-                <div class="intel-type">
-                    ${escapeHtml(
-                        intel.intel_type ||
-                        'General Intelligence'
-                    )}
-                </div>
-
-            </div>
-
-            <div class="intel-status ${statusClass}">
-                ${statusText}
-            </div>
-
-        </div>
-
-
-        <div class="intel-body">
-
-            <div class="info-grid">
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Submitted By
-                    </div>
-
-                    <div class="info-value">
-                        ${escapeHtml(
-                            senderDisplay
-                        )}
-                    </div>
-
-                </div>
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Recipient
-                    </div>
-
-                    <div class="info-value">
-                        ${escapeHtml(
-                            recipientDisplay
-                        )}
-                    </div>
-
-                </div>
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Received
-                    </div>
-
-                    <div class="info-value">
-                        ${escapeHtml(
-                            createdDate
-                        )}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="section">
-
-                <div class="section-title">
-                    Finding
-                </div>
-
-                <div class="section-content">${escapeHtml(
-                    intel.finding ||
-                    'No finding provided.'
-                )}</div>
-
-            </div>
-
-
-            ${locationHtml}
-
-            ${sourceHtml}
-
-            ${evidenceHtml}
-
-
-            ${
-                hasFullIntelAccess()
-                    ? `
-                        <div class="triage-panel">
-
-                            <div class="triage-title">
-                                ASSIGN / REASSIGN INTELLIGENCE
-                            </div>
-
-                            <div class="triage-description">
-                                Select one or more SCU officers. There is no limit on the number of officers that can be selected.
-                            </div>
-
-                            <div
-                                class="agent-list"
-                                id="agent-list-${escapeAttribute(intel.id)}"
-                            >
-                                ${agentColumnsHtml}
-                            </div>
-
-                            <div class="reassign-button-container">
-
-                                <button
-                                    class="send-button"
-                                    id="send-${escapeAttribute(intel.id)}"
-                                    onclick="assignIntel('${escapeAttribute(intel.id)}')"
-                                >
-                                    REASSIGN INTEL
-                                </button>
-
-                                <button
-                                    class="delete-button"
-                                    onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                                >
-                                    DELETE INTEL
-                                </button>
-
-                            </div>
-
-                        </div>
-                    `
-                    : ''
             }
 
 
-            ${
-                !hasFullIntelAccess()
-                    ? `
-                        <div class="reassign-button-container">
+            const primaryIntel =
+                intelItems[0];
 
-                            <button
-                                class="delete-button"
-                                onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                            >
-                                DELETE INTEL
-                            </button>
+
+            const card =
+                document.createElement(
+                    'div'
+                );
+
+
+            const currentCopy =
+                intelItems.find(
+                    item =>
+                        currentUser &&
+                        String(
+                            item.recipient_id
+                        ) ===
+                        String(
+                            currentUser.id
+                        )
+                ) ||
+                primaryIntel;
+
+
+            const isCurrentRecipient =
+                Boolean(
+                    currentCopy &&
+                    currentUser &&
+                    String(
+                        currentCopy.recipient_id
+                    ) ===
+                    String(
+                        currentUser.id
+                    )
+                );
+
+
+            card.className =
+                isCurrentRecipient
+                    ? 'intel-card unread'
+                    : 'intel-card read';
+
+
+            const createdDate =
+                primaryIntel.created_at
+                    ? new Date(
+                        primaryIntel.created_at
+                    ).toLocaleString(
+                        'en-GB'
+                    )
+                    : 'Unknown';
+
+
+            /*
+             * Sender.
+             */
+
+            const sender =
+                primaryIntel.sender_officer ||
+                null;
+
+
+            const senderDisplay =
+                sender
+                    ? `${sender.full_name || 'Unknown Officer'}${
+                        sender.callsign
+                            ? ` — ${sender.callsign}`
+                            : ''
+                    }`
+                    : 'Unknown Officer';
+
+
+            /*
+             * Build complete recipient list.
+             */
+
+            const recipientMap =
+                new Map();
+
+
+            intelItems.forEach(
+                item => {
+
+                    if (
+                        !item.recipient_id
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const key =
+                        String(
+                            item.recipient_id
+                        );
+
+
+                    if (
+                        !recipientMap.has(
+                            key
+                        )
+                    ) {
+
+                        recipientMap.set(
+                            key,
+                            item.recipient_officer ||
+                            null
+                        );
+
+                    }
+
+                }
+            );
+
+
+            const recipientEntries =
+                Array.from(
+                    recipientMap.entries()
+                );
+
+
+            const recipientListHtml =
+                recipientEntries.length
+                    ? `
+                        <div class="recipient-list">
+
+                            ${
+                                recipientEntries
+                                    .map(
+                                        ([recipientId, recipient]) => {
+
+                                            const isCurrent =
+                                                currentUser &&
+                                                String(
+                                                    recipientId
+                                                ) ===
+                                                String(
+                                                    currentUser.id
+                                                );
+
+
+                                            const recipientName =
+                                                recipient
+                                                    ? `${recipient.full_name || 'Unknown Officer'}${
+                                                        recipient.callsign
+                                                            ? ` — ${recipient.callsign}`
+                                                            : ''
+                                                    }`
+                                                    : 'Unknown Officer';
+
+
+                                            const recipientRole =
+                                                recipient
+                                                    ? (
+                                                        recipient.portal_title ||
+                                                        recipient.rank ||
+                                                        ''
+                                                    )
+                                                    : '';
+
+
+                                            return `
+                                                <div class="recipient-item ${isCurrent ? 'current-recipient' : ''}">
+
+                                                    ${escapeHtml(
+                                                        recipientName
+                                                    )}
+
+                                                    ${
+                                                        isCurrent
+                                                            ? ' — YOU'
+                                                            : ''
+                                                    }
+
+                                                    ${
+                                                        recipientRole
+                                                            ? `
+                                                                <div class="recipient-role">
+                                                                    ${escapeHtml(recipientRole)}
+                                                                </div>
+                                                            `
+                                                            : ''
+                                                    }
+
+                                                </div>
+                                            `;
+
+                                        }
+                                    )
+                                    .join('')
+                            }
 
                         </div>
                     `
-                    : ''
-            }
-
-        </div>
-
-    `;
+                    : 'UNASSIGNED';
 
 
-    intelList.appendChild(
-        card
-    );
+            /*
+             * For full-access users, use every existing
+             * recipient ID as the checked state.
+             */
 
-}
+            const selectedRecipientIds =
+                recipientEntries.map(
+                    ([recipientId]) =>
+                        recipientId
+                );
+
+
+            const agentColumnsHtml =
+                buildAgentList(
+                    primaryIntel.id,
+                    selectedRecipientIds
+                );
+
+
+            const locationHtml =
+                primaryIntel.location
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Location
+                            </div>
+
+                            <div class="section-content">${escapeHtml(
+                                primaryIntel.location
+                            )}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const sourceHtml =
+                primaryIntel.source
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Source
+                            </div>
+
+                            <div class="section-content">${escapeHtml(
+                                primaryIntel.source
+                            )}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const evidenceHtml =
+                primaryIntel.evidence
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Evidence
+                            </div>
+
+                            <div class="section-content">${escapeHtml(
+                                primaryIntel.evidence
+                            )}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            card.innerHTML = `
+
+                <div class="intel-header">
+
+                    <div>
+
+                        <div class="intel-subject">
+                            ${escapeHtml(
+                                primaryIntel.subject ||
+                                'Untitled Intelligence'
+                            )}
+                        </div>
+
+                        <div class="intel-meta">
+                            ${escapeHtml(
+                                primaryIntel.intel_type ||
+                                'General Intelligence'
+                            )}
+                        </div>
+
+                    </div>
+
+                    <div class="status-badge ${
+                        isCurrentRecipient
+                            ? 'status-new'
+                            : 'status-read'
+                    }">
+
+                        ${
+                            isCurrentRecipient
+                                ? 'NEW'
+                                : 'OPEN'
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="intel-body">
+
+                    <div class="info-grid">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Submitted By
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    senderDisplay
+                                )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Recipients
+                            </div>
+
+                            <div class="info-value">
+                                ${recipientListHtml}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Received
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    createdDate
+                                )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Copies
+                            </div>
+
+                            <div class="info-value">
+                                ${recipientEntries.length}
+                                recipient${recipientEntries.length === 1 ? '' : 's'}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="section">
+
+                        <div class="section-title">
+                            Finding
+                        </div>
+
+                        <div class="section-content">${escapeHtml(
+                            primaryIntel.finding ||
+                            'No finding provided.'
+                        )}</div>
+
+                    </div>
+
+
+                    ${locationHtml}
+
+                    ${sourceHtml}
+
+                    ${evidenceHtml}
+
+
+                    ${
+                        hasFullIntelAccess()
+                            ? `
+
+                                <div class="triage-panel">
+
+                                    <div class="triage-title">
+                                        ASSIGN / REASSIGN INTELLIGENCE
+                                    </div>
+
+                                    <div class="triage-description">
+                                        Select one or more SCU officers. There is no limit on the number of officers that can be selected.
+                                    </div>
+
+                                    <div
+                                        class="agent-list"
+                                        id="agent-list-${escapeAttribute(primaryIntel.id)}"
+                                    >
+                                        ${agentColumnsHtml}
+                                    </div>
+
+                                    <div class="reassign-button-container">
+
+                                        <button
+                                            class="send-button"
+                                            id="send-${escapeAttribute(primaryIntel.id)}"
+                                            onclick="assignIntel('${escapeAttribute(primaryIntel.id)}')"
+                                        >
+                                            REASSIGN INTEL
+                                        </button>
+
+                                        <button
+                                            class="delete-button"
+                                            onclick="deleteIntel('${escapeAttribute(primaryIntel.id)}')"
+                                        >
+                                            DELETE INTEL
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            `
+                            : ''
+                    }
+
+
+                    ${
+                        !hasFullIntelAccess() &&
+                        isCurrentRecipient
+                            ? `
+
+                                <div class="reassign-button-container">
+
+                                    <button
+                                        class="delete-button"
+                                        onclick="deleteIntel('${escapeAttribute(currentCopy.id)}')"
+                                    >
+                                        DELETE MY COPY
+                                    </button>
+
+                                </div>
+
+                            `
+                            : ''
+                    }
+
+                </div>
+
+            `;
+
+
+            intelList.appendChild(
+                card
+            );
+
+        }
 
 
         /* ================================================== */
@@ -1622,7 +2106,9 @@ async function loadScuAgents() {
                                 Location
                             </div>
 
-                            <div class="section-content">${escapeHtml(report.location)}</div>
+                            <div class="section-content">${escapeHtml(
+                                report.location
+                            )}</div>
 
                         </div>
                     `
@@ -1638,7 +2124,9 @@ async function loadScuAgents() {
                                 Source
                             </div>
 
-                            <div class="section-content">${escapeHtml(report.source)}</div>
+                            <div class="section-content">${escapeHtml(
+                                report.source
+                            )}</div>
 
                         </div>
                     `
@@ -1654,7 +2142,9 @@ async function loadScuAgents() {
                                 Evidence
                             </div>
 
-                            <div class="section-content">${escapeHtml(report.evidence)}</div>
+                            <div class="section-content">${escapeHtml(
+                                report.evidence
+                            )}</div>
 
                         </div>
                     `
@@ -1671,13 +2161,13 @@ async function loadScuAgents() {
 
                 <div class="intel-header">
 
-                    <div class="intel-heading">
+                    <div>
 
                         <div class="intel-subject">
                             NON-SCU MEMBER INTELLIGENCE
                         </div>
 
-                        <div class="intel-type">
+                        <div class="intel-meta">
                             ${escapeHtml(
                                 report.intel_type ||
                                 'NON-SCU MEMBER REPORT'
@@ -1686,7 +2176,7 @@ async function loadScuAgents() {
 
                     </div>
 
-                    <div class="intel-status status-unassigned">
+                    <div class="status-badge status-non-scu">
                         UNASSIGNED
                     </div>
 
@@ -1694,6 +2184,31 @@ async function loadScuAgents() {
 
 
                 <div class="intel-body">
+
+
+                    <div class="non-scu-reporter">
+
+                        <div class="non-scu-reporter-title">
+                            NON-SCU MEMBER REPORTER
+                        </div>
+
+                        <div class="non-scu-reporter-name">
+                            ${escapeHtml(
+                                report.reporter_name ||
+                                'Unknown'
+                            )}
+                        </div>
+
+                        <div class="non-scu-reporter-callsign">
+                            CALL SIGN:
+                            ${escapeHtml(
+                                report.reporter_callsign ||
+                                'None'
+                            )}
+                        </div>
+
+                    </div>
+
 
                     <div class="info-grid">
 
@@ -1749,7 +2264,9 @@ async function loadScuAgents() {
                             </div>
 
                             <div class="info-value">
-                                ${escapeHtml(createdDate)}
+                                ${escapeHtml(
+                                    createdDate
+                                )}
                             </div>
 
                         </div>
@@ -1781,7 +2298,7 @@ async function loadScuAgents() {
                     <div class="triage-panel non-scu-triage">
 
                         <div class="triage-title">
-                            ⚠ NON-SCU MEMBER REPORT
+                            NON-SCU MEMBER REPORT
                         </div>
 
                         <div class="triage-description">
@@ -1831,33 +2348,7 @@ async function loadScuAgents() {
 
 
         /* ================================================== */
-        /* HANDLE CHECKBOX SELECTION */
-        /* ================================================== */
-
-        function handleReassignSelection(
-            intelId,
-            selectedCheckbox
-        ) {
-
-            /*
-             * Multiple selection is intentionally allowed.
-             *
-             * There is NO code here that unchecks
-             * other officers.
-             *
-             * The user can select:
-             * - one officer
-             * - several officers
-             * - every officer
-             */
-
-            return;
-
-        }
-
-
-        /* ================================================== */
-        /* ASSIGN EXISTING SCU INTEL */
+        /* ASSIGN / REASSIGN EXISTING SCU INTEL */
         /* ================================================== */
 
         async function assignIntel(
@@ -1886,18 +2377,20 @@ async function loadScuAgents() {
 
 
             const recipientIds =
-                selectedCheckboxes
-                    .map(
-                        checkbox =>
-                            checkbox.value
+                [
+                    ...new Set(
+                        selectedCheckboxes
+                            .map(
+                                checkbox =>
+                                    checkbox.value
+                            )
+                            .filter(Boolean)
                     )
-                    .filter(
-                        Boolean
-                    );
+                ];
 
 
             if (
-                !recipientIds.length
+                recipientIds.length === 0
             ) {
 
                 alert(
@@ -1909,16 +2402,8 @@ async function loadScuAgents() {
             }
 
 
-            const uniqueRecipientIds =
-                [
-                    ...new Set(
-                        recipientIds
-                    )
-                ];
-
-
-            const selectedNames =
-                uniqueRecipientIds
+            const recipientNames =
+                recipientIds
                     .map(
                         recipientId => {
 
@@ -1933,9 +2418,10 @@ async function loadScuAgents() {
                                         )
                                 );
 
+
                             return agent
                                 ? `${agent.full_name || 'SCU Officer'}${agent.callsign ? ` (${agent.callsign})` : ''}`
-                                : 'SCU Officer';
+                                : 'Selected officer';
 
                         }
                     );
@@ -1943,7 +2429,7 @@ async function loadScuAgents() {
 
             if (
                 !confirm(
-                    `Send this intelligence to ${uniqueRecipientIds.length} selected officer${uniqueRecipientIds.length === 1 ? '' : 's'}?\n\n${selectedNames.join('\n')}`
+                    `Send this intelligence to ${recipientNames.join(', ')}?`
                 )
             ) {
 
@@ -1970,16 +2456,7 @@ async function loadScuAgents() {
 
 
             /*
-             * Keep the existing intel row wherever possible.
-             *
-             * If its current recipient is one of the selected
-             * officers, that row stays with that recipient.
-             *
-             * If its current recipient is NOT selected, the
-             * existing row is reassigned to the first selected
-             * officer.
-             *
-             * Additional selected officers receive new copies.
+             * Load the selected Intel row.
              */
 
             const {
@@ -2026,59 +2503,99 @@ async function loadScuAgents() {
             }
 
 
-            const existingRecipient =
-                existingIntel.recipient_id
-                    ? String(
-                        existingIntel.recipient_id
-                    )
-                    : null;
+            /*
+             * Make sure every copy in the group has the
+             * same intel_group_id.
+             */
+
+            let intelGroupId =
+                existingIntel.intel_group_id;
 
 
-            let keepRecipient =
-                existingRecipient &&
-                uniqueRecipientIds.includes(
-                    existingRecipient
-                )
-                    ? existingRecipient
-                    : uniqueRecipientIds[0];
+            if (!intelGroupId) {
+
+                intelGroupId =
+                    crypto.randomUUID();
 
 
-            const recipientsForCopies =
-                uniqueRecipientIds.filter(
-                    recipientId =>
-                        String(
-                            recipientId
-                        ) !==
-                        String(
-                            keepRecipient
+                const {
+                    error: groupIdError
+                } =
+                    await supabaseClient
+                        .from(
+                            'intel_submissions'
                         )
-                );
+                        .update({
+                            intel_group_id:
+                                intelGroupId
+                        })
+                        .eq(
+                            'id',
+                            intelId
+                        );
 
 
-            const {
-                error: updateError
-            } =
-                await supabaseClient
-                    .from('intel_submissions')
-                    .update({
-                        recipient_id:
-                            keepRecipient
-                    })
-                    .eq(
-                        'id',
-                        intelId
+                if (
+                    groupIdError
+                ) {
+
+                    console.error(
+                        'Unable to create Intel group:',
+                        groupIdError
+                    );
+
+                    alert(
+                        `Unable to create an Intel group for this intelligence.\n\n${groupIdError.message || groupIdError}`
                     );
 
 
-            if (updateError) {
+                    if (button) {
+
+                        button.disabled =
+                            false;
+
+                        button.textContent =
+                            'REASSIGN INTEL';
+
+                    }
+
+                    return;
+
+                }
+
+            }
+
+
+            /*
+             * Load all current copies in this group.
+             */
+
+            const {
+                data: groupRows,
+                error: groupError
+            } =
+                await supabaseClient
+                    .from(
+                        'intel_submissions'
+                    )
+                    .select('*')
+                    .eq(
+                        'intel_group_id',
+                        intelGroupId
+                    );
+
+
+            if (
+                groupError
+            ) {
 
                 console.error(
-                    'Intel assignment update error:',
-                    updateError
+                    'Unable to load Intel group:',
+                    groupError
                 );
 
                 alert(
-                    `Unable to assign intelligence.\n\n${updateError.message || updateError}`
+                    `Unable to load the current Intel recipients.\n\n${groupError.message || groupError}`
                 );
 
 
@@ -2097,20 +2614,63 @@ async function loadScuAgents() {
             }
 
 
-            if (
-                recipientsForCopies.length
-            ) {
+            const currentRows =
+                groupRows || [];
 
-                const copies =
-                    recipientsForCopies.map(
+
+            const currentRecipientMap =
+                new Map();
+
+
+            currentRows.forEach(
+                row => {
+
+                    if (
+                        row.recipient_id
+                    ) {
+
+                        currentRecipientMap.set(
+                            String(
+                                row.recipient_id
+                            ),
+                            row
+                        );
+
+                    }
+
+                }
+            );
+
+
+            /*
+             * Insert missing recipients.
+             */
+
+            const rowsToInsert =
+                recipientIds
+                    .filter(
+                        recipientId =>
+                            !currentRecipientMap.has(
+                                String(
+                                    recipientId
+                                )
+                            )
+                    )
+                    .map(
                         recipientId => {
 
                             const copy =
                                 {
                                     ...existingIntel,
-                                    id: undefined,
+
+                                    id:
+                                        undefined,
+
                                     recipient_id:
-                                        recipientId
+                                        recipientId,
+
+                                    intel_group_id:
+                                        intelGroupId
                                 };
 
 
@@ -2123,27 +2683,33 @@ async function loadScuAgents() {
                     );
 
 
+            if (
+                rowsToInsert.length
+            ) {
+
                 const {
-                    error: copyError
+                    error: insertError
                 } =
                     await supabaseClient
                         .from(
                             'intel_submissions'
                         )
                         .insert(
-                            copies
+                            rowsToInsert
                         );
 
 
-                if (copyError) {
+                if (
+                    insertError
+                ) {
 
                     console.error(
-                        'Intel copy creation error:',
-                        copyError
+                        'Intel recipient creation error:',
+                        insertError
                     );
 
                     alert(
-                        `The original intelligence was assigned, but one or more additional copies could not be created.\n\n${copyError.message || copyError}`
+                        `Unable to add one or more recipients.\n\n${insertError.message || insertError}`
                     );
 
 
@@ -2160,6 +2726,164 @@ async function loadScuAgents() {
                     await loadIntel();
 
                     return;
+
+                }
+
+            }
+
+
+            /*
+             * If the original row does not currently belong
+             * to a selected recipient, move it to the first
+             * selected recipient.
+             *
+             * This avoids creating a duplicate copy for the
+             * original row.
+             */
+
+            const existingSelectedRow =
+                currentRows.find(
+                    row =>
+                        row.recipient_id &&
+                        recipientIds.includes(
+                            String(
+                                row.recipient_id
+                            )
+                        )
+                );
+
+
+            if (
+                !existingSelectedRow &&
+                currentRows.length
+            ) {
+
+                const firstRow =
+                    currentRows[0];
+
+
+                const {
+                    error: moveError
+                } =
+                    await supabaseClient
+                        .from(
+                            'intel_submissions'
+                        )
+                        .update({
+                            recipient_id:
+                                recipientIds[0],
+
+                            intel_group_id:
+                                intelGroupId
+                        })
+                        .eq(
+                            'id',
+                            firstRow.id
+                        );
+
+
+                if (
+                    moveError
+                ) {
+
+                    console.error(
+                        'Intel recipient reassignment error:',
+                        moveError
+                    );
+
+                    alert(
+                        `Unable to reassign the original Intel copy.\n\n${moveError.message || moveError}`
+                    );
+
+
+                    if (button) {
+
+                        button.disabled =
+                            false;
+
+                        button.textContent =
+                            'REASSIGN INTEL';
+
+                    }
+
+                    await loadIntel();
+
+                    return;
+
+                }
+
+            }
+
+
+            /*
+             * Remove recipients who were unchecked.
+             *
+             * Only rows belonging to this Intel group are
+             * affected.
+             */
+
+            const rowsAfterInsert =
+                await supabaseClient
+                    .from(
+                        'intel_submissions'
+                    )
+                    .select(
+                        'id, recipient_id, intel_group_id'
+                    )
+                    .eq(
+                        'intel_group_id',
+                        intelGroupId
+                    );
+
+
+            if (
+                !rowsAfterInsert.error
+            ) {
+
+                const rowsToRemove =
+                    (
+                        rowsAfterInsert.data ||
+                        []
+                    ).filter(
+                        row =>
+                            row.recipient_id &&
+                            !recipientIds.includes(
+                                String(
+                                    row.recipient_id
+                                )
+                            )
+                    );
+
+
+                for (
+                    const row
+                    of rowsToRemove
+                ) {
+
+                    const {
+                        error: removeError
+                    } =
+                        await supabaseClient
+                            .from(
+                                'intel_submissions'
+                            )
+                            .delete()
+                            .eq(
+                                'id',
+                                row.id
+                            );
+
+
+                    if (
+                        removeError
+                    ) {
+
+                        console.error(
+                            'Unable to remove old Intel recipient:',
+                            removeError
+                        );
+
+                    }
 
                 }
 
@@ -2196,11 +2920,6 @@ async function loadScuAgents() {
                 !currentOfficer ||
                 !currentOfficer.id
             ) {
-
-                console.error(
-                    'NON-SCU conversion stopped: currentOfficer.id is missing.',
-                    currentOfficer
-                );
 
                 alert(
                     'Unable to identify the sending SCU officer. Please refresh the page and try again.'
@@ -2239,18 +2958,20 @@ async function loadScuAgents() {
 
 
             const recipientIds =
-                selectedCheckboxes
-                    .map(
-                        checkbox =>
-                            checkbox.value
+                [
+                    ...new Set(
+                        selectedCheckboxes
+                            .map(
+                                checkbox =>
+                                    checkbox.value
+                            )
+                            .filter(Boolean)
                     )
-                    .filter(
-                        Boolean
-                    );
+                ];
 
 
             if (
-                !recipientIds.length
+                recipientIds.length === 0
             ) {
 
                 alert(
@@ -2262,16 +2983,8 @@ async function loadScuAgents() {
             }
 
 
-            const uniqueRecipientIds =
-                [
-                    ...new Set(
-                        recipientIds
-                    )
-                ];
-
-
-            const selectedNames =
-                uniqueRecipientIds
+            const recipientNames =
+                recipientIds
                     .map(
                         recipientId => {
 
@@ -2286,9 +2999,10 @@ async function loadScuAgents() {
                                         )
                                 );
 
+
                             return agent
                                 ? `${agent.full_name || 'SCU Officer'}${agent.callsign ? ` (${agent.callsign})` : ''}`
-                                : 'SCU Officer';
+                                : 'Selected officer';
 
                         }
                     );
@@ -2296,7 +3010,7 @@ async function loadScuAgents() {
 
             if (
                 !confirm(
-                    `Send this NON-SCU intelligence to ${uniqueRecipientIds.length} selected officer${uniqueRecipientIds.length === 1 ? '' : 's'}?\n\n${selectedNames.join('\n')}`
+                    `Send this NON-SCU intelligence to ${recipientNames.join(', ')}?`
                 )
             ) {
 
@@ -2326,40 +3040,52 @@ async function loadScuAgents() {
                 currentOfficer.id;
 
 
-            const intelRows =
-                uniqueRecipientIds.map(
-                    recipientId => {
+            /*
+             * One group ID is used for every recipient copy.
+             */
 
-                        return {
-                            sender_id:
-                                senderId,
+            const intelGroupId =
+                crypto.randomUUID();
 
-                            recipient_id:
-                                recipientId,
 
-                            subject:
-                                'NON-SCU MEMBER INTELLIGENCE',
+            const rowsToInsert =
+                recipientIds.map(
+                    recipientId => ({
 
-                            intel_type:
-                                report.intel_type ||
-                                'NON-SCU MEMBER REPORT',
+                        sender_id:
+                            senderId,
 
-                            finding:
-                                report.finding ||
-                                '',
+                        recipient_id:
+                            recipientId,
 
-                            location:
-                                report.location ||
-                                null,
+                        intel_group_id:
+                            intelGroupId,
 
-                            source:
-                                report.source
-                                    ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
-                                    : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`
+                        subject:
+                            'NON-SCU MEMBER INTELLIGENCE',
 
-                        };
+                        intel_type:
+                            report.intel_type ||
+                            'NON-SCU MEMBER REPORT',
 
-                    }
+                        finding:
+                            report.finding ||
+                            '',
+
+                        location:
+                            report.location ||
+                            null,
+
+                        source:
+                            report.source
+                                ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
+                                : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`,
+
+                        evidence:
+                            report.evidence ||
+                            null
+
+                    })
                 );
 
 
@@ -2372,7 +3098,7 @@ async function loadScuAgents() {
                         'intel_submissions'
                     )
                     .insert(
-                        intelRows
+                        rowsToInsert
                     )
                     .select();
 
@@ -2385,17 +3111,6 @@ async function loadScuAgents() {
                     'NON-SCU conversion error:',
                     insertError
                 );
-
-                console.error(
-                    'NON-SCU sender ID used:',
-                    senderId
-                );
-
-                console.error(
-                    'NON-SCU recipient IDs used:',
-                    uniqueRecipientIds
-                );
-
 
                 alert(
                     `Unable to send NON-SCU intelligence.\n\n${insertError.message || insertError}`
@@ -2448,7 +3163,6 @@ async function loadScuAgents() {
                     'NON-SCU status update error:',
                     statusError
                 );
-
 
                 alert(
                     'The intelligence was sent successfully, but the original NON-SCU report could not be marked as assigned. Please refresh the page and check the queue.'
@@ -2517,8 +3231,12 @@ async function loadScuAgents() {
                 ||
                 (
                     intelRecord.recipient_id &&
-                    intelRecord.recipient_id ===
-                    currentUser.id
+                    String(
+                        intelRecord.recipient_id
+                    ) ===
+                    String(
+                        currentUser.id
+                    )
                 );
 
 
