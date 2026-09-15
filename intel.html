@@ -1356,17 +1356,11 @@ if (
 
                 const result =
                     await supabaseClient
-                        .from('intel_views')
-                        .upsert(
+                        .rpc(
+                            'mark_intel_viewed',
                             {
-                                intel_id:
-                                    row.id,
-                                user_id:
-                                    currentUser.id
-                            },
-                            {
-                                onConflict:
-                                    'intel_id,user_id'
+                                p_intel_id:
+                                    row.id
                             }
                         );
 
