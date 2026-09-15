@@ -1350,10 +1350,12 @@ if (
 ) {
 
     const viewResults =
-        await Promise.all(
-            ownUnreadRows.map(
-                row =>
-                    supabaseClient
+    await Promise.all(
+        ownUnreadRows.map(
+            async row => {
+
+                const result =
+                    await supabaseClient
                         .from('intel_views')
                         .upsert(
                             {
@@ -1366,10 +1368,19 @@ if (
                                 onConflict:
                                     'intel_id,user_id'
                             }
-                        )
-            )
-        );
+                        );
 
+                console.log(
+                    'VIEW SAVED:',
+                    row.id,
+                    result
+                );
+
+                return result;
+
+            }
+        )
+    );
 
     viewResults.forEach(
         result => {
