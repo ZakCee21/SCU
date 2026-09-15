@@ -1262,297 +1262,326 @@ async function loadScuAgents() {
         }
 
 
-        /* ================================================== */
-        /* RENDER SCU INTEL */
-        /* ================================================== */
+  function renderScuIntel(
+    intel,
+    intelList
+) {
 
-        function renderScuIntel(
-            intel,
-            intelList
-        ) {
-
-            const card =
-                document.createElement(
-                    'div'
-                );
+    const card =
+        document.createElement(
+            'div'
+        );
 
 
-            card.className =
-                'intel-card open';
+    card.className =
+        'intel-card open';
 
 
-            const createdDate =
+    const createdDate =
+        intel.created_at
+            ? new Date(
                 intel.created_at
-                    ? new Date(
-                        intel.created_at
-                    ).toLocaleString(
-                        'en-GB'
-                    )
-                    : 'Unknown';
+            ).toLocaleString(
+                'en-GB'
+            )
+            : 'Unknown';
 
 
-            const isRecipient =
-                intel.recipient_id &&
-                currentUser &&
-                String(
-                    intel.recipient_id
-                ) ===
-                String(
-                    currentUser.id
-                );
+    const isRecipient =
+        intel.recipient_id &&
+        currentUser &&
+        String(
+            intel.recipient_id
+        ) ===
+        String(
+            currentUser.id
+        );
 
 
-            const statusClass =
-                isRecipient
-                    ? 'status-new'
-                    : 'status-open';
+    const statusClass =
+        isRecipient
+            ? 'status-new'
+            : 'status-open';
 
 
-            const statusText =
-                isRecipient
-                    ? 'NEW'
-                    : 'OPEN';
+    const statusText =
+        isRecipient
+            ? 'NEW'
+            : 'OPEN';
 
 
-            const locationHtml =
-                intel.location
-                    ? `
-                        <div class="section">
+    /*
+     * SUBMITTED BY
+     */
 
-                            <div class="section-title">
-                                Location
-                            </div>
-
-                            <div class="section-content">${escapeHtml(intel.location)}</div>
-
-                        </div>
-                    `
-                    : '';
+    const sender =
+        intel.sender_officer || null;
 
 
-            const sourceHtml =
-                intel.source
-                    ? `
-                        <div class="section">
-
-                            <div class="section-title">
-                                Source
-                            </div>
-
-                            <div class="section-content">${escapeHtml(intel.source)}</div>
-
-                        </div>
-                    `
-                    : '';
+    const senderDisplay =
+        sender
+            ? `${sender.full_name || 'Unknown Officer'}${
+                sender.callsign
+                    ? ` — ${sender.callsign}`
+                    : ''
+            }`
+            : 'Unknown Officer';
 
 
-            const evidenceHtml =
-                intel.evidence
-                    ? `
-                        <div class="section">
+    /*
+     * RECIPIENT
+     */
 
-                            <div class="section-title">
-                                Evidence
-                            </div>
-
-                            <div class="section-content">${escapeHtml(intel.evidence)}</div>
-
-                        </div>
-                    `
-                    : '';
+    const recipient =
+        intel.recipient_officer || null;
 
 
-            const selectedRecipientIds =
+    const recipientDisplay =
+        recipient
+            ? `${recipient.full_name || 'Unknown Officer'}${
+                recipient.callsign
+                    ? ` — ${recipient.callsign}`
+                    : ''
+            }`
+            : 'UNASSIGNED';
+
+
+    const locationHtml =
+        intel.location
+            ? `
+                <div class="section">
+
+                    <div class="section-title">
+                        Location
+                    </div>
+
+                    <div class="section-content">${escapeHtml(intel.location)}</div>
+
+                </div>
+            `
+            : '';
+
+
+    const sourceHtml =
+        intel.source
+            ? `
+                <div class="section">
+
+                    <div class="section-title">
+                        Source
+                    </div>
+
+                    <div class="section-content">${escapeHtml(intel.source)}</div>
+
+                </div>
+            `
+            : '';
+
+
+    const evidenceHtml =
+        intel.evidence
+            ? `
+                <div class="section">
+
+                    <div class="section-title">
+                        Evidence
+                    </div>
+
+                    <div class="section-content">${escapeHtml(intel.evidence)}</div>
+
+                </div>
+            `
+            : '';
+
+
+    const selectedRecipientIds =
+        intel.recipient_id
+            ? [
                 intel.recipient_id
-                    ? [
-                        intel.recipient_id
-                    ]
-                    : [];
+            ]
+            : [];
 
 
-            const agentColumnsHtml =
-                buildAgentList(
-                    intel.id,
-                    selectedRecipientIds
-                );
+    const agentColumnsHtml =
+        buildAgentList(
+            intel.id,
+            selectedRecipientIds
+        );
 
 
-            card.innerHTML = `
+    card.innerHTML = `
 
-                <div class="intel-header">
+        <div class="intel-header">
 
-                    <div class="intel-heading">
+            <div class="intel-heading">
 
-                        <div class="intel-subject">
-                            ${escapeHtml(
-                                intel.subject ||
-                                'Untitled Intelligence'
-                            )}
-                        </div>
+                <div class="intel-subject">
+                    ${escapeHtml(
+                        intel.subject ||
+                        'Untitled Intelligence'
+                    )}
+                </div>
 
-                        <div class="intel-type">
-                            ${escapeHtml(
-                                intel.intel_type ||
-                                'General Intelligence'
-                            )}
-                        </div>
+                <div class="intel-type">
+                    ${escapeHtml(
+                        intel.intel_type ||
+                        'General Intelligence'
+                    )}
+                </div>
 
+            </div>
+
+            <div class="intel-status ${statusClass}">
+                ${statusText}
+            </div>
+
+        </div>
+
+
+        <div class="intel-body">
+
+            <div class="info-grid">
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Submitted By
                     </div>
 
-                    <div class="intel-status ${statusClass}">
-                        ${statusText}
+                    <div class="info-value">
+                        ${escapeHtml(
+                            senderDisplay
+                        )}
                     </div>
 
                 </div>
 
 
-                <div class="intel-body">
+                <div class="info-box">
 
-                    <div class="info-grid">
-
-                        <div class="info-box">
-
-                            <div class="info-label">
-                                Received
-                            </div>
-
-                            <div class="info-value">
-                                ${escapeHtml(
-                                    createdDate
-                                )}
-                            </div>
-
-                        </div>
-
-
-                        <div class="info-box">
-
-                            <div class="info-label">
-                                Recipient
-                            </div>
-
-                            <div class="info-value">
-
-                                ${
-                                    intel.recipient_id
-                                        ? (
-                                            scaAgents.find(
-                                                agent =>
-                                                    String(agent.id) ===
-                                                    String(intel.recipient_id)
-                                            )
-                                                ? escapeHtml(
-                                                    scaAgents.find(
-                                                        agent =>
-                                                            String(agent.id) ===
-                                                            String(intel.recipient_id)
-                                                    ).full_name
-                                                )
-                                                : 'Assigned SCU Officer'
-                                        )
-                                        : 'UNASSIGNED'
-                                }
-
-                            </div>
-
-                        </div>
-
+                    <div class="info-label">
+                        Recipient
                     </div>
 
-
-                    <div class="section">
-
-                        <div class="section-title">
-                            Finding
-                        </div>
-
-                        <div class="section-content">${escapeHtml(
-                            intel.finding ||
-                            'No finding provided.'
-                        )}</div>
-
+                    <div class="info-value">
+                        ${escapeHtml(
+                            recipientDisplay
+                        )}
                     </div>
-
-
-                    ${locationHtml}
-
-                    ${sourceHtml}
-
-                    ${evidenceHtml}
-
-
-                    ${
-                        hasFullIntelAccess()
-                            ? `
-                                <div class="triage-panel">
-
-                                    <div class="triage-title">
-                                        ASSIGN / REASSIGN INTELLIGENCE
-                                    </div>
-
-                                    <div class="triage-description">
-                                        Select one or more SCU officers. There is no limit on the number of officers that can be selected.
-                                    </div>
-
-                                    <div
-                                        class="agent-list"
-                                        id="agent-list-${escapeAttribute(intel.id)}"
-                                    >
-                                        ${agentColumnsHtml}
-                                    </div>
-
-                                    <div class="reassign-button-container">
-
-                                        <button
-                                            class="send-button"
-                                            id="send-${escapeAttribute(intel.id)}"
-                                            onclick="assignIntel('${escapeAttribute(intel.id)}')"
-                                        >
-                                            REASSIGN INTEL
-                                        </button>
-
-                                        <button
-                                            class="delete-button"
-                                            onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                                        >
-                                            DELETE INTEL
-                                        </button>
-
-                                    </div>
-
-                                </div>
-                            `
-                            : ''
-                    }
-
-
-                    ${
-                        !hasFullIntelAccess()
-                            ? `
-                                <div class="reassign-button-container">
-
-                                    <button
-                                        class="delete-button"
-                                        onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                                    >
-                                        DELETE INTEL
-                                    </button>
-
-                                </div>
-                            `
-                            : ''
-                    }
 
                 </div>
 
-            `;
+
+                <div class="info-box">
+
+                    <div class="info-label">
+                        Received
+                    </div>
+
+                    <div class="info-value">
+                        ${escapeHtml(
+                            createdDate
+                        )}
+                    </div>
+
+                </div>
+
+            </div>
 
 
-            intelList.appendChild(
-                card
-            );
+            <div class="section">
 
-        }
+                <div class="section-title">
+                    Finding
+                </div>
+
+                <div class="section-content">${escapeHtml(
+                    intel.finding ||
+                    'No finding provided.'
+                )}</div>
+
+            </div>
+
+
+            ${locationHtml}
+
+            ${sourceHtml}
+
+            ${evidenceHtml}
+
+
+            ${
+                hasFullIntelAccess()
+                    ? `
+                        <div class="triage-panel">
+
+                            <div class="triage-title">
+                                ASSIGN / REASSIGN INTELLIGENCE
+                            </div>
+
+                            <div class="triage-description">
+                                Select one or more SCU officers. There is no limit on the number of officers that can be selected.
+                            </div>
+
+                            <div
+                                class="agent-list"
+                                id="agent-list-${escapeAttribute(intel.id)}"
+                            >
+                                ${agentColumnsHtml}
+                            </div>
+
+                            <div class="reassign-button-container">
+
+                                <button
+                                    class="send-button"
+                                    id="send-${escapeAttribute(intel.id)}"
+                                    onclick="assignIntel('${escapeAttribute(intel.id)}')"
+                                >
+                                    REASSIGN INTEL
+                                </button>
+
+                                <button
+                                    class="delete-button"
+                                    onclick="deleteIntel('${escapeAttribute(intel.id)}')"
+                                >
+                                    DELETE INTEL
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `
+                    : ''
+            }
+
+
+            ${
+                !hasFullIntelAccess()
+                    ? `
+                        <div class="reassign-button-container">
+
+                            <button
+                                class="delete-button"
+                                onclick="deleteIntel('${escapeAttribute(intel.id)}')"
+                            >
+                                DELETE INTEL
+                            </button>
+
+                        </div>
+                    `
+                    : ''
+            }
+
+        </div>
+
+    `;
+
+
+    intelList.appendChild(
+        card
+    );
+
+}
 
 
         /* ================================================== */
