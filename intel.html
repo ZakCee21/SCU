@@ -696,6 +696,17 @@
 
 
         /* ================================================== */
+        /* CLEAN INTEL TEXT */
+        /* ================================================== */
+
+        function cleanIntelText(value) {
+
+            return String(value ?? '').trim();
+
+        }
+
+
+        /* ================================================== */
         /* LOAD CURRENT USER */
         /* ================================================== */
 
@@ -908,7 +919,6 @@
                             .trim()
                             .toLowerCase();
 
-
                     const nameB =
                         (b.full_name || '')
                             .trim()
@@ -1009,9 +1019,15 @@
 
             const agentsPerColumn = 8;
 
-            const selectedIds = Array.isArray(selectedRecipientIds)
-                ? selectedRecipientIds
-                : (selectedRecipientIds ? [selectedRecipientIds] : []);
+            const selectedIds =
+                Array.isArray(selectedRecipientIds)
+                    ? selectedRecipientIds
+                    : (
+                        selectedRecipientIds
+                            ? [selectedRecipientIds]
+                            : []
+                    );
+
 
             const numberOfColumns =
                 Math.max(
@@ -1021,6 +1037,7 @@
                         agentsPerColumn
                     )
                 );
+
 
             const columns = [];
 
@@ -1104,6 +1121,7 @@
 
         }
 
+
         /* ================================================== */
         /* LOAD INTELLIGENCE */
         /* ================================================== */
@@ -1168,6 +1186,7 @@
                 `;
 
                 return;
+
             }
 
 
@@ -1176,7 +1195,6 @@
 
             let scuIntel =
                 data || [];
-
 
 
             if (
@@ -1191,6 +1209,7 @@
                 `;
 
                 return;
+
             }
 
 
@@ -1544,12 +1563,17 @@
                                         const recipient =
                                             officersMap[recipientId];
 
+
                                         if (!recipient) {
+
                                             return 'Unknown SCU Officer';
+
                                         }
+
 
                                         const name =
                                             `${recipient.rank || ''} ${recipient.full_name || ''}`.trim();
+
 
                                         return `${name}${recipient.callsign ? ' — ' + recipient.callsign : ''}`;
 
@@ -1581,26 +1605,32 @@
                             <div class="triage-panel">
 
                                 <div class="triage-title">
+
                                     ${
                                         isUnassigned
                                             ? '⚠ UNASSIGNED INTELLIGENCE'
                                             : '↻ REASSIGN INTELLIGENCE'
                                     }
+
                                 </div>
 
                                 <div class="triage-description">
+
                                     ${
                                         isUnassigned
                                             ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
                                             : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
                                     }
+
                                 </div>
 
                                 <div
                                     class="agent-list"
                                     id="agent-list-${escapeAttribute(groupId)}"
                                 >
+
                                     ${agentColumnsHtml}
+
                                 </div>
 
                                 <div class="reassign-button-container">
@@ -1610,11 +1640,13 @@
                                         id="send-${escapeAttribute(groupId)}"
                                         onclick="assignIntel('${escapeAttribute(groupId)}')"
                                     >
+
                                         ${
                                             isUnassigned
                                                 ? 'SEND INTEL'
                                                 : 'REASSIGN INTEL'
                                         }
+
                                     </button>
 
                                 </div>
@@ -1790,14 +1822,18 @@
                             <div>
 
                                 <div class="intel-subject">
+
                                     ${escapeHtml(
                                         intel.subject ||
                                         'Untitled Intelligence'
                                     )}
+
                                 </div>
 
                                 <div class="intel-meta">
+
                                     Submitted ${escapeHtml(createdDate)}
+
                                 </div>
 
                             </div>
@@ -1818,10 +1854,12 @@
                                     </div>
 
                                     <div class="info-value">
+
                                         ${escapeHtml(
                                             intel.intel_type ||
                                             'Not specified'
                                         )}
+
                                     </div>
 
                                 </div>
@@ -1834,7 +1872,9 @@
                                     </div>
 
                                     <div class="info-value">
+
                                         ${escapeHtml(senderDisplay)}
+
                                     </div>
 
                                 </div>
@@ -1847,7 +1887,9 @@
                                     </div>
 
                                     <div class="info-value">
+
                                         ${escapeHtml(createdDate)}
+
                                     </div>
 
                                 </div>
@@ -1899,6 +1941,7 @@
 
         }
 
+
         /* ================================================== */
         /* RENDER NON-SCU REPORT */
         /* ================================================== */
@@ -1949,10 +1992,15 @@
             ) {
 
                 locationHtml = `
+
                     <div class="section">
+
                         <div class="section-title">Location</div>
+
                         <div class="section-content">${escapeHtml(report.location)}</div>
+
                     </div>
+
                 `;
 
             }
@@ -1966,10 +2014,15 @@
             ) {
 
                 sourceHtml = `
+
                     <div class="section">
+
                         <div class="section-title">Source / Context</div>
+
                         <div class="section-content">${escapeHtml(report.source)}</div>
+
                     </div>
+
                 `;
 
             }
@@ -1983,10 +2036,15 @@
             ) {
 
                 evidenceHtml = `
+
                     <div class="section">
+
                         <div class="section-title">Evidence</div>
+
                         <div class="section-content">${escapeHtml(report.evidence)}</div>
+
                     </div>
+
                 `;
 
             }
@@ -2030,7 +2088,7 @@
                     <div class="non-scu-reporter">
 
                         <div class="non-scu-reporter-title">
-                            REPORTER DETAILS
+                            REPORTER
                         </div>
 
                         <div class="non-scu-reporter-name">
@@ -2038,7 +2096,7 @@
                         </div>
 
                         <div class="non-scu-reporter-callsign">
-                            Call Sign: ${escapeHtml(reporterCallsign)}
+                            CALL SIGN: ${escapeHtml(reporterCallsign)}
                         </div>
 
                     </div>
@@ -2065,19 +2123,6 @@
                         <div class="info-box">
 
                             <div class="info-label">
-                                Submitted By
-                            </div>
-
-                            <div class="info-value">
-                                NON-SCU MEMBER
-                            </div>
-
-                        </div>
-
-
-                        <div class="info-box">
-
-                            <div class="info-label">
                                 Recipient
                             </div>
 
@@ -2091,7 +2136,7 @@
                         <div class="info-box">
 
                             <div class="info-label">
-                                Received
+                                Submitted
                             </div>
 
                             <div class="info-value">
@@ -2110,8 +2155,10 @@
                         </div>
 
                         <div class="section-content">${escapeHtml(
-                            report.finding ||
-                            'No finding provided.'
+                            cleanIntelText(
+                                report.finding ||
+                                'No finding provided.'
+                            )
                         )}</div>
 
                     </div>
@@ -2127,19 +2174,20 @@
                     <div class="triage-panel non-scu-triage">
 
                         <div class="triage-title">
-                            ⚠ NON-SCU MEMBER REPORT
+                            ⚠ UNASSIGNED INTELLIGENCE
                         </div>
 
                         <div class="triage-description">
-                            This intelligence was submitted by a person outside the SCU. Select the appropriate SCU officer below. Once sent, it will be converted into a normal SCU intelligence submission and delivered through the officer's existing New Intel system.
+                            Select one or more SCU officers below and send this intelligence to them.
                         </div>
-
 
                         <div
                             class="agent-list"
                             id="agent-list-public-${escapeAttribute(report.id)}"
                         >
+
                             ${agentColumnsHtml}
+
                         </div>
 
 
@@ -2153,16 +2201,21 @@
                                 SEND INTEL
                             </button>
 
-                            <button
-                                class="delete-non-scu-button"
-                                onclick="deleteNonScuIntel('${escapeAttribute(report.id)}')"
-                            >
-                                DELETE BOGUS REPORT
-                            </button>
-
                         </div>
 
                     </div>
+
+                </div>
+
+
+                <div class="intel-footer">
+
+                    <button
+                        class="delete-non-scu-button"
+                        onclick="deleteNonScuIntel('${escapeAttribute(report.id)}')"
+                    >
+                        DELETE BOGUS REPORT
+                    </button>
 
                 </div>
 
@@ -2174,9 +2227,7 @@
             );
 
         }
-
-
-        /* ================================================== */
+                /* ================================================== */
         /* HANDLE CHECKBOX SELECTION */
         /* ================================================== */
 
@@ -2207,6 +2258,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2227,6 +2279,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2259,6 +2312,7 @@
             ) {
 
                 return;
+
             }
 
 
@@ -2337,11 +2391,14 @@
                 );
 
                 if (button) {
+
                     button.disabled = false;
                     button.textContent = 'REASSIGN INTEL';
+
                 }
 
                 return;
+
             }
 
 
@@ -2377,11 +2434,14 @@
                 );
 
                 if (button) {
+
                     button.disabled = false;
                     button.textContent = 'REASSIGN INTEL';
+
                 }
 
                 return;
+
             }
 
 
@@ -2458,11 +2518,14 @@
                     );
 
                     if (button) {
+
                         button.disabled = false;
                         button.textContent = 'SEND INTEL';
+
                     }
 
                     return;
+
                 }
 
             }
@@ -2519,11 +2582,14 @@
                     );
 
                     if (button) {
+
                         button.disabled = false;
                         button.textContent = 'REASSIGN INTEL';
+
                     }
 
                     return;
+
                 }
 
             }
@@ -2598,11 +2664,14 @@
                     );
 
                     if (button) {
+
                         button.disabled = false;
                         button.textContent = 'REASSIGN INTEL';
+
                     }
 
                     return;
+
                 }
 
             }
@@ -2611,6 +2680,7 @@
             await loadIntel();
 
         }
+
 
         /* ================================================== */
         /* ASSIGN NON-SCU INTEL */
@@ -2629,6 +2699,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2647,6 +2718,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2664,6 +2736,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2684,6 +2757,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2716,6 +2790,7 @@
             ) {
 
                 return;
+
             }
 
 
@@ -2817,6 +2892,7 @@
                 }
 
                 return;
+
             }
 
 
@@ -2859,12 +2935,14 @@
                 await loadIntel();
 
                 return;
+
             }
 
 
             await loadIntel();
 
         }
+
 
         /* ================================================== */
         /* DELETE EXISTING SCU INTEL */
