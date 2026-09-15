@@ -1178,66 +1178,6 @@
                 data || [];
 
 
-            /*
-             * Build the complete recipient groups. Full-access users already
-             * receive all copies. Normal recipients first receive their own
-             * copy, then we attempt to load the other copies in the same group
-             * so the complete recipient list can be displayed.
-             */
-
-            const groupIds = [
-                ...new Set(
-                    scuIntel
-                        .map(
-                            intel =>
-                                intel.intel_group_id
-                        )
-                        .filter(Boolean)
-                )
-            ];
-
-
-            if (
-                !hasFullIntelAccess() &&
-                groupIds.length > 0
-            ) {
-
-                const {
-                    data: groupRows,
-                    error: groupError
-                } = await supabaseClient
-                    .from('intel_submissions')
-                    .select('*')
-                    .in(
-                        'intel_group_id',
-                        groupIds
-                    );
-
-
-                if (!groupError && groupRows) {
-
-                    const existingIds = new Set(
-                        scuIntel.map(
-                            intel => intel.id
-                        )
-                    );
-
-                    groupRows.forEach(
-                        row => {
-
-                            if (!existingIds.has(row.id)) {
-
-                                scuIntel.push(row);
-
-                            }
-
-                        }
-                    );
-
-                }
-
-            }
-
 
             if (
                 scuIntel.length === 0 &&
