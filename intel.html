@@ -41,476 +41,406 @@
         }
 
         .header-logo {
-            width: 52px;
-            height: 52px;
-            object-fit: contain;
-            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            background: #17212b;
+            border: 1px solid #344353;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            font-weight: bold;
+            color: #ffffff;
         }
 
         .header-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            letter-spacing: 1px;
-            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .header-subtitle {
+            margin-top: 3px;
+            font-size: 11px;
+            color: #8d9aaa;
+            letter-spacing: 0.5px;
         }
 
         .back-button {
-            background: #202c38;
-            color: white;
-            border: 1px solid #354554;
-            padding: 9px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
+            background: #17212b;
+            color: #dbe4ed;
+            border: 1px solid #344353;
+            border-radius: 6px;
+            padding: 9px 14px;
+            font-size: 11px;
             font-weight: bold;
-            white-space: nowrap;
+            cursor: pointer;
         }
 
         .back-button:hover {
-            background: #2b3a48;
+            background: #202c38;
         }
 
-        .background-logo {
-            position: fixed;
-            top: 50%;
-            width: 275px;
-            height: 275px;
-            object-fit: contain;
-            opacity: 0.5;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .background-logo-left {
-            left: 80px;
-            transform: translateY(-50%);
-        }
-
-        .background-logo-right {
-            right: 80px;
-            transform: translateY(-50%);
-        }
-
-        .container {
+        .page {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 30px 20px 50px;
-            position: relative;
-            z-index: 1;
+            padding: 25px;
         }
 
-        .intro {
-            margin-bottom: 25px;
+        .page-heading {
+            margin-bottom: 20px;
         }
 
-        .intro h1 {
-            margin: 0 0 7px;
-            font-size: 25px;
-            color: #ffffff;
-            text-align: left;
-        }
-
-        .intro p {
+        .page-title {
             margin: 0;
-            color: #7f8b98;
-            font-size: 13px;
-            text-align: left;
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        .page-description {
+            margin-top: 7px;
+            color: #7f8b99;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .intel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
 
         .intel-card {
-            background: #111821;
+            background: #10171f;
             border: 1px solid #293542;
-            border-radius: 6px;
-            margin-bottom: 18px;
+            border-radius: 9px;
             overflow: hidden;
         }
 
-        .intel-card.unread {
-            border-left: 4px solid #22c55e;
+        .intel-card.new {
+            border-left: 4px solid #9b2c2c;
         }
 
-        .intel-card.read {
-            border-left: 4px solid #1d4ed8;
-        }
-
-        .intel-card.unassigned {
-            border-left: 4px solid #f59e0b;
+        .intel-card.open {
+            border-left: 4px solid #365f7c;
         }
 
         .intel-card.non-scu {
-            border-left: 4px solid #a855f7;
+            border-left: 4px solid #7c5a36;
         }
 
         .intel-header {
-            padding: 15px 18px;
+            padding: 16px 18px;
+            background: #141d26;
             border-bottom: 1px solid #293542;
-            background: #0d131a;
             display: flex;
-            justify-content: space-between;
             align-items: flex-start;
+            justify-content: space-between;
             gap: 15px;
         }
 
+        .intel-heading {
+            min-width: 0;
+        }
+
         .intel-subject {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: bold;
             color: #ffffff;
             margin-bottom: 5px;
-            text-align: left;
         }
 
-        .intel-meta {
-            color: #6f7c88;
-            font-size: 11px;
-            text-align: left;
-        }
-
-        .status-badge {
-            flex-shrink: 0;
+        .intel-type {
+            color: #91a0b0;
             font-size: 10px;
-            font-weight: bold;
-            padding: 5px 8px;
-            border-radius: 3px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .intel-status {
+            flex-shrink: 0;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 0.6px;
         }
 
         .status-new {
-            background: #14532d;
-            color: #86efac;
+            background: #552020;
+            color: #ffb5b5;
+            border: 1px solid #783232;
         }
 
-        .status-read {
-            background: #172554;
-            color: #93c5fd;
+        .status-open {
+            background: #1c3446;
+            color: #a9d7f5;
+            border: 1px solid #2e536d;
         }
 
         .status-unassigned {
-            background: #451a03;
-            color: #fbbf24;
-        }
-
-        .status-non-scu {
-            background: #3b0764;
-            color: #d8b4fe;
+            background: #4c3822;
+            color: #f3c78f;
+            border: 1px solid #73552f;
         }
 
         .intel-body {
             padding: 18px;
-            text-align: left;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 10px;
-            margin-bottom: 17px;
-            align-items: stretch;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
         }
 
         .info-box {
             background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 10px;
-            text-align: left;
-            display: block;
-            min-height: 0;
+            border: 1px solid #232f3a;
+            border-radius: 6px;
+            padding: 10px 12px;
         }
 
         .info-label {
-            color: #667381;
+            color: #687787;
             font-size: 9px;
-            font-weight: bold;
             text-transform: uppercase;
-            margin: 0 0 5px 0;
-            letter-spacing: .5px;
-            text-align: left;
-            width: 100%;
-            display: block;
-        }
-
-        .info-value {
-            color: #dbe1e7;
-            font-size: 12px;
-            line-height: 1.4;
-            margin: 0;
-            padding: 0;
-            text-align: left;
-            width: 100%;
-            display: block;
-            white-space: normal;
-        }
-
-        .section {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .section-title {
-            font-size: 10px;
-            color: #667381;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: .7px;
-            margin-bottom: 6px;
-            text-align: left;
-        }
-
-        .section-content {
-            background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 12px;
-            color: #d5dbe1;
-            font-size: 13px;
-            line-height: 1.55;
-            white-space: pre-wrap;
-            text-align: left;
-            margin: 0;
-            min-height: 42px;
-        }
-
-        .non-scu-reporter {
-            background: #160d20;
-            border: 1px solid #6b21a8;
-            border-radius: 5px;
-            padding: 13px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .non-scu-reporter-title {
-            color: #c084fc;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 7px;
-        }
-
-        .non-scu-reporter-name {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .non-scu-reporter-callsign {
-            color: #a78bfa;
-            font-size: 12px;
-        }
-
-        .assigned-panel {
-            background: #0d1720;
-            border: 1px solid #1d4ed8;
-            border-radius: 5px;
-            padding: 13px;
-            margin-top: 15px;
-            text-align: left;
-        }
-
-        .assigned-title {
-            color: #60a5fa;
-            font-size: 11px;
-            font-weight: bold;
-            text-transform: uppercase;
+            letter-spacing: 0.6px;
             margin-bottom: 5px;
         }
 
-        .assigned-description {
-            color: #8b98a5;
+        .info-value {
+            color: #dbe4ed;
             font-size: 12px;
-            margin: 0;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+
+        .section {
+            margin-top: 14px;
+            background: #0b1117;
+            border: 1px solid #232f3a;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            padding: 9px 12px;
+            background: #111923;
+            border-bottom: 1px solid #232f3a;
+            color: #8191a1;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            font-weight: bold;
+        }
+
+        .section-content {
+            padding: 12px;
+            color: #d5dde5;
+            font-size: 12px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .triage-panel {
-            background: #17130b;
-            border: 1px solid #92400e;
-            border-radius: 5px;
-            padding: 15px;
-            margin-top: 15px;
-            text-align: left;
-        }
-
-        .triage-title {
-            color: #fbbf24;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .triage-description {
-            color: #a8a29e;
-            font-size: 12px;
-            line-height: 1.5;
-            margin: 0 0 12px 0;
+            margin-top: 18px;
+            background: #0c141c;
+            border: 1px solid #344353;
+            border-radius: 7px;
+            padding: 16px;
         }
 
         .non-scu-triage {
-            background: #160d20;
-            border-color: #6b21a8;
+            border-color: #654a2b;
+            background: #15110c;
+        }
+
+        .triage-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #e6edf5;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 7px;
         }
 
         .non-scu-triage .triage-title {
-            color: #c084fc;
+            color: #efc07b;
+        }
+
+        .triage-description {
+            font-size: 11px;
+            line-height: 1.5;
+            color: #8391a0;
+            margin-bottom: 14px;
         }
 
         .agent-list {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0 20px;
-            background: #080c11;
-            border: 1px solid #354554;
-            border-radius: 5px;
-            overflow: hidden;
-            text-align: left;
-        }
-
-        .agent-column {
-            min-width: 0;
+            gap: 8px;
         }
 
         .agent-option {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 11px 12px;
-            margin: 0;
-            border-bottom: 1px solid #202b36;
+            gap: 9px;
+            background: #111a23;
+            border: 1px solid #293542;
+            border-radius: 6px;
+            padding: 10px;
             cursor: pointer;
-            color: #e8edf2;
-            font-size: 13px;
-            font-weight: normal;
+            transition: 0.15s ease;
         }
 
         .agent-option:hover {
-            background: #111a23;
+            background: #17222d;
+            border-color: #405264;
         }
 
-        .agent-option input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
+        .agent-option input {
+            width: 15px;
+            height: 15px;
             margin: 0;
-            flex-shrink: 0;
-            accent-color: #1d4ed8;
+            accent-color: #4e7696;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
-        .agent-name {
-            flex: 1;
+        .agent-details {
             min-width: 0;
         }
 
-        .agent-loading {
-            grid-column: 1 / -1;
-            padding: 12px;
-            color: #6f7c88;
-            font-size: 12px;
+        .agent-name {
+            color: #dce5ed;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .agent-role {
+            color: #738294;
+            font-size: 9px;
+            margin-top: 2px;
+        }
+
+        .current-recipient {
+            margin-top: 12px;
+            padding: 9px 10px;
+            background: #0b1117;
+            border: 1px solid #232f3a;
+            border-radius: 5px;
+            color: #8b9aaa;
+            font-size: 10px;
         }
 
         .reassign-button-container {
-            margin-top: 10px;
             display: flex;
-            justify-content: flex-end;
+            flex-wrap: wrap;
             gap: 8px;
+            margin-top: 14px;
         }
 
         .send-button {
-            background: #1d4ed8;
+            background: #29485d;
+            border: 1px solid #3b6682;
             color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .send-button:hover {
-            background: #2563eb;
-        }
-
-        .send-button:disabled {
-            background: #263746;
-            cursor: not-allowed;
-        }
-
-        .non-scu-send-button {
-            background: #7e22ce;
-        }
-
-        .non-scu-send-button:hover {
-            background: #9333ea;
-        }
-
-        .intel-footer {
-            border-top: 1px solid #293542;
-            padding: 11px 18px;
-            display: flex;
-            justify-content: flex-end;
-            background: #0d131a;
-        }
-
-        .delete-button,
-        .delete-non-scu-button {
-            background: #3f1111;
-            color: #fca5a5;
-            border: 1px solid #7f1d1d;
-            padding: 8px 12px;
-            border-radius: 4px;
+            padding: 9px 14px;
+            border-radius: 5px;
             font-size: 10px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .delete-button:hover,
-        .delete-non-scu-button:hover {
-            background: #7f1d1d;
+        .send-button:hover {
+            background: #355d76;
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .delete-button {
+            background: #551f1f;
+            border: 1px solid #793030;
             color: #ffffff;
+            padding: 9px 14px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
-        .loading,
-        .empty {
+        .delete-button:hover {
+            background: #6b2929;
+        }
+
+        .delete-non-scu-button {
+            background: #5a2d1e;
+            border: 1px solid #7a412b;
+            color: #ffffff;
+            padding: 9px 14px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .delete-non-scu-button:hover {
+            background: #713923;
+        }
+
+        .empty-state {
+            background: #10171f;
+            border: 1px solid #293542;
+            border-radius: 9px;
+            padding: 45px 20px;
             text-align: center;
-            padding: 50px 20px;
-            color: #6f7c88;
-            font-size: 13px;
+            color: #6f7d8b;
+            font-size: 12px;
         }
 
-        @media (max-width: 800px) {
-
-            .info-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
+        .loading {
+            padding: 35px;
+            text-align: center;
+            color: #788694;
+            font-size: 12px;
         }
 
-        @media (max-width: 600px) {
+        .error-box {
+            background: #241313;
+            border: 1px solid #5f2929;
+            border-radius: 7px;
+            padding: 15px;
+            color: #e6a5a5;
+            font-size: 12px;
+            line-height: 1.5;
+        }
 
-            .header {
+        .error-box button {
+            margin-top: 10px;
+            background: #552020;
+            border: 1px solid #783232;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .page {
                 padding: 15px;
             }
 
-            .header-logo {
-                width: 42px;
-                height: 42px;
-            }
-
-            .header-brand {
-                gap: 10px;
-            }
-
-            .header-title {
-                font-size: 17px;
-            }
-
-            .container {
-                padding: 20px 12px 40px;
-            }
-
-            .intel-header {
-                flex-direction: column;
+            .header {
+                padding: 15px;
             }
 
             .info-grid {
@@ -521,32 +451,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .agent-loading {
-                grid-column: 1;
-            }
-
-            .reassign-button-container {
-                justify-content: stretch;
+            .intel-header {
                 flex-direction: column;
-            }
-
-            .send-button,
-            .delete-non-scu-button {
-                width: 100%;
-            }
-
-            .background-logo {
-                width: 130px;
-                height: 130px;
-                opacity: 0.25;
-            }
-
-            .background-logo-left {
-                left: -45px;
-            }
-
-            .background-logo-right {
-                right: -45px;
             }
 
         }
@@ -557,30 +463,22 @@
 
 <body>
 
-    <img
-        class="background-logo background-logo-left"
-        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
-        alt=""
-    >
-
-    <img
-        class="background-logo background-logo-right"
-        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
-        alt=""
-    >
-
-    <header class="header">
+    <div class="header">
 
         <div class="header-brand">
 
-            <img
-                class="header-logo"
-                src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
-                alt="SCU Logo"
-            >
+            <div class="header-logo">
+                SCU
+            </div>
 
-            <div class="header-title">
-                SCU INTELLIGENCE
+            <div>
+                <div class="header-title">
+                    SCU INTELLIGENCE
+                </div>
+
+                <div class="header-subtitle">
+                    STREET CRIMES UNIT
+                </div>
             </div>
 
         </div>
@@ -592,23 +490,31 @@
             BACK TO DASHBOARD
         </button>
 
-    </header>
+    </div>
 
-    <main class="container">
 
-        <div class="intro">
+    <div class="page">
 
-            <h1>
-                Intelligence Received
+        <div class="page-heading">
+
+            <h1 class="page-title">
+                Intelligence
             </h1>
 
-            <p id="page-description">
-                Intelligence submissions sent directly to you by authorised officers.
-            </p>
+            <div
+                class="page-description"
+                id="page-description"
+            >
+                Intelligence assigned to you and intelligence requiring review.
+            </div>
 
         </div>
 
-        <div id="intel-list">
+
+        <div
+            class="intel-list"
+            id="intel-list"
+        >
 
             <div class="loading">
                 Loading intelligence...
@@ -616,13 +522,10 @@
 
         </div>
 
-    </main>
+    </div>
+
 
     <script>
-
-        /* ================================================== */
-        /* SUPABASE */
-        /* ================================================== */
 
         const SUPABASE_URL =
             'https://mtlozyseibrefhxnocvb.supabase.co';
@@ -631,26 +534,18 @@
             'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
         const supabaseClient =
-            supabase.createClient(
+            window.supabase.createClient(
                 SUPABASE_URL,
                 SUPABASE_KEY
             );
 
 
-        /* ================================================== */
-        /* GLOBALS */
-        /* ================================================== */
-
         let currentUser = null;
         let currentOfficer = null;
-        let currentRole = null;
         let scaAgents = [];
+        let intelRecords = [];
         let nonScuReports = [];
 
-
-        /* ================================================== */
-        /* FULL INTEL ACCESS */
-        /* ================================================== */
 
         const fullAccessRoles = [
             'master',
@@ -659,22 +554,16 @@
         ];
 
 
-        function hasFullIntelAccess() {
-
-            return fullAccessRoles.includes(
-                currentRole
-            );
-
-        }
-
-
-        /* ================================================== */
-        /* ESCAPE HELPERS */
-        /* ================================================== */
-
         function escapeHtml(value) {
 
-            return String(value ?? '')
+            if (
+                value === null ||
+                value === undefined
+            ) {
+                return '';
+            }
+
+            return String(value)
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
@@ -686,11 +575,20 @@
 
         function escapeAttribute(value) {
 
-            return String(value ?? '')
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
+            return escapeHtml(value)
+                .replace(/`/g, '&#096;');
+
+        }
+
+
+        function hasFullIntelAccess() {
+
+            return Boolean(
+                currentOfficer &&
+                fullAccessRoles.includes(
+                    currentOfficer.role
+                )
+            );
 
         }
 
@@ -703,15 +601,29 @@
 
             const {
                 data: {
-                    session
+                    user
                 },
                 error
-            } = await supabaseClient.auth.getSession();
+            } =
+                await supabaseClient.auth.getUser();
 
 
-            if (error || !session) {
+            if (
+                error ||
+                !user
+            ) {
 
-                window.location.href = 'index.html';
+                console.error(
+                    'Unable to load current user:',
+                    error
+                );
+
+                alert(
+                    'Your login session could not be found. Please log in again.'
+                );
+
+                window.location.href =
+                    'index.html';
 
                 return false;
 
@@ -719,63 +631,36 @@
 
 
             currentUser =
-                session.user;
-
-
-            if (!currentUser || !currentUser.id) {
-
-                console.error(
-                    'No authenticated user ID was found.'
-                );
-
-                alert(
-                    'Unable to identify the logged-in officer.'
-                );
-
-                return false;
-
-            }
+                user;
 
 
             const {
                 data: officer,
                 error: officerError
-            } = await supabaseClient
-
-                .from('officers')
-
-                .select(`
-                    id,
-                    full_name,
-                    rank,
-                    role,
-                    active,
-                    callsign,
-                    portal_title
-                `)
-
-                .eq(
-                    'id',
-                    currentUser.id
-                )
-
-                .single();
+            } =
+                await supabaseClient
+                    .from('officers')
+                    .select('*')
+                    .eq(
+                        'id',
+                        user.id
+                    )
+                    .single();
 
 
-            if (officerError || !officer) {
+            if (
+                officerError ||
+                !officer
+            ) {
 
                 console.error(
-                    'Officer loading error:',
+                    'Unable to load officer profile:',
                     officerError
                 );
 
-                document.getElementById(
-                    'intel-list'
-                ).innerHTML = `
-                    <div class="empty">
-                        Unable to load your officer profile.
-                    </div>
-                `;
+                alert(
+                    'Unable to load your SCU officer profile.'
+                );
 
                 return false;
 
@@ -785,33 +670,13 @@
             currentOfficer =
                 officer;
 
-            currentRole =
-                officer.role;
-
-
-            console.log(
-                'CURRENT USER ID:',
-                currentUser.id
-            );
-
-            console.log(
-                'CURRENT OFFICER ID:',
-                currentOfficer.id
-            );
-
-            console.log(
-                'CURRENT ROLE:',
-                currentRole
-            );
-
-
             return true;
 
         }
 
 
         /* ================================================== */
-        /* LOAD ACTIVE SCU AGENTS */
+        /* LOAD SCU AGENTS */
         /* ================================================== */
 
         async function loadScuAgents() {
@@ -819,29 +684,26 @@
             const {
                 data,
                 error
-            } = await supabaseClient
-
-                .from('officers')
-
-                .select(
-                    'id, full_name, rank, callsign'
-                )
-
-                .eq(
-                    'is_scu_agent',
-                    true
-                )
-
-                .eq(
-                    'active',
-                    true
-                );
+            } =
+                await supabaseClient
+                    .from('officers')
+                    .select(
+                        'id, full_name, callsign, rank, role, portal_title, active, is_scu_agent'
+                    )
+                    .eq(
+                        'active',
+                        true
+                    )
+                    .eq(
+                        'is_scu_agent',
+                        true
+                    );
 
 
             if (error) {
 
                 console.error(
-                    'SCU agent loading error:',
+                    'Unable to load SCU agents:',
                     error
                 );
 
@@ -853,147 +715,60 @@
 
 
             const rankOrder = {
-
                 'Head of SCU': 1,
                 'Assistant Head of SCU': 2,
                 'Head of Weapons': 3,
                 'Head of Drugs': 4,
                 'Detective': 5
-
             };
 
 
-            const filteredAgents =
-                (data || []).filter(
-                    agent => {
+            scaAgents =
+                (data || []).sort(
+                    (a, b) => {
 
-                        const rank =
-                            (agent.rank || '').trim();
+                        const aRank =
+                            rankOrder[
+                                a.portal_title
+                            ] ||
+                            rankOrder[
+                                a.rank
+                            ] ||
+                            99;
 
-                        return Object.prototype.hasOwnProperty.call(
-                            rankOrder,
-                            rank
+                        const bRank =
+                            rankOrder[
+                                b.portal_title
+                            ] ||
+                            rankOrder[
+                                b.rank
+                            ] ||
+                            99;
+
+                        if (
+                            aRank !==
+                            bRank
+                        ) {
+
+                            return (
+                                aRank -
+                                bRank
+                            );
+
+                        }
+
+                        return String(
+                            a.full_name ||
+                            ''
+                        ).localeCompare(
+                            String(
+                                b.full_name ||
+                                ''
+                            )
                         );
 
                     }
                 );
-
-
-            filteredAgents.sort(
-                (a, b) => {
-
-                    const rankA =
-                        (a.rank || '').trim();
-
-                    const rankB =
-                        (b.rank || '').trim();
-
-
-                    const rankDifference =
-                        rankOrder[rankA] -
-                        rankOrder[rankB];
-
-
-                    if (
-                        rankDifference !== 0
-                    ) {
-
-                        return rankDifference;
-
-                    }
-
-
-                    const nameA =
-                        (a.full_name || '')
-                            .trim()
-                            .toLowerCase();
-
-
-                    const nameB =
-                        (b.full_name || '')
-                            .trim()
-                            .toLowerCase();
-
-
-                    return nameA.localeCompare(
-                        nameB
-                    );
-
-                }
-            );
-
-
-            scaAgents =
-                filteredAgents;
-
-        }
-
-
-        /* ================================================== */
-        /* LOAD NON-SCU REPORTS */
-        /* ================================================== */
-
-        async function loadNonScuReports() {
-
-            nonScuReports = [];
-
-
-            if (
-                !hasFullIntelAccess()
-            ) {
-
-                return;
-
-            }
-
-
-            const {
-                data,
-                error
-            } = await supabaseClient
-
-                .from('non_scu_intel_submissions')
-
-                .select(`
-                    id,
-                    reporter_name,
-                    reporter_callsign,
-                    intel_type,
-                    finding,
-                    location,
-                    source,
-                    evidence,
-                    created_at,
-                    status
-                `)
-
-                .eq(
-                    'status',
-                    'unassigned'
-                )
-
-                .order(
-                    'created_at',
-                    {
-                        ascending: false
-                    }
-                );
-
-
-            if (error) {
-
-                console.error(
-                    'NON-SCU intelligence loading error:',
-                    error
-                );
-
-                return;
-
-            }
-
-
-            nonScuReports =
-                data || [];
 
         }
 
@@ -1004,96 +779,90 @@
 
         function buildAgentList(
             reportId,
-            selectedRecipientId = null
+            selectedRecipientIds = []
         ) {
 
-            const agentsPerColumn = 8;
-
-            const numberOfColumns =
-                Math.max(
-                    1,
-                    Math.ceil(
-                        scaAgents.length /
-                        agentsPerColumn
+            const selectedIds =
+                Array.isArray(
+                    selectedRecipientIds
+                )
+                    ? selectedRecipientIds.map(
+                        id => String(id)
                     )
-                );
+                    : (
+                        selectedRecipientIds
+                            ? [
+                                String(
+                                    selectedRecipientIds
+                                )
+                            ]
+                            : []
+                    );
 
-            const columns = [];
 
-
-            for (
-                let i = 0;
-                i < numberOfColumns;
-                i++
+            if (
+                !scaAgents.length
             ) {
 
-                columns.push([]);
+                return `
+                    <div class="error-box">
+                        No active SCU officers are currently available for assignment.
+                    </div>
+                `;
 
             }
 
 
-            scaAgents.forEach(
-                (agent, index) => {
-
-                    const columnIndex =
-                        Math.floor(
-                            index /
-                            agentsPerColumn
-                        );
-
-
-                    columns[
-                        columnIndex
-                    ].push(
-                        agent
-                    );
-
-                }
-            );
-
-
-            return columns
+            return scaAgents
                 .map(
-                    column => `
+                    agent => {
 
-                        <div class="agent-column">
+                        const checked =
+                            selectedIds.includes(
+                                String(agent.id)
+                            )
+                                ? 'checked'
+                                : '';
 
-                            ${
-                                column
-                                    .map(
-                                        agent => `
 
-                                            <label class="agent-option">
+                        const displayRole =
+                            agent.portal_title ||
+                            agent.rank ||
+                            'SCU Officer';
 
-                                                <input
-                                                    type="checkbox"
-                                                    class="reassign-checkbox"
-                                                    value="${escapeAttribute(agent.id)}"
-                                                    data-intel-id="${escapeAttribute(reportId)}"
-                                                    ${
-                                                        selectedRecipientId === agent.id
-                                                            ? 'checked'
-                                                            : ''
-                                                    }
-                                                    onchange="handleReassignSelection('${escapeAttribute(reportId)}', this)"
-                                                >
 
-                                                <span class="agent-name">
-                                                    ${escapeHtml(
-                                                        `${agent.rank || ''} ${agent.full_name || 'SCU Agent'}${agent.callsign ? ' — ' + agent.callsign : ''}`.trim()
-                                                    )}
-                                                </span>
+                        return `
+                            <label class="agent-option">
 
-                                            </label>
+                                <input
+                                    type="checkbox"
+                                    class="reassign-checkbox"
+                                    value="${escapeAttribute(agent.id)}"
+                                    data-intel-id="${escapeAttribute(reportId)}"
+                                    ${checked}
+                                >
 
-                                        `
-                                    )
-                                    .join('')
-                            }
+                                <div class="agent-details">
 
-                        </div>
+                                    <div class="agent-name">
+                                        ${escapeHtml(agent.full_name || 'Unknown Officer')}
+                                    </div>
 
-                    `
+                                    <div class="agent-role">
+                                        ${escapeHtml(displayRole)}
+                                        ${
+                                            agent.callsign
+                                                ? ` — ${escapeHtml(agent.callsign)}`
+                                                : ''
+                                        }
+                                    </div>
+
+                                </div>
+
+                            </label>
+                        `;
+
+                    }
                 )
                 .join('');
 
@@ -1145,21 +914,31 @@
 
 
             const {
-                data,
-                error
-            } = await query;
+                data: intel,
+                error: intelError
+            } =
+                await query;
 
 
-            if (error) {
+            if (intelError) {
 
                 console.error(
-                    'Intel loading error:',
-                    error
+                    'Intel load error:',
+                    intelError
                 );
 
                 intelList.innerHTML = `
-                    <div class="empty">
+                    <div class="error-box">
                         Unable to load intelligence.
+                        <br><br>
+                        ${escapeHtml(
+                            intelError.message ||
+                            intelError
+                        )}
+                        <br>
+                        <button onclick="loadIntel()">
+                            RETRY
+                        </button>
                     </div>
                 `;
 
@@ -1168,157 +947,93 @@
             }
 
 
-            await loadNonScuReports();
-
-
-            const scuIntel =
-                data || [];
+            intelRecords =
+                intel || [];
 
 
             if (
-                scuIntel.length === 0 &&
-                nonScuReports.length === 0
-            ) {
-
-                intelList.innerHTML = `
-                    <div class="empty">
-                        No intelligence available.
-                    </div>
-                `;
-
-                return;
-
-            }
-
-
-            const senderIds = [
-                ...new Set(
-                    scuIntel
-                        .map(
-                            intel =>
-                                intel.sender_id
-                        )
-                        .filter(Boolean)
-                )
-            ];
-
-
-            const recipientIds = [
-                ...new Set(
-                    scuIntel
-                        .map(
-                            intel =>
-                                intel.recipient_id
-                        )
-                        .filter(Boolean)
-                )
-            ];
-
-
-            const allOfficerIds = [
-                ...new Set([
-                    ...senderIds,
-                    ...recipientIds
-                ])
-            ];
-
-
-            let officersMap = {};
-
-
-            if (
-                allOfficerIds.length > 0
+                hasFullIntelAccess()
             ) {
 
                 const {
-                    data: officers,
-                    error: officersError
-                } = await supabaseClient
-
-                    .from('officers')
-
-                    .select(
-                        'id, full_name, rank, callsign, portal_title'
-                    )
-
-                    .in(
-                        'id',
-                        allOfficerIds
-                    );
-
-
-                if (!officersError) {
-
-                    (officers || [])
-                        .forEach(
-                            officer => {
-
-                                officersMap[
-                                    officer.id
-                                ] = officer;
-
+                    data: publicReports,
+                    error: publicError
+                } =
+                    await supabaseClient
+                        .from(
+                            'non_scu_intel_submissions'
+                        )
+                        .select('*')
+                        .eq(
+                            'status',
+                            'unassigned'
+                        )
+                        .order(
+                            'created_at',
+                            {
+                                ascending: false
                             }
                         );
 
+
+                if (publicError) {
+
+                    console.error(
+                        'NON-SCU load error:',
+                        publicError
+                    );
+
+                    nonScuReports = [];
+
+                } else {
+
+                    nonScuReports =
+                        publicReports || [];
+
                 }
+
+            } else {
+
+                nonScuReports = [];
 
             }
 
 
-            const intelIds =
-                scuIntel.map(
-                    intel =>
-                        intel.id
+            renderIntel();
+
+        }
+
+
+        /* ================================================== */
+        /* RENDER INTELLIGENCE */
+        /* ================================================== */
+
+        function renderIntel() {
+
+            const intelList =
+                document.getElementById(
+                    'intel-list'
                 );
 
 
-            let viewedIds =
-                new Set();
+            intelList.innerHTML = '';
 
 
-            if (
-                intelIds.length > 0
-            ) {
-
-                const {
-                    data: views,
-                    error: viewsError
-                } = await supabaseClient
-
-                    .from('intel_views')
-
-                    .select(
-                        'intel_id'
-                    )
-
-                    .eq(
-                        'user_id',
-                        currentUser.id
-                    )
-
-                    .in(
-                        'intel_id',
-                        intelIds
-                    );
+            const combined = [];
 
 
-                if (!viewsError) {
+            intelRecords.forEach(
+                item => {
 
-                    viewedIds =
-                        new Set(
-                            (views || [])
-                                .map(
-                                    view =>
-                                        view.intel_id
-                                )
-                        );
+                    combined.push({
+                        type: 'scu',
+                        created_at:
+                            item.created_at,
+                        item
+                    });
 
                 }
-
-            }
-
-
-            intelList.innerHTML = '';
+            );
 
 
             if (
@@ -1326,12 +1041,14 @@
             ) {
 
                 nonScuReports.forEach(
-                    report => {
+                    item => {
 
-                        renderNonScuReport(
-                            report,
-                            intelList
-                        );
+                        combined.push({
+                            type: 'non-scu',
+                            created_at:
+                                item.created_at,
+                            item
+                        });
 
                     }
                 );
@@ -1339,466 +1056,55 @@
             }
 
 
-            scuIntel.forEach(
-                intel => {
-
-                    const sender =
-                        officersMap[
-                            intel.sender_id
-                        ] || null;
-
-
-                    const recipient =
-                        officersMap[
-                            intel.recipient_id
-                        ] || null;
-
-
-                    const isUnassigned =
-                        !intel.recipient_id;
-
-
-                    const isViewed =
-                        viewedIds.has(
-                            intel.id
-                        );
-
-
-                    if (!isViewed) {
-
-                        supabaseClient
-                            .from('intel_views')
-                            .upsert(
-                                {
-                                    intel_id:
-                                        intel.id,
-                                    user_id:
-                                        currentUser.id
-                                },
-                                {
-                                    onConflict:
-                                        'intel_id,user_id'
-                                }
-                            )
-                            .then(
-                                result => {
-
-                                    if (
-                                        result.error
-                                    ) {
-
-                                        console.error(
-                                            'View tracking error:',
-                                            result.error
-                                        );
-
-                                    }
-
-                                }
-                            );
-
-                    }
-
-
-                    let cardClass =
-                        'read';
-
-
-                    let statusBadge =
-                        `
-                            <span class="status-badge status-read">
-                                OPEN
-                            </span>
-                        `;
-
-
-                    if (
-                        isUnassigned
-                    ) {
-
-                        cardClass =
-                            'unassigned';
-
-
-                        statusBadge =
-                            `
-                                <span class="status-badge status-unassigned">
-                                    UNASSIGNED
-                                </span>
-                            `;
-
-                    }
-                    else if (
-                        !isViewed
-                    ) {
-
-                        cardClass =
-                            'unread';
-
-
-                        statusBadge =
-                            `
-                                <span class="status-badge status-new">
-                                    NEW
-                                </span>
-                            `;
-
-                    }
-
-
-                    const createdDate =
-                        intel.created_at
-                            ? new Date(
-                                intel.created_at
-                            ).toLocaleString(
-                                'en-GB',
-                                {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                }
-                            )
-                            : 'Unknown';
-
-
-                    const senderName =
-                        sender
-                            ? `${sender.rank || ''} ${sender.full_name || ''}`.trim()
-                            : 'Unknown';
-
-
-                    const senderDisplay =
-                        sender
-                            ? `${senderName}${sender.callsign ? ' — ' + sender.callsign : ''}`
-                            : 'Unknown';
-
-
-                    const recipientName =
-                        recipient
-                            ? `${recipient.rank || ''} ${recipient.full_name || ''}`.trim()
-                            : 'UNASSIGNED';
-
-
-                    const recipientDisplay =
-                        recipient
-                            ? `${recipientName}${recipient.callsign ? ' — ' + recipient.callsign : ''}`
-                            : 'No recipient assigned';
-
-
-                    let triageHtml = '';
-
-
-                    if (
-                        hasFullIntelAccess()
-                    ) {
-
-                        const agentColumnsHtml =
-                            buildAgentList(
-                                intel.id,
-                                intel.recipient_id
-                            );
-
-
-                        triageHtml = `
-
-                            <div class="triage-panel">
-
-                                <div class="triage-title">
-                                    ${
-                                        isUnassigned
-                                            ? '⚠ UNASSIGNED INTELLIGENCE'
-                                            : '↻ REASSIGN INTELLIGENCE'
-                                    }
-                                </div>
-
-                                <div class="triage-description">
-                                    ${
-                                        isUnassigned
-                                            ? 'This intelligence was submitted without a recipient. Select the appropriate SCU officer below and send the intelligence to them.'
-                                            : 'This intelligence is currently assigned to the officer shown below. Select another SCU officer if this intelligence needs to be reassigned.'
-                                    }
-                                </div>
-
-                                <div
-                                    class="agent-list"
-                                    id="agent-list-${escapeAttribute(intel.id)}"
-                                >
-                                    ${agentColumnsHtml}
-                                </div>
-
-                                <div class="reassign-button-container">
-
-                                    <button
-                                        class="send-button"
-                                        id="send-${escapeAttribute(intel.id)}"
-                                        onclick="assignIntel('${escapeAttribute(intel.id)}')"
-                                    >
-                                        ${
-                                            isUnassigned
-                                                ? 'SEND INTEL'
-                                                : 'REASSIGN INTEL'
-                                        }
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-
-
-                    let assignedHtml = '';
-
-
-                    if (
-                        !isUnassigned &&
-                        hasFullIntelAccess()
-                    ) {
-
-                        assignedHtml = `
-
-                            <div class="assigned-panel">
-
-                                <div class="assigned-title">
-                                    CURRENT RECIPIENT
-                                </div>
-
-                                <div class="assigned-description">
-                                    ${escapeHtml(recipientDisplay)}
-                                </div>
-
-                            </div>
-
-                        `;
-
-                    }
-
-
-                    const canDeleteThisIntel =
-                        hasFullIntelAccess()
-                        ||
-                        (
-                            intel.recipient_id &&
-                            intel.recipient_id === currentUser.id
-                        );
-
-
-                    let deleteHtml = '';
-
-
-                    if (
-                        canDeleteThisIntel
-                    ) {
-
-                        deleteHtml = `
-
-                            <div class="intel-footer">
-
-                                <button
-                                    class="delete-button"
-                                    onclick="deleteIntel('${escapeAttribute(intel.id)}')"
-                                >
-                                    DELETE INTEL
-                                </button>
-
-                            </div>
-
-                        `;
-
-                    }
-
-
-                    let locationHtml = '';
-
-
-                    if (
-                        intel.location
-                    ) {
-
-                        locationHtml = `
-                            <div class="section">
-                                <div class="section-title">Location</div>
-                                <div class="section-content">${escapeHtml(intel.location)}</div>
-                            </div>
-                        `;
-
-                    }
-
-
-                    let sourceHtml = '';
-
-
-                    if (
-                        intel.source ||
-                        intel.context
-                    ) {
-
-                        sourceHtml = `
-                            <div class="section">
-                                <div class="section-title">Source / Context</div>
-                                <div class="section-content">${escapeHtml(
-                                    intel.source ||
-                                    intel.context ||
-                                    ''
-                                )}</div>
-                            </div>
-                        `;
-
-                    }
-
-
-                    let evidenceHtml = '';
-
-
-                    if (
-                        intel.evidence
-                    ) {
-
-                        evidenceHtml = `
-                            <div class="section">
-                                <div class="section-title">Evidence</div>
-                                <div class="section-content">${escapeHtml(intel.evidence)}</div>
-                            </div>
-                        `;
-
-                    }
-
-
-                    const card =
-                        document.createElement(
-                            'div'
-                        );
-
-
-                    card.className =
-                        `intel-card ${cardClass}`;
-
-
-                    card.innerHTML = `
-
-                        <div class="intel-header">
-
-                            <div>
-
-                                <div class="intel-subject">
-                                    ${escapeHtml(
-                                        intel.subject ||
-                                        'Untitled Intelligence'
-                                    )}
-                                </div>
-
-                                <div class="intel-meta">
-                                    Submitted ${escapeHtml(createdDate)}
-                                </div>
-
-                            </div>
-
-                            ${statusBadge}
-
-                        </div>
-
-
-                        <div class="intel-body">
-
-                            <div class="info-grid">
-
-                                <div class="info-box">
-
-                                    <div class="info-label">
-                                        Intel Type
-                                    </div>
-
-                                    <div class="info-value">
-                                        ${escapeHtml(
-                                            intel.intel_type ||
-                                            'Not specified'
-                                        )}
-                                    </div>
-
-                                </div>
-
-
-                                <div class="info-box">
-
-                                    <div class="info-label">
-                                        Submitted By
-                                    </div>
-
-                                    <div class="info-value">
-                                        ${escapeHtml(senderDisplay)}
-                                    </div>
-
-                                </div>
-
-
-                                <div class="info-box">
-
-                                    <div class="info-label">
-                                        Recipient
-                                    </div>
-
-                                    <div class="info-value">
-                                        ${escapeHtml(recipientDisplay)}
-                                    </div>
-
-                                </div>
-
-
-                                <div class="info-box">
-
-                                    <div class="info-label">
-                                        Received
-                                    </div>
-
-                                    <div class="info-value">
-                                        ${escapeHtml(createdDate)}
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="section">
-
-                                <div class="section-title">
-                                    Finding
-                                </div>
-
-                                <div class="section-content">${escapeHtml(
-                                    intel.finding ||
-                                    intel.description ||
-                                    'No finding provided.'
-                                )}</div>
-
-                            </div>
-
-
-                            ${locationHtml}
-
-                            ${sourceHtml}
-
-                            ${evidenceHtml}
-
-                            ${assignedHtml}
-
-                            ${triageHtml}
-
-                        </div>
-
-
-                        ${deleteHtml}
-
-                    `;
-
-
-                    intelList.appendChild(
-                        card
+            combined.sort(
+                (a, b) => {
+
+                    return new Date(
+                        b.created_at
+                    ) -
+                    new Date(
+                        a.created_at
                     );
+
+                }
+            );
+
+
+            if (
+                !combined.length
+            ) {
+
+                intelList.innerHTML = `
+                    <div class="empty-state">
+                        No intelligence currently requires your attention.
+                    </div>
+                `;
+
+                return;
+
+            }
+
+
+            combined.forEach(
+                entry => {
+
+                    if (
+                        entry.type === 'non-scu'
+                    ) {
+
+                        renderNonScuIntel(
+                            entry.item,
+                            intelList
+                        );
+
+                    } else {
+
+                        renderScuIntel(
+                            entry.item,
+                            intelList
+                        );
+
+                    }
 
                 }
             );
@@ -1807,97 +1113,306 @@
 
 
         /* ================================================== */
-        /* RENDER NON-SCU REPORT */
+        /* RENDER SCU INTEL */
         /* ================================================== */
 
-        function renderNonScuReport(
-            report,
+        function renderScuIntel(
+            intel,
             intelList
         ) {
 
+            const card =
+                document.createElement(
+                    'div'
+                );
+
+
+            card.className =
+                'intel-card open';
+
+
             const createdDate =
-                report.created_at
+                intel.created_at
                     ? new Date(
-                        report.created_at
+                        intel.created_at
                     ).toLocaleString(
-                        'en-GB',
-                        {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        }
+                        'en-GB'
                     )
                     : 'Unknown';
 
 
-            const reporterName =
-                (report.reporter_name || '').trim()
-                || 'Unknown';
+            const isRecipient =
+                intel.recipient_id &&
+                currentUser &&
+                String(
+                    intel.recipient_id
+                ) ===
+                String(
+                    currentUser.id
+                );
 
 
-            const reporterCallsign =
-                (report.reporter_callsign || '').trim()
-                || 'No call sign provided';
+            const statusClass =
+                isRecipient
+                    ? 'status-new'
+                    : 'status-open';
+
+
+            const statusText =
+                isRecipient
+                    ? 'NEW'
+                    : 'OPEN';
+
+
+            const locationHtml =
+                intel.location
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Location
+                            </div>
+
+                            <div class="section-content">${escapeHtml(intel.location)}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const sourceHtml =
+                intel.source
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Source
+                            </div>
+
+                            <div class="section-content">${escapeHtml(intel.source)}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const evidenceHtml =
+                intel.evidence
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Evidence
+                            </div>
+
+                            <div class="section-content">${escapeHtml(intel.evidence)}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const selectedRecipientIds =
+                intel.recipient_id
+                    ? [
+                        intel.recipient_id
+                    ]
+                    : [];
 
 
             const agentColumnsHtml =
                 buildAgentList(
-                    `public-${report.id}`
+                    intel.id,
+                    selectedRecipientIds
                 );
 
 
-            let locationHtml = '';
+            card.innerHTML = `
 
+                <div class="intel-header">
 
-            if (
-                report.location
-            ) {
+                    <div class="intel-heading">
 
-                locationHtml = `
-                    <div class="section">
-                        <div class="section-title">Location</div>
-                        <div class="section-content">${escapeHtml(report.location)}</div>
+                        <div class="intel-subject">
+                            ${escapeHtml(
+                                intel.subject ||
+                                'Untitled Intelligence'
+                            )}
+                        </div>
+
+                        <div class="intel-type">
+                            ${escapeHtml(
+                                intel.intel_type ||
+                                'General Intelligence'
+                            )}
+                        </div>
+
                     </div>
-                `;
 
-            }
-
-
-            let sourceHtml = '';
-
-
-            if (
-                report.source
-            ) {
-
-                sourceHtml = `
-                    <div class="section">
-                        <div class="section-title">Source / Context</div>
-                        <div class="section-content">${escapeHtml(report.source)}</div>
+                    <div class="intel-status ${statusClass}">
+                        ${statusText}
                     </div>
-                `;
 
-            }
-
-
-            let evidenceHtml = '';
+                </div>
 
 
-            if (
-                report.evidence
-            ) {
+                <div class="intel-body">
 
-                evidenceHtml = `
-                    <div class="section">
-                        <div class="section-title">Evidence</div>
-                        <div class="section-content">${escapeHtml(report.evidence)}</div>
+                    <div class="info-grid">
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Received
+                            </div>
+
+                            <div class="info-value">
+                                ${escapeHtml(
+                                    createdDate
+                                )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <div class="info-label">
+                                Recipient
+                            </div>
+
+                            <div class="info-value">
+
+                                ${
+                                    intel.recipient_id
+                                        ? (
+                                            scaAgents.find(
+                                                agent =>
+                                                    String(agent.id) ===
+                                                    String(intel.recipient_id)
+                                            )
+                                                ? escapeHtml(
+                                                    scaAgents.find(
+                                                        agent =>
+                                                            String(agent.id) ===
+                                                            String(intel.recipient_id)
+                                                    ).full_name
+                                                )
+                                                : 'Assigned SCU Officer'
+                                        )
+                                        : 'UNASSIGNED'
+                                }
+
+                            </div>
+
+                        </div>
+
                     </div>
-                `;
 
-            }
 
+                    <div class="section">
+
+                        <div class="section-title">
+                            Finding
+                        </div>
+
+                        <div class="section-content">${escapeHtml(
+                            intel.finding ||
+                            'No finding provided.'
+                        )}</div>
+
+                    </div>
+
+
+                    ${locationHtml}
+
+                    ${sourceHtml}
+
+                    ${evidenceHtml}
+
+
+                    ${
+                        hasFullIntelAccess()
+                            ? `
+                                <div class="triage-panel">
+
+                                    <div class="triage-title">
+                                        ASSIGN / REASSIGN INTELLIGENCE
+                                    </div>
+
+                                    <div class="triage-description">
+                                        Select one or more SCU officers. There is no limit on the number of officers that can be selected.
+                                    </div>
+
+                                    <div
+                                        class="agent-list"
+                                        id="agent-list-${escapeAttribute(intel.id)}"
+                                    >
+                                        ${agentColumnsHtml}
+                                    </div>
+
+                                    <div class="reassign-button-container">
+
+                                        <button
+                                            class="send-button"
+                                            id="send-${escapeAttribute(intel.id)}"
+                                            onclick="assignIntel('${escapeAttribute(intel.id)}')"
+                                        >
+                                            REASSIGN INTEL
+                                        </button>
+
+                                        <button
+                                            class="delete-button"
+                                            onclick="deleteIntel('${escapeAttribute(intel.id)}')"
+                                        >
+                                            DELETE INTEL
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            `
+                            : ''
+                    }
+
+
+                    ${
+                        !hasFullIntelAccess()
+                            ? `
+                                <div class="reassign-button-container">
+
+                                    <button
+                                        class="delete-button"
+                                        onclick="deleteIntel('${escapeAttribute(intel.id)}')"
+                                    >
+                                        DELETE INTEL
+                                    </button>
+
+                                </div>
+                            `
+                            : ''
+                    }
+
+                </div>
+
+            `;
+
+
+            intelList.appendChild(
+                card
+            );
+
+        }
+
+
+        /* ================================================== */
+        /* RENDER NON-SCU INTEL */
+        /* ================================================== */
+
+        function renderNonScuIntel(
+            report,
+            intelList
+        ) {
 
             const card =
                 document.createElement(
@@ -1909,60 +1424,110 @@
                 'intel-card non-scu';
 
 
+            const createdDate =
+                report.created_at
+                    ? new Date(
+                        report.created_at
+                    ).toLocaleString(
+                        'en-GB'
+                    )
+                    : 'Unknown';
+
+
+            const locationHtml =
+                report.location
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Location
+                            </div>
+
+                            <div class="section-content">${escapeHtml(report.location)}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const sourceHtml =
+                report.source
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Source
+                            </div>
+
+                            <div class="section-content">${escapeHtml(report.source)}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const evidenceHtml =
+                report.evidence
+                    ? `
+                        <div class="section">
+
+                            <div class="section-title">
+                                Evidence
+                            </div>
+
+                            <div class="section-content">${escapeHtml(report.evidence)}</div>
+
+                        </div>
+                    `
+                    : '';
+
+
+            const agentColumnsHtml =
+                buildAgentList(
+                    `public-${report.id}`
+                );
+
+
             card.innerHTML = `
 
                 <div class="intel-header">
 
-                    <div>
+                    <div class="intel-heading">
 
                         <div class="intel-subject">
                             NON-SCU MEMBER INTELLIGENCE
                         </div>
 
-                        <div class="intel-meta">
-                            Submitted ${escapeHtml(createdDate)}
+                        <div class="intel-type">
+                            ${escapeHtml(
+                                report.intel_type ||
+                                'NON-SCU MEMBER REPORT'
+                            )}
                         </div>
 
                     </div>
 
-                    <span class="status-badge status-non-scu">
-                        NON-SCU REPORT
-                    </span>
+                    <div class="intel-status status-unassigned">
+                        UNASSIGNED
+                    </div>
 
                 </div>
 
 
                 <div class="intel-body">
 
-                    <div class="non-scu-reporter">
-
-                        <div class="non-scu-reporter-title">
-                            REPORTER DETAILS
-                        </div>
-
-                        <div class="non-scu-reporter-name">
-                            ${escapeHtml(reporterName)}
-                        </div>
-
-                        <div class="non-scu-reporter-callsign">
-                            Call Sign: ${escapeHtml(reporterCallsign)}
-                        </div>
-
-                    </div>
-
-
                     <div class="info-grid">
 
                         <div class="info-box">
 
                             <div class="info-label">
-                                Intel Type
+                                Reporter
                             </div>
 
                             <div class="info-value">
                                 ${escapeHtml(
-                                    report.intel_type ||
-                                    'Not specified'
+                                    report.reporter_name ||
+                                    'Unknown'
                                 )}
                             </div>
 
@@ -1972,11 +1537,14 @@
                         <div class="info-box">
 
                             <div class="info-label">
-                                Submitted By
+                                Call Sign
                             </div>
 
                             <div class="info-value">
-                                NON-SCU MEMBER
+                                ${escapeHtml(
+                                    report.reporter_callsign ||
+                                    'None'
+                                )}
                             </div>
 
                         </div>
@@ -2038,7 +1606,7 @@
                         </div>
 
                         <div class="triage-description">
-                            This intelligence was submitted by a person outside the SCU. Select the appropriate SCU officer below. Once sent, it will be converted into a normal SCU intelligence submission and delivered through the officer's existing New Intel system.
+                            This intelligence was submitted by a person outside the SCU. Select one or more SCU officers below. There is no limit on the number of officers that can be selected. Once sent, it will be converted into normal SCU intelligence submissions and delivered through each officer's existing New Intel system.
                         </div>
 
 
@@ -2053,7 +1621,7 @@
                         <div class="reassign-button-container">
 
                             <button
-                                class="send-button non-scu-send-button"
+                                class="send-button"
                                 id="send-public-${escapeAttribute(report.id)}"
                                 onclick="assignNonScuIntel('${escapeAttribute(report.id)}')"
                             >
@@ -2092,26 +1660,19 @@
             selectedCheckbox
         ) {
 
-            const checkboxes =
-                document.querySelectorAll(
-                    `.reassign-checkbox[data-intel-id="${intelId}"]`
-                );
+            /*
+             * Multiple selection is intentionally allowed.
+             *
+             * There is NO code here that unchecks
+             * other officers.
+             *
+             * The user can select:
+             * - one officer
+             * - several officers
+             * - every officer
+             */
 
-
-            checkboxes.forEach(
-                checkbox => {
-
-                    if (
-                        checkbox !== selectedCheckbox
-                    ) {
-
-                        checkbox.checked =
-                            false;
-
-                    }
-
-                }
-            );
+            return;
 
         }
 
@@ -2137,16 +1698,31 @@
             }
 
 
-            const selectedCheckbox =
-                document.querySelector(
-                    `.reassign-checkbox[data-intel-id="${intelId}"]:checked`
+            const selectedCheckboxes =
+                Array.from(
+                    document.querySelectorAll(
+                        `.reassign-checkbox[data-intel-id="${intelId}"]:checked`
+                    )
                 );
 
 
-            if (!selectedCheckbox) {
+            const recipientIds =
+                selectedCheckboxes
+                    .map(
+                        checkbox =>
+                            checkbox.value
+                    )
+                    .filter(
+                        Boolean
+                    );
+
+
+            if (
+                !recipientIds.length
+            ) {
 
                 alert(
-                    'Please select an SCU officer.'
+                    'Please select at least one SCU officer.'
                 );
 
                 return;
@@ -2154,26 +1730,41 @@
             }
 
 
-            const recipientId =
-                selectedCheckbox.value;
+            const uniqueRecipientIds =
+                [
+                    ...new Set(
+                        recipientIds
+                    )
+                ];
 
 
-            const selectedAgent =
-                scaAgents.find(
-                    agent =>
-                        agent.id === recipientId
-                );
+            const selectedNames =
+                uniqueRecipientIds
+                    .map(
+                        recipientId => {
 
+                            const agent =
+                                scaAgents.find(
+                                    item =>
+                                        String(
+                                            item.id
+                                        ) ===
+                                        String(
+                                            recipientId
+                                        )
+                                );
 
-            const recipientName =
-                selectedAgent
-                    ? `${selectedAgent.rank || ''} ${selectedAgent.full_name || 'SCU Agent'}`.trim()
-                    : 'the selected officer';
+                            return agent
+                                ? `${agent.full_name || 'SCU Officer'}${agent.callsign ? ` (${agent.callsign})` : ''}`
+                                : 'SCU Officer';
+
+                        }
+                    );
 
 
             if (
                 !confirm(
-                    `Send this intelligence to ${recipientName}?`
+                    `Send this intelligence to ${uniqueRecipientIds.length} selected officer${uniqueRecipientIds.length === 1 ? '' : 's'}?\n\n${selectedNames.join('\n')}`
                 )
             ) {
 
@@ -2190,49 +1781,208 @@
 
             if (button) {
 
-                button.disabled = true;
-                button.textContent = 'SENDING...';
+                button.disabled =
+                    true;
+
+                button.textContent =
+                    'SENDING...';
 
             }
 
 
+            /*
+             * Keep the existing intel row wherever possible.
+             *
+             * If its current recipient is one of the selected
+             * officers, that row stays with that recipient.
+             *
+             * If its current recipient is NOT selected, the
+             * existing row is reassigned to the first selected
+             * officer.
+             *
+             * Additional selected officers receive new copies.
+             */
+
             const {
-                error
-            } = await supabaseClient
-
-                .from('intel_submissions')
-
-                .update({
-                    recipient_id:
-                        recipientId
-                })
-
-                .eq(
-                    'id',
-                    intelId
-                );
+                data: existingIntel,
+                error: existingError
+            } =
+                await supabaseClient
+                    .from('intel_submissions')
+                    .select('*')
+                    .eq(
+                        'id',
+                        intelId
+                    )
+                    .single();
 
 
-            if (error) {
+            if (
+                existingError ||
+                !existingIntel
+            ) {
 
                 console.error(
-                    'Intel assignment error:',
-                    error
+                    'Unable to load existing intelligence:',
+                    existingError
                 );
 
                 alert(
-                    `Unable to assign intelligence.\n\n${error.message || error}`
+                    `Unable to load this intelligence.\n\n${existingError?.message || existingError || 'Unknown error'}`
                 );
 
 
                 if (button) {
 
-                    button.disabled = false;
-                    button.textContent = 'REASSIGN INTEL';
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        'REASSIGN INTEL';
 
                 }
 
                 return;
+
+            }
+
+
+            const existingRecipient =
+                existingIntel.recipient_id
+                    ? String(
+                        existingIntel.recipient_id
+                    )
+                    : null;
+
+
+            let keepRecipient =
+                existingRecipient &&
+                uniqueRecipientIds.includes(
+                    existingRecipient
+                )
+                    ? existingRecipient
+                    : uniqueRecipientIds[0];
+
+
+            const recipientsForCopies =
+                uniqueRecipientIds.filter(
+                    recipientId =>
+                        String(
+                            recipientId
+                        ) !==
+                        String(
+                            keepRecipient
+                        )
+                );
+
+
+            const {
+                error: updateError
+            } =
+                await supabaseClient
+                    .from('intel_submissions')
+                    .update({
+                        recipient_id:
+                            keepRecipient
+                    })
+                    .eq(
+                        'id',
+                        intelId
+                    );
+
+
+            if (updateError) {
+
+                console.error(
+                    'Intel assignment update error:',
+                    updateError
+                );
+
+                alert(
+                    `Unable to assign intelligence.\n\n${updateError.message || updateError}`
+                );
+
+
+                if (button) {
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        'REASSIGN INTEL';
+
+                }
+
+                return;
+
+            }
+
+
+            if (
+                recipientsForCopies.length
+            ) {
+
+                const copies =
+                    recipientsForCopies.map(
+                        recipientId => {
+
+                            const copy =
+                                {
+                                    ...existingIntel,
+                                    id: undefined,
+                                    recipient_id:
+                                        recipientId
+                                };
+
+
+                            delete copy.id;
+
+
+                            return copy;
+
+                        }
+                    );
+
+
+                const {
+                    error: copyError
+                } =
+                    await supabaseClient
+                        .from(
+                            'intel_submissions'
+                        )
+                        .insert(
+                            copies
+                        );
+
+
+                if (copyError) {
+
+                    console.error(
+                        'Intel copy creation error:',
+                        copyError
+                    );
+
+                    alert(
+                        `The original intelligence was assigned, but one or more additional copies could not be created.\n\n${copyError.message || copyError}`
+                    );
+
+
+                    if (button) {
+
+                        button.disabled =
+                            false;
+
+                        button.textContent =
+                            'REASSIGN INTEL';
+
+                    }
+
+                    await loadIntel();
+
+                    return;
+
+                }
 
             }
 
@@ -2285,7 +2035,8 @@
             const report =
                 nonScuReports.find(
                     item =>
-                        item.id === reportId
+                        item.id ===
+                        reportId
                 );
 
 
@@ -2300,16 +2051,31 @@
             }
 
 
-            const selectedCheckbox =
-                document.querySelector(
-                    `.reassign-checkbox[data-intel-id="public-${reportId}"]:checked`
+            const selectedCheckboxes =
+                Array.from(
+                    document.querySelectorAll(
+                        `.reassign-checkbox[data-intel-id="public-${reportId}"]:checked`
+                    )
                 );
 
 
-            if (!selectedCheckbox) {
+            const recipientIds =
+                selectedCheckboxes
+                    .map(
+                        checkbox =>
+                            checkbox.value
+                    )
+                    .filter(
+                        Boolean
+                    );
+
+
+            if (
+                !recipientIds.length
+            ) {
 
                 alert(
-                    'Please select an SCU officer.'
+                    'Please select at least one SCU officer.'
                 );
 
                 return;
@@ -2317,37 +2083,41 @@
             }
 
 
-            const recipientId =
-                selectedCheckbox.value;
+            const uniqueRecipientIds =
+                [
+                    ...new Set(
+                        recipientIds
+                    )
+                ];
 
 
-            if (!recipientId) {
+            const selectedNames =
+                uniqueRecipientIds
+                    .map(
+                        recipientId => {
 
-                alert(
-                    'Unable to identify the selected SCU officer.'
-                );
+                            const agent =
+                                scaAgents.find(
+                                    item =>
+                                        String(
+                                            item.id
+                                        ) ===
+                                        String(
+                                            recipientId
+                                        )
+                                );
 
-                return;
+                            return agent
+                                ? `${agent.full_name || 'SCU Officer'}${agent.callsign ? ` (${agent.callsign})` : ''}`
+                                : 'SCU Officer';
 
-            }
-
-
-            const selectedAgent =
-                scaAgents.find(
-                    agent =>
-                        agent.id === recipientId
-                );
-
-
-            const recipientName =
-                selectedAgent
-                    ? `${selectedAgent.rank || ''} ${selectedAgent.full_name || 'SCU Agent'}`.trim()
-                    : 'the selected officer';
+                        }
+                    );
 
 
             if (
                 !confirm(
-                    `Send this NON-SCU intelligence to ${recipientName}?`
+                    `Send this NON-SCU intelligence to ${uniqueRecipientIds.length} selected officer${uniqueRecipientIds.length === 1 ? '' : 's'}?\n\n${selectedNames.join('\n')}`
                 )
             ) {
 
@@ -2364,8 +2134,11 @@
 
             if (button) {
 
-                button.disabled = true;
-                button.textContent = 'SENDING...';
+                button.disabled =
+                    true;
+
+                button.textContent =
+                    'SENDING...';
 
             }
 
@@ -2374,55 +2147,55 @@
                 currentOfficer.id;
 
 
-            console.log(
-                'NON-SCU CONVERSION',
-                {
-                    senderId,
-                    recipientId,
-                    reportId
-                }
-            );
+            const intelRows =
+                uniqueRecipientIds.map(
+                    recipientId => {
+
+                        return {
+                            sender_id:
+                                senderId,
+
+                            recipient_id:
+                                recipientId,
+
+                            subject:
+                                'NON-SCU MEMBER INTELLIGENCE',
+
+                            intel_type:
+                                report.intel_type ||
+                                'NON-SCU MEMBER REPORT',
+
+                            finding:
+                                report.finding ||
+                                '',
+
+                            location:
+                                report.location ||
+                                null,
+
+                            source:
+                                report.source
+                                    ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
+                                    : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`
+
+                        };
+
+                    }
+                );
 
 
             const {
                 data: insertedIntel,
                 error: insertError
-            } = await supabaseClient
-
-                .from('intel_submissions')
-
-                .insert({
-
-                    sender_id:
-                        senderId,
-
-                    recipient_id:
-                        recipientId,
-
-                    subject:
-                        'NON-SCU MEMBER INTELLIGENCE',
-
-                    intel_type:
-                        report.intel_type ||
-                        'NON-SCU MEMBER REPORT',
-
-                    finding:
-                        report.finding ||
-                        '',
-
-                    location:
-                        report.location ||
-                        null,
-
-                    source:
-                        report.source
-                            ? `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}\n\n${report.source}`
-                            : `NON-SCU MEMBER REPORTER: ${report.reporter_name || 'Unknown'} — CALL SIGN: ${report.reporter_callsign || 'None'}`
-
-                })
-
-                .select()
-                .single();
+            } =
+                await supabaseClient
+                    .from(
+                        'intel_submissions'
+                    )
+                    .insert(
+                        intelRows
+                    )
+                    .select();
 
 
             if (
@@ -2440,8 +2213,8 @@
                 );
 
                 console.error(
-                    'NON-SCU recipient ID used:',
-                    recipientId
+                    'NON-SCU recipient IDs used:',
+                    uniqueRecipientIds
                 );
 
 
@@ -2452,8 +2225,11 @@
 
                 if (button) {
 
-                    button.disabled = false;
-                    button.textContent = 'SEND INTEL';
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        'SEND INTEL';
 
                 }
 
@@ -2470,19 +2246,19 @@
 
             const {
                 error: statusError
-            } = await supabaseClient
-
-                .from('non_scu_intel_submissions')
-
-                .update({
-                    status:
-                        'assigned'
-                })
-
-                .eq(
-                    'id',
-                    reportId
-                );
+            } =
+                await supabaseClient
+                    .from(
+                        'non_scu_intel_submissions'
+                    )
+                    .update({
+                        status:
+                            'assigned'
+                    })
+                    .eq(
+                        'id',
+                        reportId
+                    );
 
 
             if (
@@ -2523,20 +2299,19 @@
             const {
                 data: intelRecord,
                 error: intelCheckError
-            } = await supabaseClient
-
-                .from('intel_submissions')
-
-                .select(
-                    'recipient_id'
-                )
-
-                .eq(
-                    'id',
-                    intelId
-                )
-
-                .single();
+            } =
+                await supabaseClient
+                    .from(
+                        'intel_submissions'
+                    )
+                    .select(
+                        'recipient_id'
+                    )
+                    .eq(
+                        'id',
+                        intelId
+                    )
+                    .single();
 
 
             if (
@@ -2563,7 +2338,8 @@
                 ||
                 (
                     intelRecord.recipient_id &&
-                    intelRecord.recipient_id === currentUser.id
+                    intelRecord.recipient_id ===
+                    currentUser.id
                 );
 
 
@@ -2591,16 +2367,16 @@
 
             const {
                 error
-            } = await supabaseClient
-
-                .from('intel_submissions')
-
-                .delete()
-
-                .eq(
-                    'id',
-                    intelId
-                );
+            } =
+                await supabaseClient
+                    .from(
+                        'intel_submissions'
+                    )
+                    .delete()
+                    .eq(
+                        'id',
+                        intelId
+                    );
 
 
             if (error) {
@@ -2648,7 +2424,8 @@
             const report =
                 nonScuReports.find(
                     item =>
-                        item.id === reportId
+                        item.id ===
+                        reportId
                 );
 
 
@@ -2676,16 +2453,16 @@
 
             const {
                 error
-            } = await supabaseClient
-
-                .from('non_scu_intel_submissions')
-
-                .delete()
-
-                .eq(
-                    'id',
-                    reportId
-                );
+            } =
+                await supabaseClient
+                    .from(
+                        'non_scu_intel_submissions'
+                    )
+                    .delete()
+                    .eq(
+                        'id',
+                        reportId
+                    );
 
 
             if (error) {
