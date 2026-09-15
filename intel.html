@@ -1287,69 +1287,195 @@
 
             }
 
-
-            const intelIds =
-                scuIntel.map(
-                    intel =>
-                        intel.id
-                );
-
-
-            let viewedIds =
-                new Set();
+const intelIds =
+    scuIntel.map(
+        intel =>
+            intel.id
+    );
 
 
-            if (
-                intelIds.length > 0
-            ) {
+let viewedIds =
+    new Set();
 
-                const {
-                    data: views,
-                    error: viewsError
-                } = await supabaseClient
-
-                    .from('intel_views')
-
-                    .select(
-                        'intel_id'
-                    )
-
-                    .eq(
-                        'user_id',
-                        currentUser.id
-                    )
-
-                    .in(
-                        'intel_id',
-                        intelIds
-                    );
-
-
-                if (!viewsError) {
-
-                    viewedIds =
-                        new Set(
-                            (views || [])
-                                .map(
-                                    view =>
-                                        view.intel_id
-                                )
-                        );
-
-                }
 
 /* ================================================== */
-/* DO NOT AUTO-MARK INTEL AS VIEWED                   */
+/* LOAD THIS USER'S VIEWED INTELLIGENCE */
+/* ================================================== */
+
+if (
+    intelIds.length > 0
+) {
+
+    const {
+        data: views,
+        error: viewsError
+    } = await supabaseClient
+
+        .from('intel_views')
+
+        .select(
+            'intel_id'
+        )
+
+        .eq(
+            'user_id',
+            currentUser.id
+        )
+
+        .in(
+            'intel_id',
+            intelIds
+        );
+
+
+    if (viewsError) {
+
+        console.error(
+            'Intel view loading error:',
+            viewsError
+        );
+
+    }
+
+    else {
+
+        viewedIds =
+            new Set(
+                (views || [])
+                    .map(
+                        view =>
+                            view.intel_id
+                    )
+            );
+
+    }
+
+}
+
+
+/* ================================================== */
+/* MARK INTELLIGENCE AS VIEWED */
 /* ================================================== */
 
 /*
-    Intel remains NEW until the user explicitly opens
-    or reads it.
+    Normal SCU officers:
+    Only their own received intelligence is marked viewed.
 
-    Do not mark unread intelligence as viewed simply
-    because the Intel page has loaded.
+    Full-access users:
+    Their visible intelligence is marked viewed because
+    they can see the entire SCU intelligence system.
 */
 
+const rowsToMarkViewed =
+    hasFullIntelAccess()
+
+        ? scuIntel.filter(
+            row =>
+                !viewedIds.has(row.id)
+        )
+
+        : scuIntel.filter(
+            row =>
+                row.recipient_id === currentUser.id &&
+                !viewedIds.has(row.id)
+        );
+
+
+if (
+    rowsToMarkViewed.length > 0
+) {
+
+    const viewResults =
+        await Promise.all(
+            rowsToMarkViewed.map(
+                async row => {
+
+                    const result =
+                        await supabaseClient
+                            .rpc(
+                                'mark_intel_viewed',
+                                {
+                                    p_intel_id:
+                                        row.id
+                                }
+                            );
+
+
+                    console.log(
+                        'VIEW SAVED:',
+                        row.id,
+                        result
+                    );
+
+
+                    return result;
+
+                }
+            )
+        );
+
+
+    viewResults.forEach(
+        result => {
+
+            if (
+                result.error
+            ) {
+
+                console.error(
+                    'View tracking error:',
+                    result.error
+                );
+
+            }
+
+        }
+    );
+
+
+    rowsToMarkViewed.forEach(
+        row => {
+
+            viewedIds.add(
+                row.id
+            );
+
+        }
+    );
+
+}
+
+
+/* ================================================== */
+/* GROUP INTELLIGENCE */
+/* ================================================== */
+
+const intelGroups = {};
+
+
+scuIntel.forEach(
+    intel => {
+
+        const groupId =
+            intel.intel_group_id ||
+            intel.id;
+
+
+        if (
+            !intelGroups[groupId]
+        ) {
+
+            intelGroups[groupId] = [];
+
+        }
+
+
+        intelGroups[groupId].push(
+            intel
+        );
+
+    }
+);
             const intelGroups = {};
 
 
