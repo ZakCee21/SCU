@@ -1388,9 +1388,9 @@ async function loadIntelCounts(
                 'intel_submissions'
             )
 
-            .select(
-                'id'
-            );
+         .select(
+    'id, intel_group_id'
+);
 
 
     // Normal officers only receive their own Intel.
@@ -1622,19 +1622,60 @@ async function loadIntelCounts(
 //
 // --------------------------------------------------
 
-let newCount = 0;
-
-let openCount =
-    intel.length;
+const intelGroups =
+    new Map();
 
 
 intel.forEach(
     item => {
 
+        const groupId =
+            item.intel_group_id ||
+            item.id;
+
+
         if (
-            !viewedIds.has(
-                item.id
+            !intelGroups.has(
+                groupId
             )
+        ) {
+
+            intelGroups.set(
+                groupId,
+                []
+            );
+
+        }
+
+
+        intelGroups
+            .get(groupId)
+            .push(item);
+
+    }
+);
+
+
+let newCount = 0;
+
+let openCount =
+    intelGroups.size;
+
+
+intelGroups.forEach(
+    groupRows => {
+
+        const isViewed =
+            groupRows.some(
+                row =>
+                    viewedIds.has(
+                        row.id
+                    )
+            );
+
+
+        if (
+            !isViewed
         ) {
 
             newCount++;
