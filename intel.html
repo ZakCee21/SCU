@@ -1337,8 +1337,67 @@
 
                 }
 
+            }const ownUnreadRows =
+    scuIntel.filter(
+        row =>
+            row.recipient_id === currentUser.id &&
+            !viewedIds.has(row.id)
+    );
+
+
+if (
+    ownUnreadRows.length > 0
+) {
+
+    const viewResults =
+        await Promise.all(
+            ownUnreadRows.map(
+                row =>
+                    supabaseClient
+                        .from('intel_views')
+                        .upsert(
+                            {
+                                intel_id:
+                                    row.id,
+                                user_id:
+                                    currentUser.id
+                            },
+                            {
+                                onConflict:
+                                    'intel_id,user_id'
+                            }
+                        )
+            )
+        );
+
+
+    viewResults.forEach(
+        result => {
+
+            if (result.error) {
+
+                console.error(
+                    'View tracking error:',
+                    result.error
+                );
+
             }
 
+        }
+    );
+
+
+    ownUnreadRows.forEach(
+        row => {
+
+            viewedIds.add(
+                row.id
+            );
+
+        }
+    );
+
+}
 
             const intelGroups = {};
 
@@ -1433,42 +1492,7 @@
         row =>
             viewedIds.has(row.id)
     );
-
-                    const viewRecord =
-    ownIntelRecord ||
-    intel;
-
-if (
-    !viewedIds.has(viewRecord.id)
-) {
-    const {
-        error: viewError
-    } = await supabaseClient
-        .from('intel_views')
-        .upsert(
-            {
-                intel_id:
-                    viewRecord.id,
-                user_id:
-                    currentUser.id
-            },
-            {
-                onConflict:
-                    'intel_id,user_id'
-            }
-        );
-
-    if (viewError) {
-        console.error(
-            'View tracking error:',
-            viewError
-        );
-    } else {
-        viewedIds.add(
-            viewRecord.id
-        );
-    }
-}
+                    
 
 
                     let cardClass =
