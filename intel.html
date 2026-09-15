@@ -1435,46 +1435,40 @@
     );
 
                     const viewRecord =
-                        ownIntelRecord ||
-                        intel;
+    ownIntelRecord ||
+    intel;
 
+if (
+    !viewedIds.has(viewRecord.id)
+) {
+    const {
+        error: viewError
+    } = await supabaseClient
+        .from('intel_views')
+        .upsert(
+            {
+                intel_id:
+                    viewRecord.id,
+                user_id:
+                    currentUser.id
+            },
+            {
+                onConflict:
+                    'intel_id,user_id'
+            }
+        );
 
-                    if (
-                        !viewedIds.has(viewRecord.id)
-                    ) {
-
-                        supabaseClient
-                            .from('intel_views')
-                            .upsert(
-                                {
-                                    intel_id:
-                                        viewRecord.id,
-                                    user_id:
-                                        currentUser.id
-                                },
-                                {
-                                    onConflict:
-                                        'intel_id,user_id'
-                                }
-                            )
-                            .then(
-                                result => {
-
-                                    if (
-                                        result.error
-                                    ) {
-
-                                        console.error(
-                                            'View tracking error:',
-                                            result.error
-                                        );
-
-                                    }
-
-                                }
-                            );
-
-                    }
+    if (viewError) {
+        console.error(
+            'View tracking error:',
+            viewError
+        );
+    } else {
+        viewedIds.add(
+            viewRecord.id
+        );
+    }
+}
 
 
                     let cardClass =
