@@ -1388,9 +1388,9 @@ async function loadIntelCounts(
                 'intel_submissions'
             )
 
-         .select(
-    'id, intel_group_id'
-);
+            .select(
+                'id, intel_group_id, recipient_id'
+            );
 
 
     // Normal officers only receive their own Intel.
@@ -1449,12 +1449,6 @@ async function loadIntelCounts(
     // --------------------------------------------------
     // Load NON-SCU Intel
     // --------------------------------------------------
-    //
-    // Only senior users can see/count NON-SCU reports.
-    //
-    // Unassigned reports are treated as NEW Intel.
-    //
-    // --------------------------------------------------
 
     let nonScuNewCount = 0;
 
@@ -1500,51 +1494,111 @@ async function loadIntelCounts(
 
 
     // --------------------------------------------------
-    // No Intel at all
+    // Build ONE canonical record per Intel group
+    // --------------------------------------------------
+    //
+    // This MUST match the way intel.html tracks views.
+    //
+    // For a normal officer:
+    //     their own recipient row is used.
+    //
+    // For a senior/full-access user:
+    //     the first row in the group is used unless
+    //     they are themselves a recipient.
+    //
+    // This prevents multiple-recipient Intel from being
+    // counted more than once and ensures the dashboard
+    // checks the exact intel_views record created when
+    // the Intel was opened.
+    //
     // --------------------------------------------------
 
-    if (
-        intel.length === 0 &&
-        nonScuNewCount === 0
-    ) {
+    const intelGroups =
+        new Map();
 
-        document
-            .getElementById('newIntel')
-            .textContent =
-                '0';
 
-        document
-            .getElementById('openIntel')
-            .textContent =
-                '0';
+    intel.forEach(
+        item => {
 
-        document
-            .getElementById('newIntelCard')
-            .classList.remove(
-                'has-new-intel'
-            );
+            const groupId =
+                item.intel_group_id ||
+                item.id;
 
-        console.log(
-            'Intel counts:',
-            {
-                newIntel: 0,
-                openIntel: 0,
-                total: 0,
-                nonScuNewIntel: 0,
-                fullIntelAccess:
-                    hasFullIntelAccess,
-                role:
-                    role
+
+            if (
+                !intelGroups.has(
+                    groupId
+                )
+            ) {
+
+                intelGroups.set(
+                    groupId,
+                    []
+                );
+
             }
-        );
 
-        return;
 
-    }
+            intelGroups
+                .get(groupId)
+                .push(item);
+
+        }
+    );
 
 
     // --------------------------------------------------
-    // Get viewed normal SCU Intel
+    // Create canonical Intel IDs
+    // --------------------------------------------------
+
+    const canonicalIntelIds = [];
+
+
+    const canonicalGroups =
+        [];
+
+
+    intelGroups.forEach(
+        groupRows => {
+
+            const ownIntelRecord =
+                groupRows.find(
+                    row =>
+                        row.recipient_id ===
+                        userId
+                ) || null;
+
+
+            const canonicalRecord =
+                ownIntelRecord ||
+                groupRows[0];
+
+
+            if (
+                canonicalRecord
+            ) {
+
+                canonicalIntelIds.push(
+                    canonicalRecord.id
+                );
+
+
+                canonicalGroups.push({
+                    groupRows:
+                        groupRows,
+
+                    canonicalId:
+                        canonicalRecord.id
+                });
+
+            }
+
+        }
+    );
+
+
+    // --------------------------------------------------
+    // Get viewed Intel records
     // --------------------------------------------------
 
     let viewedIds =
@@ -1552,15 +1606,8 @@ async function loadIntelCounts(
 
 
     if (
-        intel.length > 0
+        canonicalIntelIds.length > 0
     ) {
-
-        const intelIds =
-            intel.map(
-                item =>
-                    item.id
-            );
-
 
         const {
             data: viewData,
@@ -1580,7 +1627,7 @@ async function loadIntelCounts(
 
             .in(
                 'intel_id',
-                intelIds
+                canonicalIntelIds
             );
 
 
@@ -1608,106 +1655,60 @@ async function loadIntelCounts(
     }
 
 
-   // --------------------------------------------------
-// Calculate Intel counts
-// --------------------------------------------------
-//
-// NEW INTEL
-// = Intel this officer has NOT viewed.
-//
-// OPEN INTEL
-// = All active Intel records.
-//   Viewing Intel does NOT remove it from this count.
-//   It remains counted until the Intel record is deleted.
-//
-// --------------------------------------------------
+    // --------------------------------------------------
+    // Calculate Intel counts
+    // --------------------------------------------------
+    //
+    // NEW INTEL
+    // = One count per Intel group that has not been
+    //   viewed by this user.
+    //
+    // OPEN INTEL
+    // = One count per active Intel group, regardless
+    //   of whether it has been viewed.
+    //
+    // --------------------------------------------------
 
-const intelGroups =
-    new Map();
-
-
-intel.forEach(
-    item => {
-
-        const groupId =
-            item.intel_group_id ||
-            item.id;
+    let newCount = 0;
 
 
-        if (
-            !intelGroups.has(
-                groupId
-            )
-        ) {
+    let openCount =
+        canonicalGroups.length;
 
-            intelGroups.set(
-                groupId,
-                []
-            );
+
+    canonicalGroups.forEach(
+        group => {
+
+            if (
+                !viewedIds.has(
+                    group.canonicalId
+                )
+            ) {
+
+                newCount++;
+
+            }
 
         }
+    );
 
 
-        intelGroups
-            .get(groupId)
-            .push(item);
+    // --------------------------------------------------
+    // Add NON-SCU unassigned reports to NEW INTEL
+    // --------------------------------------------------
 
-    }
-);
-
-
-let newCount = 0;
-
-let openCount =
-    intelGroups.size;
+    newCount +=
+        nonScuNewCount;
 
 
-intelGroups.forEach(
-    groupRows => {
+    // --------------------------------------------------
+    // Add NON-SCU reports to OPEN INTEL
+    // --------------------------------------------------
 
-        // The Intel is NEW only if this user
-        // has not viewed any of their own
-        // records within the group.
-
-        const isViewedByCurrentUser =
-            groupRows.some(
-                row =>
-                    viewedIds.has(
-                        row.id
-                    )
-            );
+    openCount +=
+        nonScuNewCount;
 
 
-        if (
-            !isViewedByCurrentUser
-        ) {
-
-            newCount++;
-
-        }
-
-    }
-);
-   // --------------------------------------------------
-// Add NON-SCU unassigned reports to NEW INTEL
-// --------------------------------------------------
-
-newCount +=
-    nonScuNewCount;
-
-
-// --------------------------------------------------
-// Add NON-SCU reports to OPEN INTEL
-// --------------------------------------------------
-//
-// They remain open until the underlying Intel
-// record is deleted.
-//
-// --------------------------------------------------
-
-openCount +=
-    nonScuNewCount;
-   
     // --------------------------------------------------
     // Display counts
     // --------------------------------------------------
@@ -1765,11 +1766,22 @@ openCount +=
                 openCount,
 
             total:
-                intel.length +
+                intelGroups.size +
                 nonScuNewCount,
+
+            scuIntelGroups:
+                intelGroups.size,
 
             nonScuNewIntel:
                 nonScuNewCount,
+
+            viewedIntelGroups:
+                canonicalGroups.filter(
+                    group =>
+                        viewedIds.has(
+                            group.canonicalId
+                        )
+                ).length,
 
             fullIntelAccess:
                 hasFullIntelAccess,
