@@ -1371,88 +1371,98 @@
 
 
             /* ================================================== */
-            /* MARK INTELLIGENCE AS VIEWED */
-            /* ================================================== */
+/* MARK INTELLIGENCE AS VIEWED */
+/* ================================================== */
 
-            const rowsToMarkViewed =
-                hasFullIntelAccess()
+const rowsToMarkViewed =
+    hasFullIntelAccess()
 
-                    ? scuIntel.filter(
-                        row =>
-                            !viewedIds.has(row.id)
-                    )
+        ? scuIntel.filter(
+            row =>
+                !viewedIds.has(row.id)
+        )
 
-                    : scuIntel.filter(
-                        row =>
-                            row.recipient_id === currentUser.id &&
-                            !viewedIds.has(row.id)
-                    );
-
-
-            if (
-                rowsToMarkViewed.length > 0
-            ) {
-
-                const viewResults =
-                    await Promise.all(
-                        rowsToMarkViewed.map(
-                            async row => {
-
-                                const result =
-                                    await supabaseClient
-                                        .rpc(
-                                            'mark_intel_viewed',
-                                            {
-                                                p_intel_id:
-                                                    row.id
-                                            }
-                                        );
+        : scuIntel.filter(
+            row =>
+                row.recipient_id === currentUser.id &&
+                !viewedIds.has(row.id)
+        );
 
 
-                                console.log(
-                                    'VIEW SAVED:',
-                                    row.id,
-                                    result
-                                );
+if (
+    rowsToMarkViewed.length > 0
+) {
+
+    const viewRows =
+        rowsToMarkViewed.map(
+            row => ({
+                intel_id:
+                    row.id,
+
+                user_id:
+                    currentUser.id
+            })
+        );
 
 
-                                return result;
-
-                            }
-                        )
-                    );
-
-
-                viewResults.forEach(
-                    result => {
-
-                        if (
-                            result.error
-                        ) {
-
-                            console.error(
-                                'View tracking error:',
-                                result.error
-                            );
-
-                        }
-
-                    }
-                );
+    console.log(
+        'MARKING INTEL AS VIEWED:',
+        viewRows
+    );
 
 
-                rowsToMarkViewed.forEach(
-                    row => {
+    const {
+        data: savedViews,
+        error: viewError
+    } = await supabaseClient
 
-                        viewedIds.add(
-                            row.id
-                        );
+        .from('intel_views')
 
-                    }
+        .upsert(
+            viewRows,
+            {
+                onConflict:
+                    'intel_id,user_id'
+            }
+        )
+
+        .select();
+
+
+    if (viewError) {
+
+        console.error(
+            'INTEL VIEW SAVE ERROR:',
+            viewError
+        );
+
+        alert(
+            `Unable to save viewed status.\n\n${viewError.message || viewError}`
+        );
+
+    }
+
+    else {
+
+        console.log(
+            'INTEL VIEWS SAVED:',
+            savedViews
+        );
+
+
+        rowsToMarkViewed.forEach(
+            row => {
+
+                viewedIds.add(
+                    row.id
                 );
 
             }
+        );
 
+    }
+
+}
 
             /* ================================================== */
             /* GROUP INTELLIGENCE */
