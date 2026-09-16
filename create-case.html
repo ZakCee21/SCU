@@ -201,39 +201,74 @@
 
         .officers {
             margin-top: 10px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .agent-column {
+            flex: 1;
+            min-width: 250px;
             border: 1px solid #26313c;
             border-radius: 5px;
             overflow: hidden;
+            background: #0b0f14;
         }
 
-        .officer {
+        .agent-option {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             padding: 12px;
             border-bottom: 1px solid #26313c;
+            cursor: pointer;
+            margin: 0;
+            text-transform: none;
+            color: #e6edf3;
+            font-size: 13px;
         }
 
-        .officer:last-child {
+        .agent-option:last-child {
             border-bottom: none;
         }
 
-        .officer input {
+        .agent-option:hover {
+            background: #111820;
+        }
+
+        .agent-option input {
             width: auto;
+            margin: 0;
+            flex-shrink: 0;
         }
 
-        .officer-info {
+        .agent-info {
             flex: 1;
+            min-width: 0;
         }
 
-        .callsign {
+        .agent-name {
+            color: #e6edf3;
+            font-size: 13px;
             font-weight: bold;
         }
 
-        .rank {
-            color: #94a3b8;
-            font-size: 12px;
-            margin-top: 3px;
+        .agent-rank {
+            color: #6f7c88;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .no-officers {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #26313c;
+            border-radius: 5px;
+            color: #6f7c88;
+            font-size: 13px;
+            background: #0b0f14;
         }
 
         /* =========================
@@ -347,6 +382,10 @@
                 order: 2;
             }
 
+            .agent-column {
+                min-width: 240px;
+            }
+
         }
 
     </style>
@@ -417,7 +456,9 @@
 
 </header>
 
+
 <div class="back-button-container">
+
     <button
         type="button"
         class="back-button"
@@ -425,6 +466,7 @@
     >
         ← BACK TO DASHBOARD
     </button>
+
 </div>
 
 
@@ -618,9 +660,6 @@ async function loadOfficers() {
             .from('officers')
             .select(
                 'id, callsign, full_name, rank, portal_title'
-            )
-            .order(
-                'callsign'
             );
 
 
@@ -633,7 +672,7 @@ async function loadOfficers() {
     if (error) {
 
         list.innerHTML =
-            'Unable to load officers.';
+            '<div class="no-officers">Unable to load officers.</div>';
 
         console.error(
             error
@@ -647,63 +686,186 @@ async function loadOfficers() {
     if (!data || data.length === 0) {
 
         list.innerHTML =
-            'No officers found.';
+            '<div class="no-officers">No officers found.</div>';
 
         return;
 
     }
 
 
-    list.innerHTML =
+    /*
+     * Rank order used on the existing
+     * case page.
+     */
+
+    const rankOrder = {
+
+        'Head of SCU': 1,
+
+        'Assistant Head of SCU': 2,
+
+        'Head of Weapons': 3,
+
+        'Head of Drugs': 4,
+
+        'Detective': 5
+
+    };
+
+
+    /*
+     * Remove:
+     *
+     * - Current user
+     * - GOV
+     * - High Command
+     *
+     * GOV and High Command are filtered
+     * using portal_title rather than role,
+     * because all senior positions use
+     * the backend role "master".
+     */
+
+    const officers =
         data
             .filter(
-                officer =>
-                    officer.id !== currentUser.id
-                    &&
-                    (officer.portal_title || '').trim() !== 'High Command'
+                officer => {
+
+                    const portalTitle =
+                        (officer.portal_title || '').trim();
+
+                    return (
+                        officer.id !== currentUser.id
+                        &&
+                        portalTitle !== 'GOV'
+                        &&
+                        portalTitle !== 'High Command'
+                    );
+
+                }
             )
+            .sort(
+                (a, b) => {
+
+                    const rankA =
+                        rankOrder[a.portal_title] ||
+                        rankOrder[a.rank] ||
+                        99;
+
+                    const rankB =
+                        rankOrder[b.portal_title] ||
+                        rankOrder[b.rank] ||
+                        99;
+
+                    if (rankA !== rankB) {
+
+                        return rankA - rankB;
+
+                    }
+
+                    return (
+                        (a.callsign || '')
+                            .localeCompare(
+                                b.callsign || ''
+                            )
+                    );
+
+                }
+            );
+
+
+    if (officers.length === 0) {
+
+        list.innerHTML =
+            '<div class="no-officers">No selectable officers found.</div>';
+
+        return;
+
+    }
+
+
+    /*
+     * Create columns with a maximum
+     * of 8 officers in each column.
+     */
+
+    const columns = [];
+
+    for (
+        let i = 0;
+        i < officers.length;
+        i += 8
+    ) {
+
+        columns.push(
+            officers.slice(
+                i,
+                i + 8
+            )
+        );
+
+    }
+
+
+    list.innerHTML =
+        columns
             .map(
-                officer => `
+                column => `
 
-                    <label class="officer">
+                    <div class="agent-column">
 
-                        <input
-                            type="checkbox"
-                            value="${officer.id}"
-                            class="officer-checkbox"
-                        >
+                        ${column
+                            .map(
+                                officer => `
 
-                        <div class="officer-info">
+                                    <label class="agent-option">
 
-                            <div class="callsign">
-                                ${escapeHtml(
-                                    officer.callsign
-                                    ||
-                                    'UNASSIGNED'
-                                )}
-                            </div>
+                                        <input
+                                            type="checkbox"
+                                            value="${escapeHtml(
+                                                officer.id
+                                            )}"
+                                            class="officer-checkbox"
+                                        >
 
-                            <div class="rank">
+                                        <div class="agent-info">
 
-                                ${escapeHtml(
-                                    officer.full_name
-                                    ||
-                                    ''
-                                )}
+                                            <div class="agent-name">
 
-                                —
+                                                ${escapeHtml(
+                                                    officer.callsign ||
+                                                    officer.full_name ||
+                                                    'UNASSIGNED'
+                                                )}
 
-                                ${escapeHtml(
-                                    officer.rank
-                                    ||
-                                    'Officer'
-                                )}
+                                            </div>
 
-                            </div>
+                                            <div class="agent-rank">
 
-                        </div>
+                                                ${escapeHtml(
+                                                    officer.full_name ||
+                                                    ''
+                                                )}
 
-                    </label>
+                                                —
+
+                                                ${escapeHtml(
+                                                    officer.portal_title ||
+                                                    officer.rank ||
+                                                    'Officer'
+                                                )}
+
+                                            </div>
+
+                                        </div>
+
+                                    </label>
+
+                                `
+                            )
+                            .join('')}
+
+                    </div>
 
                 `
             )
