@@ -658,6 +658,22 @@
     </div>
 
 
+    <!-- EVIDENCE FILE -->
+
+    <div class="form-group">
+
+        <label for="evidenceFile">
+            Upload Evidence File
+        </label>
+
+        <input
+            type="file"
+            id="evidenceFile"
+        >
+
+    </div>
+
+
     <!-- SUBMIT -->
 
     <button
@@ -1157,6 +1173,12 @@ async function submitIntel() {
             .value
             .trim();
 
+    const evidenceFileInput =
+        document.getElementById('evidenceFile');
+
+    const evidenceFile =
+        evidenceFileInput.files[0] || null;
+
 
     const message =
         document
@@ -1334,6 +1356,81 @@ if (sendToTriage) {
 
 
     // ==================================================
+    // UPLOAD EVIDENCE FILE IF PROVIDED
+    // ==================================================
+
+    let uploadedEvidenceLink = evidenceLink || null;
+
+    if (evidenceFile) {
+
+        const filePath =
+            `intel/${currentUser.id}/${Date.now()}_${evidenceFile.name}`;
+
+        const {
+            error: uploadError
+        } = await supabaseClient.storage
+            .from('case-evidence')
+            .upload(
+                filePath,
+                evidenceFile
+            );
+
+        if (uploadError) {
+
+            console.error(
+                'Evidence upload error:',
+                uploadError
+            );
+
+            message.classList.add(
+                'error'
+            );
+
+            message.textContent =
+                'Unable to upload evidence file: ' +
+                uploadError.message;
+
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                'SUBMIT INTELLIGENCE';
+
+            return;
+        }
+
+        const {
+            data: publicData
+        } = supabaseClient.storage
+            .from('case-evidence')
+            .getPublicUrl(filePath);
+
+        uploadedEvidenceLink =
+            publicData.publicUrl;
+    }
+
+
+    // ==================================================
+    // ADD EVIDENCE FILE LINK TO SUBMISSIONS
+    // ==================================================
+
+    submissions.forEach(
+        submission => {
+
+            if (
+                evidenceFile &&
+                uploadedEvidenceLink
+            ) {
+
+                submission.evidence_link =
+                    uploadedEvidenceLink;
+
+            }
+
+        }
+    );
+
+
+    // ==================================================
     // INSERT SUBMISSIONS
     // ==================================================
 
@@ -1462,6 +1559,10 @@ if (sendToTriage) {
         .getElementById('evidenceLink')
         .value = '';
 
+    document
+        .getElementById('evidenceFile')
+        .value = '';
+
 
     submitButton.disabled =
         false;
@@ -1485,6 +1586,3 @@ checkLogin();
 </body>
 
 </html>
-
-
-
