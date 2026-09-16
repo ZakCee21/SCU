@@ -2620,6 +2620,10 @@ async function loadEvidence() {
                 'evidence-item';
 
 
+            /* =========================
+               EVIDENCE INFORMATION
+            ========================= */
+
             const info =
                 document.createElement(
                     'div'
@@ -2629,6 +2633,8 @@ async function loadEvidence() {
             info.className =
                 'evidence-info';
 
+
+            /* TITLE */
 
             const name =
                 document.createElement(
@@ -2644,6 +2650,13 @@ async function loadEvidence() {
                 item.title ||
                 'Untitled Evidence';
 
+
+            info.appendChild(
+                name
+            );
+
+
+            /* TYPE */
 
             const type =
                 document.createElement(
@@ -2661,14 +2674,11 @@ async function loadEvidence() {
 
 
             info.appendChild(
-                name
-            );
-
-
-            info.appendChild(
                 type
             );
 
+
+            /* DESCRIPTION */
 
             if (item.description) {
 
@@ -2692,6 +2702,238 @@ async function loadEvidence() {
 
             }
 
+
+            row.appendChild(
+                info
+            );
+
+
+            /* =========================
+               OPEN BUTTON
+            ========================= */
+
+            const openButton =
+                document.createElement(
+                    'button'
+                );
+
+
+            openButton.className =
+                'evidence-open';
+
+
+            openButton.textContent =
+                'OPEN';
+
+
+            openButton.addEventListener(
+                'click',
+                async function () {
+
+                    if (!item.file_url) {
+
+                        return;
+
+                    }
+
+
+                    /* =========================
+                       EXTERNAL LINK
+                    ========================= */
+
+                    if (
+                        String(
+                            item.evidence_type || ''
+                        ).toUpperCase()
+                        !== 'FILE'
+                    ) {
+
+                        window.open(
+                            item.file_url,
+                            '_blank'
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* =========================
+                       SUPABASE FILE
+                    ========================= */
+
+                    openButton.disabled =
+                        true;
+
+                    openButton.textContent =
+                        'OPENING...';
+
+
+                    try {
+
+                        const publicUrl =
+                            item.file_url;
+
+
+                        const bucketMarker =
+                            '/storage/v1/object/public/case-evidence/';
+
+
+                        const markerIndex =
+                            publicUrl.indexOf(
+                                bucketMarker
+                            );
+
+
+                        if (
+                            markerIndex === -1
+                        ) {
+
+                            throw new Error(
+                                'Unable to determine the evidence file path.'
+                            );
+
+                        }
+
+
+                        const filePath =
+                            decodeURIComponent(
+                                publicUrl.substring(
+                                    markerIndex
+                                    +
+                                    bucketMarker.length
+                                )
+                            );
+
+
+                        const {
+                            data,
+                            error
+                        } =
+                            await supabaseClient
+                                .storage
+                                .from(
+                                    'case-evidence'
+                                )
+                                .createSignedUrl(
+                                    filePath,
+                                    3600
+                                );
+
+
+                        if (error) {
+
+                            console.error(
+                                error
+                            );
+
+                            throw error;
+
+                        }
+
+
+                        if (
+                            !data ||
+                            !data.signedUrl
+                        ) {
+
+                            throw new Error(
+                                'Supabase did not return a valid file URL.'
+                            );
+
+                        }
+
+
+                        window.open(
+                            data.signedUrl,
+                            '_blank'
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            'Unable to open evidence:',
+                            error
+                        );
+
+
+                        alert(
+                            'Unable to open this evidence: '
+                            +
+                            error.message
+                        );
+
+
+                    } finally {
+
+                        openButton.disabled =
+                            false;
+
+                        openButton.textContent =
+                            'OPEN';
+
+                    }
+
+                }
+            );
+
+
+            row.appendChild(
+                openButton
+            );
+
+
+            /* =========================
+               DELETE BUTTON
+            ========================= */
+
+            if (
+                canDeleteEvidence
+            ) {
+
+                const deleteButton =
+                    document.createElement(
+                        'button'
+                    );
+
+
+                deleteButton.className =
+                    'evidence-delete';
+
+
+                deleteButton.textContent =
+                    'DELETE';
+
+
+                deleteButton.addEventListener(
+                    'click',
+                    function () {
+
+                        deleteEvidence(
+                            item,
+                            deleteButton
+                        );
+
+                    }
+                );
+
+
+                row.appendChild(
+                    deleteButton
+                );
+
+            }
+
+
+            list.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
 /* =========================
    OPEN BUTTON
 ========================= */
