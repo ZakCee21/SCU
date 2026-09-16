@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -268,6 +269,19 @@
             text-align: left;
             margin: 0;
             min-height: 42px;
+        }
+
+        .evidence-link {
+            display: inline-block;
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .evidence-link:hover {
+            color: #93c5fd;
+            text-decoration: underline;
         }
 
         .non-scu-reporter {
@@ -865,14 +879,14 @@
 
             const rankOrder = {
 
-    'Head of SCU': 1,
-    'Assistant Head of SCU': 2,
-    'Head of Weapons': 3,
-    'Head of Drugs': 4,
-    'Head of Gangs': 5,
-    'Detective': 6
+                'Head of SCU': 1,
+                'Assistant Head of SCU': 2,
+                'Head of Weapons': 3,
+                'Head of Drugs': 4,
+                'Head of Gangs': 5,
+                'Detective': 6
 
-};
+            };
 
 
             const filteredAgents =
@@ -1287,193 +1301,164 @@
 
             }
 
-const intelIds =
-    scuIntel.map(
-        intel =>
-            intel.id
-    );
+
+            const intelIds =
+                scuIntel.map(
+                    intel =>
+                        intel.id
+                );
 
 
-let viewedIds =
-    new Set();
+            let viewedIds =
+                new Set();
 
 
-/* ================================================== */
-/* LOAD THIS USER'S VIEWED INTELLIGENCE */
-/* ================================================== */
+            /* ================================================== */
+            /* LOAD THIS USER'S VIEWED INTELLIGENCE */
+            /* ================================================== */
 
-if (
-    intelIds.length > 0
-) {
+            if (
+                intelIds.length > 0
+            ) {
 
-    const {
-        data: views,
-        error: viewsError
-    } = await supabaseClient
+                const {
+                    data: views,
+                    error: viewsError
+                } = await supabaseClient
 
-        .from('intel_views')
+                    .from('intel_views')
 
-        .select(
-            'intel_id'
-        )
-
-        .eq(
-            'user_id',
-            currentUser.id
-        )
-
-        .in(
-            'intel_id',
-            intelIds
-        );
-
-
-    if (viewsError) {
-
-        console.error(
-            'Intel view loading error:',
-            viewsError
-        );
-
-    }
-
-    else {
-
-        viewedIds =
-            new Set(
-                (views || [])
-                    .map(
-                        view =>
-                            view.intel_id
+                    .select(
+                        'intel_id'
                     )
-            );
 
-    }
+                    .eq(
+                        'user_id',
+                        currentUser.id
+                    )
 
-}
-
-
-/* ================================================== */
-/* MARK INTELLIGENCE AS VIEWED */
-/* ================================================== */
-
-/*
-    Normal SCU officers:
-    Only their own received intelligence is marked viewed.
-
-    Full-access users:
-    Their visible intelligence is marked viewed because
-    they can see the entire SCU intelligence system.
-*/
-
-const rowsToMarkViewed =
-    hasFullIntelAccess()
-
-        ? scuIntel.filter(
-            row =>
-                !viewedIds.has(row.id)
-        )
-
-        : scuIntel.filter(
-            row =>
-                row.recipient_id === currentUser.id &&
-                !viewedIds.has(row.id)
-        );
-
-
-if (
-    rowsToMarkViewed.length > 0
-) {
-
-    const viewResults =
-        await Promise.all(
-            rowsToMarkViewed.map(
-                async row => {
-
-                    const result =
-                        await supabaseClient
-                            .rpc(
-                                'mark_intel_viewed',
-                                {
-                                    p_intel_id:
-                                        row.id
-                                }
-                            );
-
-
-                    console.log(
-                        'VIEW SAVED:',
-                        row.id,
-                        result
+                    .in(
+                        'intel_id',
+                        intelIds
                     );
 
 
-                    return result;
+                if (viewsError) {
+
+                    console.error(
+                        'Intel view loading error:',
+                        viewsError
+                    );
 
                 }
-            )
-        );
+
+                else {
+
+                    viewedIds =
+                        new Set(
+                            (views || [])
+                                .map(
+                                    view =>
+                                        view.intel_id
+                                )
+                        );
+
+                }
+
+            }
 
 
-    viewResults.forEach(
-        result => {
+            /* ================================================== */
+            /* MARK INTELLIGENCE AS VIEWED */
+            /* ================================================== */
+
+            const rowsToMarkViewed =
+                hasFullIntelAccess()
+
+                    ? scuIntel.filter(
+                        row =>
+                            !viewedIds.has(row.id)
+                    )
+
+                    : scuIntel.filter(
+                        row =>
+                            row.recipient_id === currentUser.id &&
+                            !viewedIds.has(row.id)
+                    );
+
 
             if (
-                result.error
+                rowsToMarkViewed.length > 0
             ) {
 
-                console.error(
-                    'View tracking error:',
-                    result.error
+                const viewResults =
+                    await Promise.all(
+                        rowsToMarkViewed.map(
+                            async row => {
+
+                                const result =
+                                    await supabaseClient
+                                        .rpc(
+                                            'mark_intel_viewed',
+                                            {
+                                                p_intel_id:
+                                                    row.id
+                                            }
+                                        );
+
+
+                                console.log(
+                                    'VIEW SAVED:',
+                                    row.id,
+                                    result
+                                );
+
+
+                                return result;
+
+                            }
+                        )
+                    );
+
+
+                viewResults.forEach(
+                    result => {
+
+                        if (
+                            result.error
+                        ) {
+
+                            console.error(
+                                'View tracking error:',
+                                result.error
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                rowsToMarkViewed.forEach(
+                    row => {
+
+                        viewedIds.add(
+                            row.id
+                        );
+
+                    }
                 );
 
             }
 
-        }
-    );
+
+            /* ================================================== */
+            /* GROUP INTELLIGENCE */
+            /* ================================================== */
+
+            const intelGroups = {};
 
 
-    rowsToMarkViewed.forEach(
-        row => {
-
-            viewedIds.add(
-                row.id
-            );
-
-        }
-    );
-
-}
-
-
-/* ================================================== */
-/* GROUP INTELLIGENCE */
-/* ================================================== */
-
-const intelGroups = {};
-
-
-scuIntel.forEach(
-    intel => {
-
-        const groupId =
-            intel.intel_group_id ||
-            intel.id;
-
-
-        if (!intelGroups[groupId]) {
-
-            intelGroups[groupId] = [];
-
-        }
-
-
-        intelGroups[groupId].push(
-            intel
-        );
-
-    }
-);
             scuIntel.forEach(
                 intel => {
 
@@ -1559,12 +1544,11 @@ scuIntel.forEach(
                         ) || null;
 
 
-        const isViewed =
-    groupRows.some(
-        row =>
-            viewedIds.has(row.id)
-    );
-                    
+                    const isViewed =
+                        groupRows.some(
+                            row =>
+                                viewedIds.has(row.id)
+                        );
 
 
                     let cardClass =
@@ -1873,8 +1857,14 @@ scuIntel.forEach(
                     let evidenceHtml = '';
 
 
+                    const intelEvidence =
+                        intel.evidence_link ||
+                        intel.evidence ||
+                        null;
+
+
                     if (
-                        intel.evidence
+                        intelEvidence
                     ) {
 
                         evidenceHtml = `
@@ -1885,7 +1875,18 @@ scuIntel.forEach(
                                     Evidence
                                 </div>
 
-                                <div class="section-content">${escapeHtml(intel.evidence)}</div>
+                                <div class="section-content">
+
+                                    <a
+                                        class="evidence-link"
+                                        href="${escapeAttribute(intelEvidence)}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        OPEN ATTACHMENT
+                                    </a>
+
+                                </div>
 
                             </div>
 
@@ -2130,7 +2131,18 @@ scuIntel.forEach(
 
                         <div class="section-title">Evidence</div>
 
-                        <div class="section-content">${escapeHtml(report.evidence)}</div>
+                        <div class="section-content">
+
+                            <a
+                                class="evidence-link"
+                                href="${escapeAttribute(report.evidence)}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                OPEN ATTACHMENT
+                            </a>
+
+                        </div>
 
                     </div>
 
@@ -2316,7 +2328,9 @@ scuIntel.forEach(
             );
 
         }
-                /* ================================================== */
+
+
+        /* ================================================== */
         /* HANDLE CHECKBOX SELECTION */
         /* ================================================== */
 
@@ -2940,7 +2954,11 @@ scuIntel.forEach(
                             null,
 
                         source:
-                            reporterSource
+                            reporterSource,
+
+                        evidence_link:
+                            report.evidence ||
+                            null
 
                     })
                 );
@@ -3274,3 +3292,4 @@ scuIntel.forEach(
 </body>
 
 </html>
+
