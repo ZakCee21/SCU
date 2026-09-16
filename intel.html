@@ -257,24 +257,20 @@
             text-align: left;
         }
 
-        .section-content {
-            background: #0b1117;
-            border: 1px solid #293542;
-            border-radius: 4px;
-            padding: 12px;
-            color: #d5dbe1;
-            font-size: 13px;
-            line-height: 1.55;
-            white-space: pre-wrap;
-            text-align: left;
-            margin: 0;
-            min-height: 42px;
-        }
+  .evidence-content {
+    background: #0b1117;
+    border: 1px solid #293542;
+    border-radius: 4px;
+    padding: 12px;
+    color: #d5dbe1;
+    font-size: 13px;
+    line-height: 1.55;
+    text-align: left;
+    margin: 0;
+}
 
-    .evidence-link {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+.evidence-link {
+    display: block;
     width: 100%;
     color: #60a5fa;
     text-decoration: none;
@@ -1881,10 +1877,10 @@
                                     Evidence
                                 </div>
 
-                                <div class="section-content">
+                                <div class="evidence-content">
 
-                                    <a
-                                        class="evidence-link"
+    <a
+        class="evidence-link"
                                         href="${escapeAttribute(intelEvidence)}"
                                         target="_blank"
                                         rel="noopener noreferrer"
