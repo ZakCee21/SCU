@@ -1960,46 +1960,268 @@ document.getElementById(
         }
 
 
-        const {
-            error
-        } =
-            await supabaseClient.rpc(
-                'delete_case',
-                {
-                    p_case_id:
+        const deleteButton =
+            document.getElementById(
+                'deleteCase'
+            );
+
+
+        deleteButton.disabled =
+            true;
+
+
+        deleteButton.textContent =
+            'DELETING...';
+
+
+        try {
+
+            /* =========================
+               LOAD CASE EVIDENCE
+            ========================= */
+
+            const {
+                data: evidenceRows,
+                error: evidenceLoadError
+            } =
+                await supabaseClient
+                    .from('evidence')
+                    .select(
+                        'id, evidence_type, file_url'
+                    )
+                    .eq(
+                        'case_id',
                         caseId
+                    );
+
+
+            if (evidenceLoadError) {
+
+                console.error(
+                    evidenceLoadError
+                );
+
+                throw new Error(
+                    'Unable to check the case evidence before deletion: '
+                    +
+                    evidenceLoadError.message
+                );
+
+            }
+
+
+            /* =========================
+               FIND STORAGE FILES
+            ========================= */
+
+            const storagePaths = [];
+
+
+            (evidenceRows || []).forEach(
+                item => {
+
+                    if (
+                        !item.file_url ||
+                        String(
+                            item.evidence_type || ''
+                        ).toUpperCase()
+                        !== 'FILE'
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const fileUrl =
+                        String(
+                            item.file_url
+                        );
+
+
+                    const bucketMarker =
+                        '/storage/v1/object/public/case-evidence/';
+
+
+                    const markerIndex =
+                        fileUrl.indexOf(
+                            bucketMarker
+                        );
+
+
+                    /* =========================
+                       FULL SUPABASE PUBLIC URL
+                    ========================= */
+
+                    if (
+                        markerIndex !== -1
+                    ) {
+
+                        const filePath =
+                            decodeURIComponent(
+                                fileUrl.substring(
+                                    markerIndex
+                                    +
+                                    bucketMarker.length
+                                )
+                            );
+
+
+                        if (filePath) {
+
+                            storagePaths.push(
+                                filePath
+                            );
+
+                        }
+
+                        return;
+
+                    }
+
+
+                    /* =========================
+                       RELATIVE STORAGE PATH
+                    ========================= */
+
+                    if (
+                        fileUrl.startsWith(
+                            `${caseId}/`
+                        )
+                    ) {
+
+                        storagePaths.push(
+                            decodeURIComponent(
+                                fileUrl
+                            )
+                        );
+
+                        return;
+
+                    }
+
+
+                    /* =========================
+                       UNKNOWN FILE PATH
+                    ========================= */
+
+                    throw new Error(
+                        'A case evidence file has an invalid Storage path. The case was NOT deleted.'
+                    );
+
                 }
             );
 
 
-        if (error) {
+            /* =========================
+               REMOVE STORAGE FILES
+            ========================= */
+
+            if (
+                storagePaths.length
+            ) {
+
+                const uniqueStoragePaths =
+                    [
+                        ...new Set(
+                            storagePaths
+                        )
+                    ];
+
+
+                const {
+                    error: storageError
+                } =
+                    await supabaseClient
+                        .storage
+                        .from(
+                            'case-evidence'
+                        )
+                        .remove(
+                            uniqueStoragePaths
+                        );
+
+
+                if (storageError) {
+
+                    console.error(
+                        storageError
+                    );
+
+                    throw new Error(
+                        'The case files could not be removed from Storage. The case was NOT deleted: '
+                        +
+                        storageError.message
+                    );
+
+                }
+
+            }
+
+
+            /* =========================
+               DELETE CASE
+            ========================= */
+
+            const {
+                error: deleteError
+            } =
+                await supabaseClient.rpc(
+                    'delete_case',
+                    {
+                        p_case_id:
+                            caseId
+                    }
+                );
+
+
+            if (deleteError) {
+
+                console.error(
+                    deleteError
+                );
+
+                throw new Error(
+                    'The case database record could not be deleted: '
+                    +
+                    deleteError.message
+                );
+
+            }
+
+
+            alert(
+                'Case deleted successfully.'
+            );
+
+
+            window.location.href =
+                'dashboard.html';
+
+
+        } catch (error) {
 
             console.error(
                 error
             );
 
+
             alert(
-                'Failed to delete case: '
-                +
                 error.message
             );
 
-            return;
+
+            deleteButton.disabled =
+                false;
+
+
+            deleteButton.textContent =
+                'DELETE CASE';
 
         }
 
-
-        alert(
-            'Case deleted successfully.'
-        );
-
-
-        window.location.href =
-            'dashboard.html';
-
     }
 );
-
 
 /* =========================
    UPLOAD + CONFIRM EVIDENCE
