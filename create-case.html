@@ -247,18 +247,23 @@
         .agent-info {
             flex: 1;
             min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .agent-name {
             color: #e6edf3;
             font-size: 13px;
+        }
+
+        .agent-callsign {
+            color: #e6edf3;
             font-weight: bold;
         }
 
         .agent-rank {
             color: #6f7c88;
-            font-size: 11px;
-            margin-top: 4px;
         }
 
         .no-officers {
@@ -693,10 +698,9 @@ async function loadOfficers() {
     }
 
 
-    /*
-     * Rank order used on the existing
-     * case page.
-     */
+    /* =========================
+       RANK ORDER
+    ========================= */
 
     const rankOrder = {
 
@@ -713,18 +717,9 @@ async function loadOfficers() {
     };
 
 
-    /*
-     * Remove:
-     *
-     * - Current user
-     * - GOV
-     * - High Command
-     *
-     * GOV and High Command are filtered
-     * using portal_title rather than role,
-     * because all senior positions use
-     * the backend role "master".
-     */
+    /* =========================
+       FILTER OFFICERS
+    ========================= */
 
     const officers =
         data
@@ -784,10 +779,9 @@ async function loadOfficers() {
     }
 
 
-    /*
-     * Create columns with a maximum
-     * of 8 officers in each column.
-     */
+    /* =========================
+       8 OFFICERS PER COLUMN
+    ========================= */
 
     const columns = [];
 
@@ -806,6 +800,10 @@ async function loadOfficers() {
 
     }
 
+
+    /* =========================
+       BUILD OFFICER LIST
+    ========================= */
 
     list.innerHTML =
         columns
@@ -830,32 +828,29 @@ async function loadOfficers() {
 
                                         <div class="agent-info">
 
-                                            <div class="agent-name">
-
+                                            <span class="agent-callsign">
                                                 ${escapeHtml(
                                                     officer.callsign ||
-                                                    officer.full_name ||
                                                     'UNASSIGNED'
                                                 )}
+                                            </span>
 
-                                            </div>
-
-                                            <div class="agent-rank">
-
-                                                ${escapeHtml(
-                                                    officer.full_name ||
-                                                    ''
-                                                )}
-
+                                            <span class="agent-rank">
                                                 —
-
                                                 ${escapeHtml(
                                                     officer.portal_title ||
                                                     officer.rank ||
                                                     'Officer'
                                                 )}
+                                            </span>
 
-                                            </div>
+                                            <span class="agent-name">
+                                                —
+                                                ${escapeHtml(
+                                                    officer.full_name ||
+                                                    ''
+                                                )}
+                                            </span>
 
                                         </div>
 
