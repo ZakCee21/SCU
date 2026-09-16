@@ -850,7 +850,22 @@
                 <div class="field">
 
                     <label>
-                        UPLOAD FILE
+                        PASTE ANY RELEVANT LINKS HERE. BODYCAM, DOCS ETC
+                    </label>
+
+                    <input
+                        id="evidenceUrl"
+                        type="url"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        UPLOAD ANY IMAGES HERE — MAX SIZE 50MB
                     </label>
 
                     <input
@@ -867,42 +882,7 @@
                         id="uploadEvidence"
                         class="upload-button"
                     >
-                        UPLOAD + CONFIRM EVIDENCE FILES
-                    </button>
-
-                </div>
-
-
-                <div
-                    style="
-                        margin:20px 0;
-                        border-top:1px solid #25313c;
-                    "
-                ></div>
-
-
-                <div class="field">
-
-                    <label>
-                        UPLOAD + CONFIRM EVIDENCE LINKS
-                    </label>
-
-                    <input
-                        id="evidenceUrl"
-                        type="url"
-                        placeholder="https://..."
-                    >
-
-                </div>
-
-
-                <div class="button-row">
-
-                    <button
-                        id="addEvidenceLink"
-                        class="link-button"
-                    >
-                        ADD EXTERNAL LINK
+                        UPLOAD + CONFIRM EVIDENCE
                     </button>
 
                 </div>
@@ -2022,7 +2002,7 @@ document.getElementById(
 
 
 /* =========================
-   UPLOAD EVIDENCE
+   UPLOAD + CONFIRM EVIDENCE
 ========================= */
 
 document.getElementById(
@@ -2043,191 +2023,13 @@ document.getElementById(
             );
 
 
-        const input =
+        const fileInput =
             document.getElementById(
                 'evidenceFile'
             );
 
 
-        const title =
-            titleInput.value.trim();
-
-
-        const description =
-            descriptionInput.value.trim();
-
-
-        const file =
-            input.files[0];
-
-
-        if (!title) {
-
-            alert(
-                'Please enter an evidence title.'
-            );
-
-            titleInput.focus();
-
-            return;
-
-        }
-
-
-        if (!description) {
-
-            alert(
-                'Please enter an evidence description.'
-            );
-
-            descriptionInput.focus();
-
-            return;
-
-        }
-
-
-        if (!file) {
-
-            alert(
-                'Please select a file first.'
-            );
-
-            return;
-
-        }
-
-
-        const filePath =
-            `${caseId}/${Date.now()}_${file.name}`;
-
-
-        const {
-            error: uploadError
-        } =
-            await supabaseClient
-                .storage
-                .from('case-evidence')
-                .upload(
-                    filePath,
-                    file
-                );
-
-
-        if (uploadError) {
-
-            console.error(
-                uploadError
-            );
-
-            alert(
-                'Failed to upload evidence: '
-                +
-                uploadError.message
-            );
-
-            return;
-
-        }
-
-
-        const {
-            data: publicData
-        } =
-            supabaseClient
-                .storage
-                .from('case-evidence')
-                .getPublicUrl(
-                    filePath
-                );
-
-
-        const {
-            error: evidenceError
-        } =
-            await supabaseClient
-                .from('evidence')
-                .insert({
-
-                    case_id:
-                        caseId,
-
-                    officer_id:
-                        currentUser.id,
-
-                    evidence_type:
-                        'File',
-
-                    title:
-                        title,
-
-                    description:
-                        description,
-
-                    file_url:
-                        publicData.publicUrl
-
-                });
-
-
-        if (evidenceError) {
-
-            console.error(
-                evidenceError
-            );
-
-            alert(
-                'Evidence uploaded but could not be recorded: '
-                +
-                evidenceError.message
-            );
-
-            return;
-
-        }
-
-
-        titleInput.value = '';
-
-        descriptionInput.value = '';
-
-        input.value = '';
-
-
-        alert(
-            'Evidence uploaded successfully.'
-        );
-
-
-        await loadEvidence();
-
-    }
-);
-
-
-/* =========================
-   ADD EXTERNAL LINK
-========================= */
-
-document.getElementById(
-    'addEvidenceLink'
-).addEventListener(
-    'click',
-    async function () {
-
-        const titleInput =
-            document.getElementById(
-                'evidenceTitle'
-            );
-
-
-        const descriptionInput =
-            document.getElementById(
-                'evidenceDescription'
-            );
-
-
-        const input =
+        const urlInput =
             document.getElementById(
                 'evidenceUrl'
             );
@@ -2241,8 +2043,12 @@ document.getElementById(
             descriptionInput.value.trim();
 
 
+        const file =
+            fileInput.files[0];
+
+
         const url =
-            input.value.trim();
+            urlInput.value.trim();
 
 
         if (!title) {
@@ -2271,77 +2077,215 @@ document.getElementById(
         }
 
 
-        if (!url) {
+        if (!file && !url) {
 
             alert(
-                'Please enter a URL.'
+                'Please provide either a relevant link or upload a file.'
             );
 
-            input.focus();
+            urlInput.focus();
 
             return;
 
         }
 
 
-        const {
-            error
-        } =
-            await supabaseClient
-                .from('evidence')
-                .insert({
-
-                    case_id:
-                        caseId,
-
-                    officer_id:
-                        currentUser.id,
-
-                    evidence_type:
-                        'External Link',
-
-                    title:
-                        title,
-
-                    description:
-                        description,
-
-                    file_url:
-                        url
-
-                });
+        const uploadButton =
+            document.getElementById(
+                'uploadEvidence'
+            );
 
 
-        if (error) {
+        uploadButton.disabled =
+            true;
+
+
+        uploadButton.textContent =
+            'UPLOADING...';
+
+
+        try {
+
+            /* =========================
+               UPLOAD FILE IF PROVIDED
+            ========================= */
+
+            if (file) {
+
+                const filePath =
+                    `${caseId}/${Date.now()}_${file.name}`;
+
+
+                const {
+                    error: uploadError
+                } =
+                    await supabaseClient
+                        .storage
+                        .from('case-evidence')
+                        .upload(
+                            filePath,
+                            file
+                        );
+
+
+                if (uploadError) {
+
+                    console.error(
+                        uploadError
+                    );
+
+                    throw new Error(
+                        'Failed to upload evidence file: '
+                        +
+                        uploadError.message
+                    );
+
+                }
+
+
+                const {
+                    data: publicData
+                } =
+                    supabaseClient
+                        .storage
+                        .from('case-evidence')
+                        .getPublicUrl(
+                            filePath
+                        );
+
+
+                const {
+                    error: evidenceError
+                } =
+                    await supabaseClient
+                        .from('evidence')
+                        .insert({
+
+                            case_id:
+                                caseId,
+
+                            officer_id:
+                                currentUser.id,
+
+                            evidence_type:
+                                'File',
+
+                            title:
+                                title,
+
+                            description:
+                                description,
+
+                            file_url:
+                                publicData.publicUrl
+
+                        });
+
+
+                if (evidenceError) {
+
+                    console.error(
+                        evidenceError
+                    );
+
+                    throw new Error(
+                        'Evidence file uploaded but could not be recorded: '
+                        +
+                        evidenceError.message
+                    );
+
+                }
+
+            }
+
+
+            /* =========================
+               SAVE LINK IF PROVIDED
+            ========================= */
+
+            if (url) {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from('evidence')
+                        .insert({
+
+                            case_id:
+                                caseId,
+
+                            officer_id:
+                                currentUser.id,
+
+                            evidence_type:
+                                'External Link',
+
+                            title:
+                                title,
+
+                            description:
+                                description,
+
+                            file_url:
+                                url
+
+                        });
+
+
+                if (error) {
+
+                    console.error(
+                        error
+                    );
+
+                    throw new Error(
+                        'Evidence link could not be recorded: '
+                        +
+                        error.message
+                    );
+
+                }
+
+            }
+
+
+            titleInput.value = '';
+
+            descriptionInput.value = '';
+
+            fileInput.value = '';
+
+            urlInput.value = '';
+
+
+            alert(
+                'Evidence uploaded successfully.'
+            );
+
+
+            await loadEvidence();
+
+
+        } catch (error) {
 
             console.error(
                 error
             );
 
             alert(
-                'Failed to add link: '
-                +
                 error.message
             );
 
-            return;
+        } finally {
+
+            uploadButton.disabled =
+                false;
+
+            uploadButton.textContent =
+                'UPLOAD + CONFIRM EVIDENCE';
 
         }
-
-
-        titleInput.value = '';
-
-        descriptionInput.value = '';
-
-        input.value = '';
-
-
-        alert(
-            'External link added successfully.'
-        );
-
-
-        await loadEvidence();
 
     }
 );
