@@ -77,54 +77,56 @@
         .header-right {
             margin-left: auto;
         }
-.back-button-container {
-    max-width: 900px;
-    margin: 20px auto 0;
-    padding: 0 20px;
-    position: relative;
-    z-index: 2;
-}
 
-.back-button {
-    background: #111820;
-    color: #cfd7df;
-    border: 1px solid #354554;
-    padding: 10px 16px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-}
+        .back-button-container {
+            max-width: 900px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
 
-.back-button:hover {
-    background: #1a2530;
-    border-color: #4b6070;
-}
+        .back-button {
+            background: #111820;
+            color: #cfd7df;
+            border: 1px solid #354554;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+        }
+
+        .back-button:hover {
+            background: #1a2530;
+            border-color: #4b6070;
+        }
+
         /* =========================
            BACKGROUND LOGOS
         ========================= */
 
-     .background-logo {
-    position: fixed;
-    top: 50%;
-    width: 275px;
-    height: 275px;
-    object-fit: contain;
-    opacity: 0.5;
-    z-index: 0;
-    pointer-events: none;
-}
+        .background-logo {
+            position: fixed;
+            top: 50%;
+            width: 275px;
+            height: 275px;
+            object-fit: contain;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
 
-.background-logo-left {
-    left: 80px;
-    transform: translateY(-50%);
-}
+        .background-logo-left {
+            left: 80px;
+            transform: translateY(-50%);
+        }
 
-.background-logo-right {
-    right: 80px;
-    transform: translateY(-50%);
-}
+        .background-logo-right {
+            right: 80px;
+            transform: translateY(-50%);
+        }
 
         /* =========================
            MAIN
@@ -424,6 +426,8 @@
         ← BACK TO DASHBOARD
     </button>
 </div>
+
+
 <!-- =========================
      MAIN
 ========================= -->
@@ -613,7 +617,7 @@ async function loadOfficers() {
         await supabaseClient
             .from('officers')
             .select(
-                'id, callsign, full_name, rank'
+                'id, callsign, full_name, rank, portal_title'
             )
             .order(
                 'callsign'
@@ -655,6 +659,8 @@ async function loadOfficers() {
             .filter(
                 officer =>
                     officer.id !== currentUser.id
+                    &&
+                    (officer.portal_title || '').trim() !== 'High Command'
             )
             .map(
                 officer => `
