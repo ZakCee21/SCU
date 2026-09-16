@@ -1597,100 +1597,120 @@ async function loadIntelCounts(
     );
 
 
-    // --------------------------------------------------
-    // Get viewed Intel records
-    // --------------------------------------------------
+ // --------------------------------------------------
+// Get viewed Intel records
+// --------------------------------------------------
+//
+// IMPORTANT:
+// Check ALL rows belonging to each Intel group,
+// not just one canonical row.
+//
+// This prevents grouped / multiple-recipient Intel
+// being incorrectly counted as NEW when another row
+// in the same group has already been viewed.
+// --------------------------------------------------
 
-    let viewedIds =
-        new Set();
-
-
-    if (
-        canonicalIntelIds.length > 0
-    ) {
-
-        const {
-            data: viewData,
-            error: viewError
-        } = await supabaseClient
-
-            .from('intel_views')
-
-            .select(
-                'intel_id'
-            )
-
-            .eq(
-                'user_id',
-                userId
-            )
-
-            .in(
-                'intel_id',
-                canonicalIntelIds
-            );
+let viewedIds =
+    new Set();
 
 
-        if (viewError) {
-
-            console.error(
-                'Load Intel views error:',
-                viewError
-            );
-
-            return;
-
-        }
+const allIntelIds =
+    intel.map(
+        row =>
+            row.id
+    );
 
 
-        viewedIds =
-            new Set(
-                (viewData || [])
-                    .map(
-                        view =>
-                            view.intel_id
-                    )
-            );
+if (
+    allIntelIds.length > 0
+) {
+
+    const {
+        data: viewData,
+        error: viewError
+    } = await supabaseClient
+
+        .from('intel_views')
+
+        .select(
+            'intel_id'
+        )
+
+        .eq(
+            'user_id',
+            userId
+        )
+
+        .in(
+            'intel_id',
+            allIntelIds
+        );
+
+
+    if (viewError) {
+
+        console.error(
+            'Load Intel views error:',
+            viewError
+        );
+
+        return;
 
     }
 
 
-    // --------------------------------------------------
-    // Calculate Intel counts
-    // --------------------------------------------------
-    //
-    // NEW INTEL
-    // = One count per Intel group that has not been
-    //   viewed by this user.
-    //
-    // OPEN INTEL
-    // = One count per active Intel group, regardless
-    //   of whether it has been viewed.
-    //
-    // --------------------------------------------------
-
-    let newCount = 0;
-
-
-    let openCount =
-        canonicalGroups.length;
-
-
-    canonicalGroups.forEach(
-        group => {
-
-            if (
-                !viewedIds.has(
-                    group.canonicalId
+    viewedIds =
+        new Set(
+            (viewData || [])
+                .map(
+                    view =>
+                        view.intel_id
                 )
-            ) {
+        );
 
-                newCount++;
+}
 
-            }
+
+// --------------------------------------------------
+// Calculate Intel counts
+// --------------------------------------------------
+//
+// A group is NEW only when NONE of its database rows
+// has been viewed by this user.
+//
+// A group is OPEN once at least one row in that group
+// has been viewed.
+// --------------------------------------------------
+
+let newCount = 0;
+
+
+let openCount =
+    canonicalGroups.length;
+
+
+canonicalGroups.forEach(
+    group => {
+
+        const groupHasBeenViewed =
+            group.groupRows.some(
+                row =>
+                    viewedIds.has(
+                        row.id
+                    )
+            );
+
+
+        if (
+            !groupHasBeenViewed
+        ) {
+
+            newCount++;
 
         }
-    );
+
+    }
+);
 
 
     // --------------------------------------------------
