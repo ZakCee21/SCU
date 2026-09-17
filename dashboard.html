@@ -1070,40 +1070,6 @@ async function loadCases(
         data || [];
 
 
-    const activeCases =
-        allCases.filter(
-            c =>
-                String(
-                    c.status || ''
-                )
-                .trim()
-                .toLowerCase() === 'active'
-        );
-
-
-    document
-        .getElementById('activeCases')
-        .textContent =
-            activeCases.length;
-
-
-    const closedCases =
-        allCases.filter(
-            c =>
-                String(
-                    c.status || ''
-                )
-                .trim()
-                .toLowerCase() === 'closed'
-        );
-
-
-    document
-        .getElementById('closedCases')
-        .textContent =
-            closedCases.length;
-
-
     // ==================================================
     // FIND CASES WITH AN ASSIGNMENT
     // ==================================================
@@ -1154,6 +1120,77 @@ async function loadCases(
     }
 
 
+    // ==================================================
+    // ACTIVE CASES
+    // ==================================================
+    //
+    // Active Cases excludes unassigned cases.
+    //
+    // Unassigned cases are shown separately in the
+    // UNASSIGNED CASES section.
+    //
+    // ==================================================
+
+    const activeCases =
+        allCases.filter(
+            c => {
+
+                const isActive =
+                    String(
+                        c.status || ''
+                    )
+                    .trim()
+                    .toLowerCase() === 'active';
+
+
+                const isAssigned =
+                    assignedCaseIds.has(
+                        String(
+                            c.id
+                        )
+                    );
+
+
+                return (
+                    isActive &&
+                    isAssigned
+                );
+
+            }
+        );
+
+
+    document
+        .getElementById('activeCases')
+        .textContent =
+            activeCases.length;
+
+
+    // ==================================================
+    // CLOSED CASES
+    // ==================================================
+
+    const closedCases =
+        allCases.filter(
+            c =>
+                String(
+                    c.status || ''
+                )
+                .trim()
+                .toLowerCase() === 'closed'
+        );
+
+
+    document
+        .getElementById('closedCases')
+        .textContent =
+            closedCases.length;
+
+
+    // ==================================================
+    // FIND UNASSIGNED CASES
+    // ==================================================
+
     if (
         canViewUnassignedCases
     ) {
@@ -1184,6 +1221,10 @@ async function loadCases(
 
     }
 
+
+    // ==================================================
+    // DETERMINE ACCESSIBLE CASES
+    // ==================================================
 
     if (
         hasFullClosedCaseAccess
@@ -1255,331 +1296,6 @@ async function loadCases(
 
             rank:
                 rank
-        }
-    );
-
-}
-
-
-// ======================================================
-// FILTER CASES
-// ======================================================
-
-function filterCases(
-    filter
-) {
-
-    if (
-        filter === 'unassigned' &&
-        !canViewUnassignedCases
-    ) {
-
-        return;
-
-    }
-
-
-    currentCaseFilter =
-        filter;
-
-
-    document
-        .getElementById(
-            'showAllCasesButton'
-        )
-        .classList.toggle(
-            'active',
-            filter === 'all'
-        );
-
-
-    document
-        .getElementById(
-            'showActiveCasesButton'
-        )
-        .classList.toggle(
-            'active',
-            filter === 'active'
-        );
-
-
-    document
-        .getElementById(
-            'showUnassignedCasesButton'
-        )
-        .classList.toggle(
-            'active',
-            filter === 'unassigned'
-        );
-
-
-    document
-        .getElementById(
-            'showClosedCasesButton'
-        )
-        .classList.toggle(
-            'active',
-            filter === 'closed'
-        );
-
-
-    document
-        .getElementById(
-            'activeCasesCard'
-        )
-        .classList.toggle(
-            'selected',
-            filter === 'active'
-        );
-
-
-    document
-        .getElementById(
-            'unassignedCasesCard'
-        )
-        .classList.toggle(
-            'selected',
-            filter === 'unassigned'
-        );
-
-
-    document
-        .getElementById(
-            'closedCasesCard'
-        )
-        .classList.toggle(
-            'selected',
-            filter === 'closed'
-        );
-
-
-    renderCaseList();
-
-}
-
-
-// ======================================================
-// RENDER CASE LIST
-// ======================================================
-
-function renderCaseList() {
-
-    const list =
-        document.getElementById(
-            'caseList'
-        );
-
-
-    if (!list) {
-
-        return;
-
-    }
-
-
-    let casesToDisplay =
-        accessibleCases || [];
-
-
-    if (
-        currentCaseFilter === 'active'
-    ) {
-
-        casesToDisplay =
-            casesToDisplay.filter(
-                caseFile =>
-                    String(
-                        caseFile.status || ''
-                    )
-                    .trim()
-                    .toLowerCase() === 'active'
-            );
-
-    }
-
-
-    if (
-        currentCaseFilter === 'closed'
-    ) {
-
-        casesToDisplay =
-            casesToDisplay.filter(
-                caseFile =>
-                    String(
-                        caseFile.status || ''
-                    )
-                    .trim()
-                    .toLowerCase() === 'closed'
-            );
-
-    }
-
-
-    if (
-        currentCaseFilter === 'unassigned'
-    ) {
-
-        if (
-            !canViewUnassignedCases
-        ) {
-
-            casesToDisplay = [];
-
-        } else {
-
-            const unassignedIds =
-                new Set(
-                    unassignedCases.map(
-                        caseFile =>
-                            String(
-                                caseFile.id
-                            )
-                    )
-                );
-
-
-            casesToDisplay =
-                casesToDisplay.filter(
-                    caseFile =>
-                        unassignedIds.has(
-                            String(
-                                caseFile.id
-                            )
-                        )
-                );
-
-        }
-
-    }
-
-
-    if (
-        casesToDisplay.length === 0
-    ) {
-
-        let message =
-            'No authorised case files found.';
-
-
-        if (
-            currentCaseFilter === 'active'
-        ) {
-
-            message =
-                'No active cases found.';
-
-        }
-
-
-        if (
-            currentCaseFilter === 'closed'
-        ) {
-
-            message =
-                'No closed cases found.';
-
-        }
-
-
-        if (
-            currentCaseFilter === 'unassigned'
-        ) {
-
-            message =
-                'No unassigned cases found.';
-
-        }
-
-
-        list.innerHTML =
-            `<div class="empty">${message}</div>`;
-
-        return;
-
-    }
-
-
-    list.innerHTML = '';
-
-
-    casesToDisplay.forEach(
-        caseFile => {
-
-            const row =
-                document.createElement(
-                    'div'
-                );
-
-
-            row.className =
-                'case-row';
-
-
-            row.style.cursor =
-                'pointer';
-
-
-            row.onclick =
-                function() {
-
-                    window.location.href =
-                        `case.html?id=${caseFile.id}`;
-
-                };
-
-
-            const caseStatus =
-                String(
-                    caseFile.status || ''
-                )
-                .trim()
-                .toLowerCase();
-
-
-            const statusClass =
-                caseStatus === 'closed'
-                    ? 'status closed'
-                    : 'status';
-
-
-            row.innerHTML = `
-
-                <div>
-
-                    <div class="case-name">
-
-                        ${escapeHtml(
-                            caseFile.case_name
-                        )}
-
-                    </div>
-
-                    <div class="case-number">
-
-                        ${escapeHtml(
-                            caseFile.case_number
-                        )}
-
-                    </div>
-
-                </div>
-
-
-                <div class="${statusClass}">
-
-                    ${escapeHtml(
-                        caseFile.status
-                    )}
-
-                </div>
-
-            `;
-
-
-            list.appendChild(
-                row
-            );
-
         }
     );
 
