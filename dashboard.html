@@ -167,6 +167,14 @@
     .intel-button:hover {
         background: #15803d;
     }
+   .activity-log-button {
+    background: #3a2f1a;
+    border: 1px solid #a16207;
+}
+
+.activity-log-button:hover {
+    background: #4a3a20;
+}
 
     .cards {
         display: grid;
@@ -560,7 +568,14 @@
     >
         DOCUMENTS & TEMPLATES
     </button>
-
+<button
+    class="dashboard-button activity-log-button"
+    id="activityLogButton"
+    onclick="window.location.href='case-activity.html'"
+    style="display:none;"
+>
+    CASE ACTIVITY LOG
+</button>
 
     <button
         class="dashboard-button intel-button"
@@ -959,7 +974,24 @@ async function loadCases(
         )
         .trim()
         .toLowerCase();
+const activityLogButton =
+    document.getElementById(
+        'activityLogButton'
+    );
 
+if (
+    role === 'master'
+) {
+
+    activityLogButton.style.display =
+        'inline-block';
+
+} else {
+
+    activityLogButton.style.display =
+        'none';
+
+}
 
     const rank =
         String(
