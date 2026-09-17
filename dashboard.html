@@ -417,7 +417,121 @@
         text-align: center;
         padding: 30px;
     }
+    /* GLOBAL SEARCH */
 
+    .global-search {
+        margin-bottom: 25px;
+    }
+
+    .global-search-title {
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: #8996a3;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .global-search-box {
+        position: relative;
+    }
+
+    .global-search-input {
+        width: 100%;
+        background: #111821;
+        color: #e8edf2;
+        border: 1px solid #293542;
+        border-radius: 7px;
+        padding: 14px 45px 14px 15px;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .global-search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.10);
+    }
+
+    .global-search-input::placeholder {
+        color: #6f7c88;
+    }
+
+    .global-search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #7f8c99;
+        font-size: 18px;
+        pointer-events: none;
+    }
+
+    .global-search-results {
+        margin-top: 10px;
+        background: #111821;
+        border: 1px solid #293542;
+        border-radius: 7px;
+        overflow: hidden;
+        display: none;
+    }
+
+    .global-search-section {
+        border-bottom: 1px solid #293542;
+    }
+
+    .global-search-section:last-child {
+        border-bottom: none;
+    }
+
+    .global-search-section-title {
+        padding: 10px 14px;
+        background: #0d141c;
+        color: #7f8c99;
+        font-size: 10px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .global-search-result {
+        padding: 12px 14px;
+        border-top: 1px solid #1c2732;
+        cursor: pointer;
+        transition:
+            background 0.15s ease,
+            border-color 0.15s ease;
+    }
+
+    .global-search-result:hover {
+        background: #141d27;
+        border-left: 3px solid #3b82f6;
+        padding-left: 11px;
+    }
+
+    .global-search-result-title {
+        font-size: 13px;
+        font-weight: bold;
+        color: #e8edf2;
+    }
+
+    .global-search-result-meta {
+        margin-top: 4px;
+        color: #7f8c99;
+        font-size: 11px;
+    }
+
+    .global-search-empty {
+        padding: 20px;
+        text-align: center;
+        color: #6f7c88;
+        font-size: 12px;
+    }
+
+    .global-search-more {
+        padding: 10px 14px;
+        color: #6f7c88;
+        font-size: 11px;
+        border-top: 1px solid #1c2732;
+    }
     @media (max-width: 700px) {
 
         .header {
@@ -549,6 +663,36 @@
 
 </section>
 
+   <!-- GLOBAL SEARCH -->
+
+<section class="global-search">
+
+    <div class="global-search-title">
+        Global Search
+    </div>
+
+    <div class="global-search-box">
+
+        <input
+            type="text"
+            id="globalSearchInput"
+            class="global-search-input"
+            placeholder="Search cases, intelligence, officers..."
+            autocomplete="off"
+        >
+
+        <div class="global-search-icon">
+            🔎
+        </div>
+
+    </div>
+
+    <div
+        id="globalSearchResults"
+        class="global-search-results"
+    ></div>
+
+</section>
 
 <!-- DASHBOARD ACTIONS -->
 
@@ -860,7 +1004,9 @@ async function checkLogin() {
     loadIntelCounts(
         userId
     );
-
+loadGlobalSearchData(
+    userId
+);
 }
 
 
@@ -2190,7 +2336,613 @@ function escapeHtml(
         );
 
 }
+// ======================================================
+// GLOBAL SEARCH
+// ======================================================
 
+let globalSearchOfficer = null;
+
+let globalSearchIntel = [];
+
+
+// ======================================================
+// LOAD GLOBAL SEARCH OFFICER DATA
+// ======================================================
+
+async function loadGlobalSearchData(
+    userId
+) {
+
+    const {
+        data: officer,
+        error
+    } = await supabaseClient
+
+        .from('officers')
+
+        .select(
+            'id, full_name, callsign, rank, role, active'
+        )
+
+        .eq(
+            'id',
+            userId
+        )
+
+        .single();
+
+
+    if (error) {
+
+        console.error(
+            'Global search officer error:',
+            error
+        );
+
+        return;
+
+    }
+
+
+    globalSearchOfficer =
+        officer;
+
+
+    const role =
+        String(
+            officer.role || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const fullIntelAccessRoles = [
+        'master',
+        'investigator',
+        'case_lead'
+    ];
+
+
+    const hasFullIntelAccess =
+        fullIntelAccessRoles.includes(
+            role
+        );
+
+
+    let intelQuery =
+        supabaseClient
+
+            .from('intel_submissions')
+
+            .select(
+                'id, intel_group_id, intel_type, finding, location, created_at, sender_id, recipient_id'
+            );
+
+
+    if (
+        !hasFullIntelAccess
+    ) {
+
+        intelQuery =
+            intelQuery.eq(
+                'recipient_id',
+                userId
+            );
+
+    }
+
+
+    const {
+        data: intelData,
+        error: intelError
+    } = await intelQuery
+
+        .order(
+            'created_at',
+            {
+                ascending: false
+            }
+        );
+
+
+    if (intelError) {
+
+        console.error(
+            'Global search intel error:',
+            intelError
+        );
+
+        globalSearchIntel = [];
+
+    } else {
+
+        globalSearchIntel =
+            intelData || [];
+
+    }
+
+}
+
+
+// ======================================================
+// GLOBAL SEARCH
+// ======================================================
+
+async function performGlobalSearch(
+    searchTerm
+) {
+
+    const resultsContainer =
+        document.getElementById(
+            'globalSearchResults'
+        );
+
+
+    const term =
+        String(
+            searchTerm || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        !term
+    ) {
+
+        resultsContainer.style.display =
+            'none';
+
+        resultsContainer.innerHTML =
+            '';
+
+        return;
+
+    }
+
+
+    resultsContainer.style.display =
+        'block';
+
+
+    const caseResults =
+        accessibleCases
+            .filter(
+                caseFile => {
+
+                    const searchable =
+                        [
+                            caseFile.case_number,
+                            caseFile.case_name,
+                            caseFile.description,
+                            caseFile.classification,
+                            caseFile.status
+                        ]
+                        .join(' ')
+                        .toLowerCase();
+
+
+                    return searchable.includes(
+                        term
+                    );
+
+                }
+            )
+            .slice(
+                0,
+                10
+            );
+
+
+    const intelResults =
+        globalSearchIntel
+            .filter(
+                intel => {
+
+                    const searchable =
+                        [
+                            intel.intel_type,
+                            intel.finding,
+                            intel.location
+                        ]
+                        .join(' ')
+                        .toLowerCase();
+
+
+                    return searchable.includes(
+                        term
+                    );
+
+                }
+            )
+            .slice(
+                0,
+                10
+            );
+
+
+    let officerResults = [];
+
+
+    const {
+        data: officers,
+        error: officersError
+    } = await supabaseClient
+
+        .from('officers')
+
+        .select(
+            'id, full_name, callsign, rank, active'
+        )
+
+        .eq(
+            'active',
+            true
+        );
+
+
+    if (
+        !officersError
+    ) {
+
+        officerResults =
+            (officers || [])
+                .filter(
+                    officer => {
+
+                        const searchable =
+                            [
+                                officer.full_name,
+                                officer.callsign,
+                                officer.rank
+                            ]
+                            .join(' ')
+                            .toLowerCase();
+
+
+                        return searchable.includes(
+                            term
+                        );
+
+                    }
+                )
+                .slice(
+                    0,
+                    10
+                );
+
+    }
+
+
+    let html =
+        '';
+
+
+    // ==================================================
+    // CASE RESULTS
+    // ==================================================
+
+    if (
+        caseResults.length > 0
+    ) {
+
+        html +=
+            `
+                <div class="global-search-section">
+
+                    <div class="global-search-section-title">
+                        CASES
+                    </div>
+            `;
+
+
+        caseResults.forEach(
+            caseFile => {
+
+                html +=
+                    `
+                        <div
+                            class="global-search-result"
+                            onclick="openGlobalCase('${encodeURIComponent(caseFile.id)}')"
+                        >
+
+                            <div class="global-search-result-title">
+                                ${escapeHtml(
+                                    caseFile.case_name ||
+                                    'Unnamed Case'
+                                )}
+                            </div>
+
+                            <div class="global-search-result-meta">
+
+                                ${escapeHtml(
+                                    caseFile.case_number ||
+                                    'No Case Number'
+                                )}
+
+                                •
+
+                                ${escapeHtml(
+                                    caseFile.status ||
+                                    'Active'
+                                )}
+
+                            </div>
+
+                        </div>
+                    `;
+
+            }
+        );
+
+
+        html +=
+            `
+                </div>
+            `;
+
+    }
+
+
+    // ==================================================
+    // INTEL RESULTS
+    // ==================================================
+
+    if (
+        intelResults.length > 0
+    ) {
+
+        html +=
+            `
+                <div class="global-search-section">
+
+                    <div class="global-search-section-title">
+                        INTELLIGENCE
+                    </div>
+            `;
+
+
+        intelResults.forEach(
+            intel => {
+
+                const intelTitle =
+                    intel.intel_type ||
+                    'Intelligence Report';
+
+
+                const finding =
+                    intel.finding ||
+                    'No finding recorded';
+
+
+                html +=
+                    `
+                        <div
+                            class="global-search-result"
+                            onclick="openGlobalIntel('${encodeURIComponent(intel.id)}')"
+                        >
+
+                            <div class="global-search-result-title">
+                                ${escapeHtml(
+                                    intelTitle
+                                )}
+                            </div>
+
+                            <div class="global-search-result-meta">
+
+                                ${escapeHtml(
+                                    finding
+                                )}
+
+                                ${
+                                    intel.location
+                                    ?
+                                    ' • ' +
+                                    escapeHtml(
+                                        intel.location
+                                    )
+                                    :
+                                    ''
+                                }
+
+                            </div>
+
+                        </div>
+                    `;
+
+            }
+        );
+
+
+        html +=
+            `
+                </div>
+            `;
+
+    }
+
+
+    // ==================================================
+    // OFFICER RESULTS
+    // ==================================================
+
+    if (
+        officerResults.length > 0
+    ) {
+
+        html +=
+            `
+                <div class="global-search-section">
+
+                    <div class="global-search-section-title">
+                        OFFICERS
+                    </div>
+            `;
+
+
+        officerResults.forEach(
+            officer => {
+
+                html +=
+                    `
+                        <div
+                            class="global-search-result"
+                        >
+
+                            <div class="global-search-result-title">
+
+                                ${escapeHtml(
+                                    officer.full_name ||
+                                    'Unknown Officer'
+                                )}
+
+                            </div>
+
+                            <div class="global-search-result-meta">
+
+                                ${
+                                    officer.callsign
+                                    ?
+                                    'Callsign: ' +
+                                    escapeHtml(
+                                        officer.callsign
+                                    )
+                                    :
+                                    ''
+                                }
+
+                                ${
+                                    officer.rank
+                                    ?
+                                    ' • ' +
+                                    escapeHtml(
+                                        officer.rank
+                                    )
+                                    :
+                                    ''
+                                }
+
+                            </div>
+
+                        </div>
+                    `;
+
+            }
+        );
+
+
+        html +=
+            `
+                </div>
+            `;
+
+    }
+
+
+    if (
+        !html
+    ) {
+
+        html =
+            `
+                <div class="global-search-empty">
+                    No authorised results found.
+                </div>
+            `;
+
+    }
+
+
+    resultsContainer.innerHTML =
+        html;
+
+}
+
+
+// ======================================================
+// OPEN SEARCH CASE
+// ======================================================
+
+function openGlobalCase(
+    encodedId
+) {
+
+    window.location.href =
+        'case.html?id=' +
+        encodedId;
+
+}
+
+
+// ======================================================
+// OPEN SEARCH INTEL
+// ======================================================
+
+function openGlobalIntel(
+    encodedId
+) {
+
+    window.location.href =
+        'intel.html?id=' +
+        encodedId;
+
+}
+
+
+// ======================================================
+// GLOBAL SEARCH EVENTS
+// ======================================================
+
+document
+    .getElementById(
+        'globalSearchInput'
+    )
+    .addEventListener(
+        'input',
+        function () {
+
+            performGlobalSearch(
+                this.value
+            );
+
+        }
+    );
+
+
+// ======================================================
+// HIDE SEARCH WHEN CLICKING ELSEWHERE
+// ======================================================
+
+document.addEventListener(
+    'click',
+    function (event) {
+
+        const searchBox =
+            document.querySelector(
+                '.global-search'
+            );
+
+
+        const results =
+            document.getElementById(
+                'globalSearchResults'
+            );
+
+
+        if (
+            searchBox &&
+            !searchBox.contains(
+                event.target
+            )
+        ) {
+
+            results.style.display =
+                'none';
+
+        }
+
+    }
+);
 
 // ======================================================
 // LOGOUT
