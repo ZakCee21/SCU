@@ -957,7 +957,12 @@ async function logActivity(
     action,
     details
 ) {
-
+alert(
+    'LOG ACTIVITY CALLED:\n\n'
+    + action
+    + '\n'
+    + (details || '')
+);
     if (
         !caseId ||
         !currentUser
