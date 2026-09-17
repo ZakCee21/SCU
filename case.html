@@ -3089,8 +3089,11 @@ async function loadEvidence() {
 
 
             name.textContent =
-                item.title ||
-                'Untitled Evidence';
+                (item.evidence_number != null
+                    ? 'E-' + String(item.evidence_number).padStart(3, '0') + ' — '
+                    : '') +
+                (item.title ||
+                'Untitled Evidence');
 
 
             info.appendChild(
