@@ -289,15 +289,6 @@
         color: #e8edf2;
     }
 
-    /*
-        New Intel notification state.
-
-        When there is new Intel:
-        - Number becomes green
-        - Card gets green border
-        - Card gets a subtle green glow
-    */
-
     .intel-card.has-new-intel {
         border-color: #22c55e;
         background: #141f1a;
@@ -383,6 +374,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        cursor: pointer;
     }
 
     .case-row:hover {
@@ -781,18 +773,6 @@ const supabaseClient =
 // ======================================================
 // SENIOR CASE ACCESS
 // ======================================================
-//
-// These website-facing titles all use the existing
-// backend role values below.
-//
-// master      = Head of SCU / Assistant Head of SCU /
-//               High Command / GOV
-//
-// investigator = Head of Drugs
-//
-// case_lead    = Head of Weapons
-//
-// ======================================================
 
 const fullClosedCaseAccessRoles = [
     'master',
@@ -1123,13 +1103,6 @@ async function loadCases(
     // ==================================================
     // ACTIVE CASES
     // ==================================================
-    //
-    // Active Cases excludes unassigned cases.
-    //
-    // Unassigned cases are shown separately in the
-    // UNASSIGNED CASES section.
-    //
-    // ==================================================
 
     const activeCases =
         allCases.filter(
@@ -1303,33 +1276,436 @@ async function loadCases(
 
 
 // ======================================================
-// LOAD INTEL COUNTS
+// CASE FILTERING
 // ======================================================
-//
-// NEW INTEL
-// = Intel without a view record for this user.
-//
-// OPEN INTEL
-// = Intel with a view record for this user.
-//
-// NON-SCU NEW INTEL
-// = Unassigned NON-SCU intelligence reports.
-//
-// Full Intel access:
-// = Master, Head of Drugs and Head of Weapons.
-//
-// Normal officers:
-// = Only Intel sent to that officer.
-//
+
+function filterCases(
+    filter
+) {
+
+    if (
+        filter === 'unassigned' &&
+        !canViewUnassignedCases
+    ) {
+
+        return;
+
+    }
+
+
+    currentCaseFilter =
+        filter;
+
+
+    document
+        .querySelectorAll(
+            '.case-filter-button'
+        )
+        .forEach(
+            button => {
+
+                button.classList.remove(
+                    'active'
+                );
+
+            }
+        );
+
+
+    if (
+        filter === 'all'
+    ) {
+
+        document
+            .getElementById(
+                'showAllCasesButton'
+            )
+            .classList.add(
+                'active'
+            );
+
+        document
+            .getElementById(
+                'activeCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'unassignedCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'closedCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+    }
+
+
+    if (
+        filter === 'active'
+    ) {
+
+        document
+            .getElementById(
+                'showActiveCasesButton'
+            )
+            .classList.add(
+                'active'
+            );
+
+        document
+            .getElementById(
+                'activeCasesCard'
+            )
+            .classList.add(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'unassignedCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'closedCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+    }
+
+
+    if (
+        filter === 'unassigned'
+    ) {
+
+        document
+            .getElementById(
+                'showUnassignedCasesButton'
+            )
+            .classList.add(
+                'active'
+            );
+
+        document
+            .getElementById(
+                'activeCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'unassignedCasesCard'
+            )
+            .classList.add(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'closedCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+    }
+
+
+    if (
+        filter === 'closed'
+    ) {
+
+        document
+            .getElementById(
+                'showClosedCasesButton'
+            )
+            .classList.add(
+                'active'
+            );
+
+        document
+            .getElementById(
+                'activeCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'unassignedCasesCard'
+            )
+            .classList.remove(
+                'selected'
+            );
+
+        document
+            .getElementById(
+                'closedCasesCard'
+            )
+            .classList.add(
+                'selected'
+            );
+
+    }
+
+
+    renderCaseList();
+
+}
+
+
+// ======================================================
+// RENDER CASE LIST
+// ======================================================
+
+function renderCaseList() {
+
+    const caseList =
+        document.getElementById(
+            'caseList'
+        );
+
+
+    let casesToDisplay =
+        [...accessibleCases];
+
+
+    // --------------------------------------------------
+    // ALL CASES
+    // --------------------------------------------------
+
+    if (
+        currentCaseFilter === 'all'
+    ) {
+
+        casesToDisplay =
+            [...accessibleCases];
+
+    }
+
+
+    // --------------------------------------------------
+    // ACTIVE CASES
+    // --------------------------------------------------
+
+    if (
+        currentCaseFilter === 'active'
+    ) {
+
+        casesToDisplay =
+            accessibleCases.filter(
+                caseFile =>
+                    String(
+                        caseFile.status || ''
+                    )
+                    .trim()
+                    .toLowerCase() === 'active'
+            );
+
+    }
+
+
+    // --------------------------------------------------
+    // UNASSIGNED CASES
+    // --------------------------------------------------
+
+    if (
+        currentCaseFilter === 'unassigned'
+    ) {
+
+        const unassignedIds =
+            new Set(
+                unassignedCases.map(
+                    caseFile =>
+                        String(
+                            caseFile.id
+                        )
+                )
+            );
+
+
+        casesToDisplay =
+            accessibleCases.filter(
+                caseFile =>
+                    unassignedIds.has(
+                        String(
+                            caseFile.id
+                        )
+                    )
+            );
+
+    }
+
+
+    // --------------------------------------------------
+    // CLOSED CASES
+    // --------------------------------------------------
+
+    if (
+        currentCaseFilter === 'closed'
+    ) {
+
+        casesToDisplay =
+            accessibleCases.filter(
+                caseFile =>
+                    String(
+                        caseFile.status || ''
+                    )
+                    .trim()
+                    .toLowerCase() === 'closed'
+            );
+
+    }
+
+
+    // --------------------------------------------------
+    // EMPTY RESULT
+    // --------------------------------------------------
+
+    if (
+        casesToDisplay.length === 0
+    ) {
+
+        let message =
+            'No cases found.';
+
+
+        if (
+            currentCaseFilter === 'active'
+        ) {
+
+            message =
+                'No active cases found.';
+
+        }
+
+
+        if (
+            currentCaseFilter === 'unassigned'
+        ) {
+
+            message =
+                'No unassigned cases found.';
+
+        }
+
+
+        if (
+            currentCaseFilter === 'closed'
+        ) {
+
+            message =
+                'No closed cases found.';
+
+        }
+
+
+        caseList.innerHTML =
+            `
+                <div class="empty">
+                    ${message}
+                </div>
+            `;
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------
+    // BUILD CASE LIST
+    // --------------------------------------------------
+
+    caseList.innerHTML =
+        casesToDisplay
+            .map(
+                caseFile => {
+
+                    const status =
+                        String(
+                            caseFile.status || ''
+                        )
+                        .trim()
+                        .toLowerCase();
+
+
+                    const statusClass =
+                        status === 'closed'
+                            ? 'status closed'
+                            : 'status';
+
+
+                    const statusText =
+                        caseFile.status ||
+                        'Active';
+
+
+                    return `
+                        <div
+                            class="case-row"
+                            onclick="window.location.href='case.html?id=${encodeURIComponent(caseFile.id)}'"
+                        >
+
+                            <div>
+
+                                <div class="case-name">
+                                    ${escapeHtml(
+                                        caseFile.case_name ||
+                                        'Unnamed Case'
+                                    )}
+                                </div>
+
+                                <div class="case-number">
+                                    ${escapeHtml(
+                                        caseFile.case_number ||
+                                        'No Case Number'
+                                    )}
+                                </div>
+
+                            </div>
+
+                            <div class="${statusClass}">
+                                ${escapeHtml(
+                                    statusText
+                                )}
+                            </div>
+
+                        </div>
+                    `;
+
+                }
+            )
+            .join('');
+
+}
+
+
+// ======================================================
+// LOAD INTEL COUNTS
 // ======================================================
 
 async function loadIntelCounts(
     userId
 ) {
-
-    // --------------------------------------------------
-    // Get officer role
-    // --------------------------------------------------
 
     const {
         data: officer,
@@ -1370,10 +1746,6 @@ async function loadIntelCounts(
         .toLowerCase();
 
 
-    // --------------------------------------------------
-    // Full Intel access roles
-    // --------------------------------------------------
-
     const fullIntelAccessRoles = [
         'master',
         'investigator',
@@ -1387,10 +1759,6 @@ async function loadIntelCounts(
         );
 
 
-    // --------------------------------------------------
-    // Load normal SCU Intel
-    // --------------------------------------------------
-
     let intelQuery =
         supabaseClient
 
@@ -1402,8 +1770,6 @@ async function loadIntelCounts(
                 'id, intel_group_id, recipient_id'
             );
 
-
-    // Normal officers only receive their own Intel.
 
     if (
         !hasFullIntelAccess
@@ -1456,10 +1822,6 @@ async function loadIntelCounts(
         intelData || [];
 
 
-    // --------------------------------------------------
-    // Load NON-SCU Intel
-    // --------------------------------------------------
-
     let nonScuNewCount = 0;
 
 
@@ -1503,26 +1865,6 @@ async function loadIntelCounts(
     }
 
 
-    // --------------------------------------------------
-    // Build ONE canonical record per Intel group
-    // --------------------------------------------------
-    //
-    // This MUST match the way intel.html tracks views.
-    //
-    // For a normal officer:
-    //     their own recipient row is used.
-    //
-    // For a senior/full-access user:
-    //     the first row in the group is used unless
-    //     they are themselves a recipient.
-    //
-    // This prevents multiple-recipient Intel from being
-    // counted more than once and ensures the dashboard
-    // checks the exact intel_views record created when
-    // the Intel was opened.
-    //
-    // --------------------------------------------------
-
     const intelGroups =
         new Map();
 
@@ -1557,13 +1899,6 @@ async function loadIntelCounts(
     );
 
 
-    // --------------------------------------------------
-    // Create canonical Intel IDs
-    // --------------------------------------------------
-
-    const canonicalIntelIds = [];
-
-
     const canonicalGroups =
         [];
 
@@ -1588,17 +1923,14 @@ async function loadIntelCounts(
                 canonicalRecord
             ) {
 
-                canonicalIntelIds.push(
-                    canonicalRecord.id
-                );
-
-
                 canonicalGroups.push({
+
                     groupRows:
                         groupRows,
 
                     canonicalId:
                         canonicalRecord.id
+
                 });
 
             }
@@ -1607,141 +1939,105 @@ async function loadIntelCounts(
     );
 
 
- // --------------------------------------------------
-// Get viewed Intel records
-// --------------------------------------------------
-//
-// IMPORTANT:
-// Check ALL rows belonging to each Intel group,
-// not just one canonical row.
-//
-// This prevents grouped / multiple-recipient Intel
-// being incorrectly counted as NEW when another row
-// in the same group has already been viewed.
-// --------------------------------------------------
-
-let viewedIds =
-    new Set();
+    let viewedIds =
+        new Set();
 
 
-const allIntelIds =
-    intel.map(
-        row =>
-            row.id
-    );
-
-
-if (
-    allIntelIds.length > 0
-) {
-
-    const {
-        data: viewData,
-        error: viewError
-    } = await supabaseClient
-
-        .from('intel_views')
-
-        .select(
-            'intel_id'
-        )
-
-        .eq(
-            'user_id',
-            userId
-        )
-
-        .in(
-            'intel_id',
-            allIntelIds
+    const allIntelIds =
+        intel.map(
+            row =>
+                row.id
         );
 
 
-    if (viewError) {
+    if (
+        allIntelIds.length > 0
+    ) {
 
-        console.error(
-            'Load Intel views error:',
-            viewError
-        );
+        const {
+            data: viewData,
+            error: viewError
+        } = await supabaseClient
 
-        return;
+            .from('intel_views')
 
-    }
+            .select(
+                'intel_id'
+            )
 
+            .eq(
+                'user_id',
+                userId
+            )
 
-    viewedIds =
-        new Set(
-            (viewData || [])
-                .map(
-                    view =>
-                        view.intel_id
-                )
-        );
-
-}
-
-
-// --------------------------------------------------
-// Calculate Intel counts
-// --------------------------------------------------
-//
-// A group is NEW only when NONE of its database rows
-// has been viewed by this user.
-//
-// A group is OPEN once at least one row in that group
-// has been viewed.
-// --------------------------------------------------
-
-let newCount = 0;
-
-
-let openCount =
-    canonicalGroups.length;
-
-
-canonicalGroups.forEach(
-    group => {
-
-        const groupHasBeenViewed =
-            group.groupRows.some(
-                row =>
-                    viewedIds.has(
-                        row.id
-                    )
+            .in(
+                'intel_id',
+                allIntelIds
             );
 
 
-        if (
-            !groupHasBeenViewed
-        ) {
+        if (viewError) {
 
-            newCount++;
+            console.error(
+                'Load Intel views error:',
+                viewError
+            );
+
+            return;
 
         }
 
+
+        viewedIds =
+            new Set(
+                (viewData || [])
+                    .map(
+                        view =>
+                            view.intel_id
+                    )
+            );
+
     }
-);
 
 
-    // --------------------------------------------------
-    // Add NON-SCU unassigned reports to NEW INTEL
-    // --------------------------------------------------
+    let newCount = 0;
+
+
+    let openCount =
+        canonicalGroups.length;
+
+
+    canonicalGroups.forEach(
+        group => {
+
+            const groupHasBeenViewed =
+                group.groupRows.some(
+                    row =>
+                        viewedIds.has(
+                            row.id
+                        )
+                );
+
+
+            if (
+                !groupHasBeenViewed
+            ) {
+
+                newCount++;
+
+            }
+
+        }
+    );
+
 
     newCount +=
         nonScuNewCount;
 
 
-    // --------------------------------------------------
-    // Add NON-SCU reports to OPEN INTEL
-    // --------------------------------------------------
-
     openCount +=
         nonScuNewCount;
 
-
-    // --------------------------------------------------
-    // Display counts
-    // --------------------------------------------------
 
     document
         .getElementById('newIntel')
@@ -1754,10 +2050,6 @@ canonicalGroups.forEach(
         .textContent =
             openCount;
 
-
-    // --------------------------------------------------
-    // New Intel notification
-    // --------------------------------------------------
 
     const newIntelCard =
         document.getElementById(
@@ -1781,10 +2073,6 @@ canonicalGroups.forEach(
 
     }
 
-
-    // --------------------------------------------------
-    // Debug information
-    // --------------------------------------------------
 
     console.log(
         'Intel counts:',
