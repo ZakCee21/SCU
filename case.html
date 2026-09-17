@@ -949,7 +949,68 @@ let canManageAccess = false;
 let canDeleteEvidence = false;
 let caseHasAssignment = false;
 
+/* =========================
+   ACTIVITY LOG
+========================= */
 
+async function logActivity(
+    action,
+    details
+) {
+
+    if (
+        !caseId ||
+        !currentUser
+    ) {
+
+        return;
+
+    }
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from('activity_log')
+                .insert({
+
+                    case_id:
+                        caseId,
+
+                    officer_id:
+                        currentUser.id,
+
+                    action:
+                        action,
+
+                    details:
+                        details || ''
+
+                });
+
+
+        if (error) {
+
+            console.warn(
+                'Activity log entry failed:',
+                error
+            );
+
+        }
+
+    } catch (error) {
+
+        console.warn(
+            'Activity log error:',
+            error
+        );
+
+    }
+
+}
+    
 const closeCaseRoles = [
     'master',
     'investigator',
@@ -1850,24 +1911,36 @@ document.getElementById(
 
         if (error) {
 
-            console.error(
-                error
-            );
+    console.error(
+        error
+    );
 
-            alert(
-                'Failed to update access: '
-                +
-                error.message
-            );
+    alert(
+        'Failed to update access: '
+        +
+        error.message
+    );
 
-            return;
+    return;
 
-        }
+}
 
 
-        alert(
-            'Access updated successfully.'
-        );
+await logActivity(
+    'OFFICER ACCESS UPDATED',
+    selectedOfficers.length
+        ? (
+            selectedOfficers.length
+            +
+            ' officer(s) assigned to the case.'
+        )
+        : 'All officers removed from the case.'
+);
+
+
+alert(
+    'Access updated successfully.'
+);
 
 
         await loadOfficerAccess();
@@ -1973,12 +2046,18 @@ document.getElementById(
             }
 
 
-            alert(
-                'Case unassigned successfully.'
-            );
+           await logActivity(
+    'CASE UNASSIGNED',
+    'All officers were removed from the case.'
+);
 
 
-            await loadCase();
+alert(
+    'Case unassigned successfully.'
+);
+
+
+await loadCase();
 
 
         } catch (error) {
@@ -2059,7 +2138,53 @@ document.getElementById(
                 'caseDescription'
             ).value.trim();
 
+const oldCaseName =
+    caseData.case_name || '';
 
+const oldClassification =
+    caseData.classification || '';
+
+const oldDescription =
+    caseData.description || '';
+
+const changes = [];
+
+if (
+    oldCaseName !== caseName
+) {
+
+    changes.push(
+        'Case name changed'
+    );
+
+}
+
+if (
+    oldClassification !== classification
+) {
+
+    changes.push(
+        'Classification changed from '
+        +
+        oldClassification
+        +
+        ' to '
+        +
+        classification
+    );
+
+}
+
+if (
+    oldDescription !== description
+) {
+
+    changes.push(
+        'Case description changed'
+    );
+
+}
+        
         const {
             error
         } =
@@ -2103,12 +2228,22 @@ document.getElementById(
         }
 
 
-        alert(
-            'Case updated successfully.'
-        );
+        if (changes.length) {
+
+    await logActivity(
+        'CASE UPDATED',
+        changes.join('; ')
+    );
+
+}
 
 
-        await loadCase();
+alert(
+    'Case updated successfully.'
+);
+
+
+await loadCase();
 
     }
 );
@@ -2188,12 +2323,24 @@ document.getElementById(
         }
 
 
-        alert(
-            'Case closed successfully.'
-        );
+     await logActivity(
+    'CASE CLOSED',
+    'Case was closed by '
+    +
+    (
+        currentOfficer.full_name
+        ||
+        currentOfficer.id
+    )
+);
 
 
-        await loadCase();
+alert(
+    'Case closed successfully.'
+);
+
+
+await loadCase();
 
     }
 );
@@ -2438,7 +2585,18 @@ document.getElementById(
             /* =========================
                DELETE CASE
             ========================= */
-
+await logActivity(
+    'CASE DELETED',
+    'Case '
+    +
+    (
+        caseData.case_number
+        ||
+        caseId
+    )
+    +
+    ' was permanently deleted.'
+);
             const {
                 error: deleteError
             } =
@@ -2680,7 +2838,7 @@ document.getElementById(
                         });
 
 
-                if (evidenceError) {
+                               if (evidenceError) {
 
                     console.error(
                         evidenceError
@@ -2694,9 +2852,12 @@ document.getElementById(
 
                 }
 
+                await logActivity(
+                    'EVIDENCE ADDED',
+                    'File evidence added: ' + title
+                );
+
             }
-
-
             /* =========================
                SAVE LINK IF PROVIDED
             ========================= */
@@ -2731,7 +2892,7 @@ document.getElementById(
                         });
 
 
-                if (error) {
+                               if (error) {
 
                     console.error(
                         error
@@ -2745,9 +2906,13 @@ document.getElementById(
 
                 }
 
+                await logActivity(
+                    'EVIDENCE ADDED',
+                    'External link evidence added: ' + title
+                );
+
             }
-
-
+            
             titleInput.value = '';
 
             descriptionInput.value = '';
@@ -2954,13 +3119,24 @@ async function deleteEvidence(
         }
 
 
-        alert(
-            'Evidence deleted successfully.'
-        );
+await logActivity(
+    'EVIDENCE DELETED',
+    'Evidence deleted: '
+    +
+    (
+        item.title
+        ||
+        'Untitled Evidence'
+    )
+);
 
 
-        await loadEvidence();
+alert(
+    'Evidence deleted successfully.'
+);
 
+
+await loadEvidence();
     } catch (error) {
 
         console.error(
