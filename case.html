@@ -991,15 +991,15 @@ async function logActivity(
                 });
 
 
-        if (error) {
+     if (error) {
 
-            console.warn(
-                'Activity log entry failed:',
-                error
-            );
+    alert(
+        'ACTIVITY LOG ERROR:\n\n'
+        +
+        error.message
+    );
 
-        }
-
+}
     } catch (error) {
 
         console.warn(
