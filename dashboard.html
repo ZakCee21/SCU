@@ -220,6 +220,31 @@
         box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
     }
 
+    /* UNASSIGNED CASES */
+
+    .unassigned-cases-card {
+        cursor: pointer;
+        transition:
+            border-color 0.15s ease,
+            background 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+
+    .unassigned-cases-card:hover {
+        border-color: #f59e0b;
+        background: #211b11;
+    }
+
+    .unassigned-cases-card .number {
+        color: #fbbf24;
+    }
+
+    .unassigned-cases-card.selected {
+        border-color: #f59e0b;
+        background: #211b11;
+        box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
+    }
+
     /* CLOSED CASES */
 
     .closed-cases-card {
@@ -345,6 +370,11 @@
     .case-filter-button.closed-filter.active {
         background: #991b1b;
         border-color: #ef4444;
+    }
+
+    .case-filter-button.unassigned-filter.active {
+        background: #92400e;
+        border-color: #f59e0b;
     }
 
     .case-row {
@@ -576,6 +606,29 @@
     </div>
 
 
+    <!-- UNASSIGNED CASES -->
+
+    <div
+        class="card unassigned-cases-card"
+        id="unassignedCasesCard"
+        onclick="filterCases('unassigned')"
+        style="display:none;"
+    >
+
+        <div class="card-title">
+            Unassigned Cases
+        </div>
+
+        <div
+            class="number"
+            id="unassignedCases"
+        >
+            0
+        </div>
+
+    </div>
+
+
     <!-- CLOSED CASES -->
 
     <div
@@ -673,6 +726,16 @@
 
 
         <button
+            class="case-filter-button unassigned-filter"
+            id="showUnassignedCasesButton"
+            onclick="filterCases('unassigned')"
+            style="display:none;"
+        >
+            UNASSIGNED CASES
+        </button>
+
+
+        <button
             class="case-filter-button closed-filter"
             id="showClosedCasesButton"
             onclick="filterCases('closed')"
@@ -739,12 +802,27 @@ const fullClosedCaseAccessRoles = [
 
 
 // ======================================================
+// UNASSIGNED CASE ACCESS
+// ======================================================
+
+const unassignedCaseRanks = [
+    'head of drugs',
+    'head of gangs',
+    'head of weapons'
+];
+
+
+// ======================================================
 // CASE LIST STATE
 // ======================================================
 
 let accessibleCases = [];
 
+let unassignedCases = [];
+
 let currentCaseFilter = 'all';
+
+let canViewUnassignedCases = false;
 
 
 // ======================================================
@@ -903,10 +981,58 @@ async function loadCases(
         .toLowerCase();
 
 
+    const rank =
+        String(
+            officer.rank || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
     const hasFullClosedCaseAccess =
         fullClosedCaseAccessRoles.includes(
             role
         );
+
+
+    canViewUnassignedCases =
+        role === 'master' ||
+        unassignedCaseRanks.includes(
+            rank
+        );
+
+
+    const unassignedCard =
+        document.getElementById(
+            'unassignedCasesCard'
+        );
+
+
+    const unassignedButton =
+        document.getElementById(
+            'showUnassignedCasesButton'
+        );
+
+
+    if (
+        canViewUnassignedCases
+    ) {
+
+        unassignedCard.style.display =
+            'block';
+
+        unassignedButton.style.display =
+            'inline-block';
+
+    } else {
+
+        unassignedCard.style.display =
+            'none';
+
+        unassignedButton.style.display =
+            'none';
+
+    }
 
 
     const {
@@ -978,6 +1104,87 @@ async function loadCases(
             closedCases.length;
 
 
+    // ==================================================
+    // FIND CASES WITH AN ASSIGNMENT
+    // ==================================================
+
+    let assignedCaseIds =
+        new Set();
+
+
+    if (
+        allCases.length > 0
+    ) {
+
+        const {
+            data: accessRows,
+            error: accessError
+        } =
+            await supabaseClient
+
+                .from('case_access')
+
+                .select(
+                    'case_id'
+                );
+
+
+        if (accessError) {
+
+            console.error(
+                'Load case assignment error:',
+                accessError
+            );
+
+        } else {
+
+            assignedCaseIds =
+                new Set(
+                    (accessRows || [])
+                        .map(
+                            row =>
+                                String(
+                                    row.case_id
+                                )
+                        )
+                );
+
+        }
+
+    }
+
+
+    if (
+        canViewUnassignedCases
+    ) {
+
+        unassignedCases =
+            allCases.filter(
+                caseFile =>
+                    !assignedCaseIds.has(
+                        String(
+                            caseFile.id
+                        )
+                    )
+            );
+
+        document
+            .getElementById('unassignedCases')
+            .textContent =
+                unassignedCases.length;
+
+    } else {
+
+        unassignedCases = [];
+
+        document
+            .getElementById('unassignedCases')
+            .textContent =
+                '0';
+
+    }
+
+
     if (
         hasFullClosedCaseAccess
     ) {
@@ -1031,14 +1238,23 @@ async function loadCases(
             closedCases:
                 closedCases.length,
 
+            unassignedCases:
+                unassignedCases.length,
+
             visibleCases:
                 accessibleCases.length,
 
             fullClosedCaseAccess:
                 hasFullClosedCaseAccess,
 
+            canViewUnassignedCases:
+                canViewUnassignedCases,
+
             role:
-                role
+                role,
+
+            rank:
+                rank
         }
     );
 
@@ -1052,6 +1268,16 @@ async function loadCases(
 function filterCases(
     filter
 ) {
+
+    if (
+        filter === 'unassigned' &&
+        !canViewUnassignedCases
+    ) {
+
+        return;
+
+    }
+
 
     currentCaseFilter =
         filter;
@@ -1079,6 +1305,16 @@ function filterCases(
 
     document
         .getElementById(
+            'showUnassignedCasesButton'
+        )
+        .classList.toggle(
+            'active',
+            filter === 'unassigned'
+        );
+
+
+    document
+        .getElementById(
             'showClosedCasesButton'
         )
         .classList.toggle(
@@ -1094,6 +1330,16 @@ function filterCases(
         .classList.toggle(
             'selected',
             filter === 'active'
+        );
+
+
+    document
+        .getElementById(
+            'unassignedCasesCard'
+        )
+        .classList.toggle(
+            'selected',
+            filter === 'unassigned'
         );
 
 
@@ -1170,6 +1416,44 @@ function renderCaseList() {
 
 
     if (
+        currentCaseFilter === 'unassigned'
+    ) {
+
+        if (
+            !canViewUnassignedCases
+        ) {
+
+            casesToDisplay = [];
+
+        } else {
+
+            const unassignedIds =
+                new Set(
+                    unassignedCases.map(
+                        caseFile =>
+                            String(
+                                caseFile.id
+                            )
+                    )
+                );
+
+
+            casesToDisplay =
+                casesToDisplay.filter(
+                    caseFile =>
+                        unassignedIds.has(
+                            String(
+                                caseFile.id
+                            )
+                        )
+                );
+
+        }
+
+    }
+
+
+    if (
         casesToDisplay.length === 0
     ) {
 
@@ -1193,6 +1477,16 @@ function renderCaseList() {
 
             message =
                 'No closed cases found.';
+
+        }
+
+
+        if (
+            currentCaseFilter === 'unassigned'
+        ) {
+
+            message =
+                'No unassigned cases found.';
 
         }
 
