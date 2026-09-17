@@ -636,7 +636,11 @@
                 id="caseTitle"
                 class="case-title"
             ></div>
-
+<div
+    id="caseCreatedBy"
+    class="case-number"
+    style="margin-top:6px;"
+></div>
             <div
                 id="caseStatus"
                 class="case-status"
@@ -1022,6 +1026,7 @@ async function initialise() {
    LOAD CASE
 ========================= */
 
+```javascript
 async function loadCase() {
 
     const {
@@ -1052,20 +1057,52 @@ async function loadCase() {
 
     }
 
-
-    caseData = data;
-
-
-    document.getElementById(
-        'caseNumber'
-    ).textContent =
-        data.case_number || 'CASE';
+caseData = data;
 
 
-    document.getElementById(
-        'caseTitle'
-    ).textContent =
-        data.case_name || 'Untitled Case';
+document.getElementById(
+    'caseNumber'
+).textContent =
+    data.case_number || 'CASE';
+
+
+document.getElementById(
+    'caseTitle'
+).textContent =
+    data.case_name || 'Untitled Case';
+
+
+const {
+    data: creator
+} =
+    await supabaseClient
+        .from('officers')
+        .select(
+            'full_name, callsign'
+        )
+        .eq(
+            'id',
+            data.created_by
+        )
+        .single();
+
+
+document.getElementById(
+    'caseCreatedBy'
+).textContent =
+    'Created By: '
+    +
+    (
+        creator
+            ? (
+                creator.full_name
+                ||
+                creator.callsign
+                ||
+                'Unknown Officer'
+            )
+            : 'Unknown Officer'
+    );
 
 
     document.getElementById(
@@ -1113,6 +1150,8 @@ async function loadCase() {
         'block';
 
 }
+```
+
 
 
 /* =========================
