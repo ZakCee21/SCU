@@ -286,6 +286,15 @@
             background: #be123c;
         }
 
+        .unassign-case-button {
+            background: #92400e;
+            color: white;
+        }
+
+        .unassign-case-button:hover {
+            background: #b45309;
+        }
+
         .delete-button {
             background: #7f1d1d;
             color: white;
@@ -636,11 +645,13 @@
                 id="caseTitle"
                 class="case-title"
             ></div>
-<div
-    id="caseCreatedBy"
-    class="case-number"
-    style="margin-top:6px;"
-></div>
+
+            <div
+                id="caseCreatedBy"
+                class="case-number"
+                style="margin-top:6px;"
+            ></div>
+
             <div
                 id="caseStatus"
                 class="case-status"
@@ -740,6 +751,14 @@
                         style="display:none;"
                     >
                         CLOSE CASE
+                    </button>
+
+                    <button
+                        id="unassignCase"
+                        class="unassign-case-button"
+                        style="display:none;"
+                    >
+                        UNASSIGN CASE
                     </button>
 
                     <button
@@ -928,12 +947,20 @@ let currentOfficer = null;
 let caseData = null;
 let canManageAccess = false;
 let canDeleteEvidence = false;
+let caseHasAssignment = false;
 
 
 const closeCaseRoles = [
     'master',
     'investigator',
     'case_lead'
+];
+
+
+const unassignCaseRanks = [
+    'head of drugs',
+    'head of gangs',
+    'head of weapons'
 ];
 
 
@@ -1057,52 +1084,52 @@ async function loadCase() {
 
     }
 
-caseData = data;
+    caseData = data;
 
 
-document.getElementById(
-    'caseNumber'
-).textContent =
-    data.case_number || 'CASE';
+    document.getElementById(
+        'caseNumber'
+    ).textContent =
+        data.case_number || 'CASE';
 
 
-document.getElementById(
-    'caseTitle'
-).textContent =
-    data.case_name || 'Untitled Case';
+    document.getElementById(
+        'caseTitle'
+    ).textContent =
+        data.case_name || 'Untitled Case';
 
 
-const {
-    data: creator
-} =
-    await supabaseClient
-        .from('officers')
-        .select(
-            'full_name, callsign'
-        )
-        .eq(
-            'id',
-            data.created_by
-        )
-        .single();
-
-
-document.getElementById(
-    'caseCreatedBy'
-).textContent =
-    'Created By: '
-    +
-    (
-        creator
-            ? (
-                creator.full_name
-                ||
-                creator.callsign
-                ||
-                'Unknown Officer'
+    const {
+        data: creator
+    } =
+        await supabaseClient
+            .from('officers')
+            .select(
+                'full_name, callsign'
             )
-            : 'Unknown Officer'
-    );
+            .eq(
+                'id',
+                data.created_by
+            )
+            .single();
+
+
+    document.getElementById(
+        'caseCreatedBy'
+    ).textContent =
+        'Created By: '
+        +
+        (
+            creator
+                ? (
+                    creator.full_name
+                    ||
+                    creator.callsign
+                    ||
+                    'Unknown Officer'
+                )
+                : 'Unknown Officer'
+        );
 
 
     document.getElementById(
@@ -1152,8 +1179,6 @@ document.getElementById(
 }
 
 
-
-
 /* =========================
    STATUS
 ========================= */
@@ -1198,6 +1223,77 @@ function updateStatusDisplay(status) {
             'none';
 
     }
+
+}
+
+
+/* =========================
+   UNASSIGN PERMISSION
+========================= */
+
+function canUnassignCurrentCase() {
+
+    if (
+        !currentOfficer
+    ) {
+
+        return false;
+
+    }
+
+
+    const role =
+        String(
+            currentOfficer.role || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    const rank =
+        String(
+            currentOfficer.rank || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    return (
+        role === 'master'
+        ||
+        unassignCaseRanks.includes(
+            rank
+        )
+    );
+
+}
+
+
+/* =========================
+   UPDATE UNASSIGN BUTTON
+========================= */
+
+function updateUnassignButton() {
+
+    const button =
+        document.getElementById(
+            'unassignCase'
+        );
+
+
+    if (!button) {
+
+        return;
+
+    }
+
+
+    button.style.display =
+        canUnassignCurrentCase()
+        &&
+        caseHasAssignment
+            ? 'inline-block'
+            : 'none';
 
 }
 
@@ -1275,6 +1371,9 @@ function setupPermissions(data) {
         canDeleteCase
             ? 'inline-block'
             : 'none';
+
+
+    updateUnassignButton();
 
 }
 
@@ -1422,14 +1521,25 @@ async function loadOfficerAccess() {
 
         canDeleteEvidence = false;
 
+        caseHasAssignment = false;
+
+        updateUnassignButton();
+
         return;
 
     }
 
 
+    caseHasAssignment =
+        (accessRows || []).length > 0;
+
+
     updateAccessPermission(
         accessRows || []
     );
+
+
+    updateUnassignButton();
 
 
     const selectedOfficerIds =
@@ -1443,14 +1553,14 @@ async function loadOfficerAccess() {
 
     const rankOrder = {
 
-    'Head of SCU': 1,
-    'Assistant Head of SCU': 2,
-    'Head of Weapons': 3,
-    'Head of Drugs': 4,
-    'Head of Gangs': 5,
-    'Detective': 6
+        'Head of SCU': 1,
+        'Assistant Head of SCU': 2,
+        'Head of Weapons': 3,
+        'Head of Drugs': 4,
+        'Head of Gangs': 5,
+        'Detective': 6
 
-};
+    };
 
 
     const filteredOfficers =
@@ -1763,6 +1873,132 @@ document.getElementById(
         await loadOfficerAccess();
 
         await loadEvidence();
+
+    }
+);
+
+
+/* =========================
+   UNASSIGN CASE
+========================= */
+
+document.getElementById(
+    'unassignCase'
+).addEventListener(
+    'click',
+    async function () {
+
+        if (
+            !canUnassignCurrentCase()
+        ) {
+
+            alert(
+                'You do not have permission to unassign this case.'
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !caseHasAssignment
+        ) {
+
+            alert(
+                'This case is already unassigned.'
+            );
+
+            return;
+
+        }
+
+
+        const confirmed =
+            confirm(
+                'Are you sure you want to unassign this case? This will remove all assigned officers from the case, but will NOT delete or close the case.'
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        const unassignButton =
+            document.getElementById(
+                'unassignCase'
+            );
+
+
+        unassignButton.disabled =
+            true;
+
+
+        unassignButton.textContent =
+            'UNASSIGNING...';
+
+
+        try {
+
+            const {
+                error
+            } =
+                await supabaseClient.rpc(
+                    'update_case_access',
+                    {
+                        p_case_id:
+                            caseId,
+
+                        p_officer_ids:
+                            []
+                    }
+                );
+
+
+            if (error) {
+
+                console.error(
+                    error
+                );
+
+                throw new Error(
+                    'Failed to unassign case: '
+                    +
+                    error.message
+                );
+
+            }
+
+
+            alert(
+                'Case unassigned successfully.'
+            );
+
+
+            await loadCase();
+
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+            alert(
+                error.message
+            );
+
+
+            unassignButton.disabled =
+                false;
+
+            unassignButton.textContent =
+                'UNASSIGN CASE';
+
+        }
 
     }
 );
