@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -167,14 +168,24 @@
     .intel-button:hover {
         background: #15803d;
     }
-   .activity-log-button {
-    background: #3a2f1a;
-    border: 1px solid #a16207;
-}
 
-.activity-log-button:hover {
-    background: #4a3a20;
-}
+    .activity-log-button {
+        background: #3a2f1a;
+        border: 1px solid #a16207;
+    }
+
+    .activity-log-button:hover {
+        background: #4a3a20;
+    }
+
+    .officers-button {
+        background: #263746;
+        border: 1px solid #354554;
+    }
+
+    .officers-button:hover {
+        background: #32495c;
+    }
 
     .cards {
         display: grid;
@@ -417,6 +428,7 @@
         text-align: center;
         padding: 30px;
     }
+
     /* GLOBAL SEARCH */
 
     .global-search {
@@ -532,6 +544,7 @@
         font-size: 11px;
         border-top: 1px solid #1c2732;
     }
+
     @media (max-width: 700px) {
 
         .header {
@@ -663,7 +676,7 @@
 
 </section>
 
-   <!-- GLOBAL SEARCH -->
+<!-- GLOBAL SEARCH -->
 
 <section class="global-search">
 
@@ -712,14 +725,27 @@
     >
         DOCUMENTS & TEMPLATES
     </button>
-<button
-    class="dashboard-button activity-log-button"
-    id="activityLogButton"
-    onclick="window.location.href='case-activity.html'"
-    style="display:none;"
->
-    CASE ACTIVITY LOG
-</button>
+
+
+    <button
+        class="dashboard-button activity-log-button"
+        id="activityLogButton"
+        onclick="window.location.href='case-activity.html'"
+        style="display:none;"
+    >
+        CASE ACTIVITY LOG
+    </button>
+
+
+    <button
+        class="dashboard-button officers-button"
+        id="officersButton"
+        onclick="window.location.href='officer-management.html'"
+        style="display:none;"
+    >
+        OFFICERS
+    </button>
+
 
     <button
         class="dashboard-button intel-button"
@@ -1004,9 +1030,11 @@ async function checkLogin() {
     loadIntelCounts(
         userId
     );
-loadGlobalSearchData(
-    userId
-);
+
+    loadGlobalSearchData(
+        userId
+    );
+
 }
 
 
@@ -1120,24 +1148,49 @@ async function loadCases(
         )
         .trim()
         .toLowerCase();
-const activityLogButton =
-    document.getElementById(
-        'activityLogButton'
-    );
 
-if (
-    role === 'master'
-) {
 
-    activityLogButton.style.display =
-        'inline-block';
+    const activityLogButton =
+        document.getElementById(
+            'activityLogButton'
+        );
 
-} else {
 
-    activityLogButton.style.display =
-        'none';
+    if (
+        role === 'master'
+    ) {
 
-}
+        activityLogButton.style.display =
+            'inline-block';
+
+    } else {
+
+        activityLogButton.style.display =
+            'none';
+
+    }
+
+
+    const officersButton =
+        document.getElementById(
+            'officersButton'
+        );
+
+
+    if (
+        role === 'master'
+    ) {
+
+        officersButton.style.display =
+            'inline-block';
+
+    } else {
+
+        officersButton.style.display =
+            'none';
+
+    }
+
 
     const rank =
         String(
@@ -2336,6 +2389,8 @@ function escapeHtml(
         );
 
 }
+
+
 // ======================================================
 // GLOBAL SEARCH
 // ======================================================
@@ -2943,6 +2998,7 @@ document.addEventListener(
 
     }
 );
+
 
 // ======================================================
 // LOGOUT
