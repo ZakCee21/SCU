@@ -168,7 +168,38 @@
             color: #94a3b8;
             font-size: 13px;
         }
+        .sort-bar {
+            margin-bottom: 20px;
+            padding: 14px;
+            background: #111820;
+            border: 1px solid #26313c;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
+        .sort-label {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .sort-bar select {
+            width: auto;
+            min-width: 180px;
+        }
+
+        .sort-direction {
+            background: #263746;
+            border: 1px solid #354554;
+        }
+
+        .sort-direction:hover {
+            background: #32495c;
+        }
     </style>
 
 </head>
@@ -229,7 +260,47 @@
 
     </div>
 
+    <div class="sort-bar">
 
+        <span class="sort-label">
+            SORT BY
+        </span>
+
+        <select id="sortBy">
+
+            <option value="callsign">
+                Callsign
+            </option>
+
+            <option value="full_name">
+                In-Game Name
+            </option>
+
+            <option value="rank">
+                Rank
+            </option>
+
+            <option value="role">
+                System Role
+            </option>
+
+            <option value="active">
+                Status
+            </option>
+
+        </select>
+
+
+        <button
+            type="button"
+            class="sort-direction"
+            id="sortDirection"
+            onclick="toggleSortDirection()"
+        >
+            A → Z
+        </button>
+
+    </div>
     <div class="panel">
 
         <table>
@@ -528,6 +599,19 @@ async function checkCommandAccess() {
 
 
 // ======================================================
+// OFFICER SORTING
+// ======================================================
+
+let officersData = [];
+
+let currentSort =
+    'callsign';
+
+let sortAscending =
+    true;
+
+
+// ======================================================
 // LOAD OFFICERS
 // ======================================================
 
@@ -541,11 +625,7 @@ async function loadOfficers() {
 
             .from('officers')
 
-            .select('*')
-
-            .order(
-                'callsign'
-            );
+            .select('*');
 
 
     const list =
@@ -606,8 +686,138 @@ async function loadOfficers() {
     }
 
 
+    officersData =
+        data;
+
+
+    renderOfficers();
+
+}
+
+
+// ======================================================
+// RENDER OFFICERS
+// ======================================================
+
+function renderOfficers() {
+
+    const list =
+        document.getElementById(
+            'officerList'
+        );
+
+
+    const sortedData =
+        [...officersData].sort(
+            (a, b) => {
+
+                let valueA;
+                let valueB;
+
+
+                if (
+                    currentSort ===
+                    'active'
+                ) {
+
+                    valueA =
+                        Boolean(
+                            a.active
+                        )
+                            ? 1
+                            : 0;
+
+                    valueB =
+                        Boolean(
+                            b.active
+                        )
+                            ? 1
+                            : 0;
+
+                }
+
+                else if (
+                    currentSort ===
+                    'role'
+                ) {
+
+                    valueA =
+                        String(
+                            a.portal_title ||
+                            getDefaultPortalTitle(
+                                a.role
+                            ) ||
+                            a.role ||
+                            ''
+                        )
+                        .trim()
+                        .toLowerCase();
+
+
+                    valueB =
+                        String(
+                            b.portal_title ||
+                            getDefaultPortalTitle(
+                                b.role
+                            ) ||
+                            b.role ||
+                            ''
+                        )
+                        .trim()
+                        .toLowerCase();
+
+                }
+
+                else {
+
+                    valueA =
+                        String(
+                            a[currentSort] || ''
+                        )
+                        .trim()
+                        .toLowerCase();
+
+
+                    valueB =
+                        String(
+                            b[currentSort] || ''
+                        )
+                        .trim()
+                        .toLowerCase();
+
+                }
+
+
+                if (
+                    valueA < valueB
+                ) {
+
+                    return sortAscending
+                        ? -1
+                        : 1;
+
+                }
+
+
+                if (
+                    valueA > valueB
+                ) {
+
+                    return sortAscending
+                        ? 1
+                        : -1;
+
+                }
+
+
+                return 0;
+
+            }
+        );
+
+
     list.innerHTML =
-        data.map(
+        sortedData.map(
             officer => {
 
                 const id =
@@ -933,6 +1143,49 @@ async function loadOfficers() {
 
 }
 
+
+// ======================================================
+// SORT CHANGE
+// ======================================================
+
+document
+    .getElementById('sortBy')
+    .addEventListener(
+        'change',
+        function () {
+
+            currentSort =
+                this.value;
+
+            renderOfficers();
+
+        }
+    );
+
+
+// ======================================================
+// TOGGLE SORT DIRECTION
+// ======================================================
+
+function toggleSortDirection() {
+
+    sortAscending =
+        !sortAscending;
+
+
+    document
+        .getElementById(
+            'sortDirection'
+        )
+        .textContent =
+            sortAscending
+                ? 'A → Z'
+                : 'Z → A';
+
+
+    renderOfficers();
+
+}
 
 // ======================================================
 // SAVE OFFICER
