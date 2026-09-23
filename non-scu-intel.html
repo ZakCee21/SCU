@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 
 <html lang="en">
@@ -236,6 +237,121 @@
 
 
     /* ==================================================
+       EVIDENCE
+       ================================================== */
+
+    .evidence-add-row {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .evidence-add-row input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .evidence-button {
+        background: #17202a;
+        color: #dbe4ec;
+        border: 1px solid #354554;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .evidence-button:hover {
+        background: #202c38;
+        border-color: #4b6070;
+    }
+
+    .evidence-file-button {
+        display: inline-block;
+        margin-top: 8px;
+        background: #17202a;
+        color: #dbe4ec;
+        border: 1px solid #354554;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .evidence-file-button:hover {
+        background: #202c38;
+        border-color: #4b6070;
+    }
+
+    .evidence-file-input {
+        display: none;
+    }
+
+    .evidence-list {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .evidence-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #080c11;
+        border: 1px solid #293542;
+        border-radius: 5px;
+        padding: 9px 10px;
+        min-width: 0;
+    }
+
+    .evidence-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .evidence-item-type {
+        color: #6f7c88;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 3px;
+    }
+
+    .evidence-item-name {
+        color: #dbe4ec;
+        font-size: 12px;
+        word-break: break-word;
+    }
+
+    .evidence-remove {
+        background: transparent;
+        color: #f87171;
+        border: 1px solid #4a2c32;
+        border-radius: 4px;
+        padding: 6px 9px;
+        cursor: pointer;
+        font-size: 10px;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .evidence-remove:hover {
+        background: #24161a;
+        border-color: #f87171;
+    }
+
+    .no-evidence {
+        color: #6f7c88;
+        font-size: 11px;
+        padding: 4px 0;
+    }
+
+
+    /* ==================================================
        SUBMIT BUTTON
        ================================================== */
 
@@ -328,6 +444,14 @@
             right: -45px;
         }
 
+        .evidence-add-row {
+            flex-direction: column;
+        }
+
+        .evidence-button {
+            width: 100%;
+        }
+
     }
 
 </style>
@@ -344,14 +468,12 @@
 class="background-logo background-logo-left"
 src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
 alt=""
-
 >
 
 <img
 class="background-logo background-logo-right"
 src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
 alt=""
-
 >
 
 <!-- ==================================================
@@ -359,7 +481,6 @@ alt=""
      ================================================== -->
 
 <header class="header">
-
 
 <div class="header-brand">
 
@@ -381,14 +502,12 @@ alt=""
 
 </div>
 
-
 <button
     class="back-button"
     onclick="window.location.href='index.html'"
 >
     BACK TO SIGN IN
 </button>
-
 
 </header>
 
@@ -400,7 +519,6 @@ alt=""
 
 <section class="intro">
 
-
 <h2>
     Submit Intelligence Finding
 </h2>
@@ -410,11 +528,9 @@ alt=""
     Your report will be reviewed by an SCU senior member and directed to the appropriate officer.
 </p>
 
-
 </section>
 
 <section class="form-panel">
-
 
 <!-- PUBLIC NOTICE -->
 
@@ -426,7 +542,6 @@ alt=""
     Please provide your name and call sign so the SCU can identify the source of the report.
 
 </div>
-
 
 <!-- REPORTER NAME -->
 
@@ -444,7 +559,6 @@ alt=""
 
 </div>
 
-
 <!-- REPORTER CALL SIGN -->
 
 <div class="form-group">
@@ -460,7 +574,6 @@ alt=""
     >
 
 </div>
-
 
 <!-- INTEL TYPE -->
 
@@ -520,7 +633,6 @@ alt=""
 
 </div>
 
-
 <!-- SUBJECT -->
 
 <div class="form-group">
@@ -537,7 +649,6 @@ alt=""
 
 </div>
 
-
 <!-- FINDING -->
 
 <div class="form-group">
@@ -552,7 +663,6 @@ alt=""
     ></textarea>
 
 </div>
-
 
 <!-- LOCATION -->
 
@@ -570,7 +680,6 @@ alt=""
 
 </div>
 
-
 <!-- SOURCE -->
 
 <div class="form-group">
@@ -587,43 +696,82 @@ alt=""
 
 </div>
 
-
-<!-- EVIDENCE LINK -->
+<!-- EVIDENCE LINKS -->
 
 <div class="form-group">
 
     <label for="evidenceLink">
-        Evidence / Document Link
+        Evidence / Document Links
     </label>
 
-    <input
-        type="url"
-        id="evidenceLink"
-        placeholder="https://..."
-    >
+    <div class="evidence-add-row">
+
+        <input
+            type="url"
+            id="evidenceLink"
+            placeholder="https://..."
+        >
+
+        <button
+            type="button"
+            class="evidence-button"
+            onclick="addEvidenceLink()"
+        >
+            ADD LINK
+        </button>
+
+    </div>
 
     <div class="small-text">
-        Optional link to supporting evidence or a document.
+        Add one or more links. Each link is stored separately.
+    </div>
+
+    <div
+        class="evidence-list"
+        id="evidenceLinkList"
+    >
+        <div class="no-evidence">
+            No evidence links added.
+        </div>
     </div>
 
 </div>
 
-
-<!-- EVIDENCE FILE -->
+<!-- EVIDENCE FILES -->
 
 <div class="form-group">
 
-    <label for="evidenceFile">
-        Upload Evidence File
+    <label>
+        Upload Evidence Files
+    </label>
+
+    <label
+        for="evidenceFile"
+        class="evidence-file-button"
+    >
+        ADD EVIDENCE FILE
     </label>
 
     <input
         type="file"
         id="evidenceFile"
+        class="evidence-file-input"
     >
 
-</div>
+    <div class="small-text">
+        Add files individually. You can return here and add another file before submitting.
+    </div>
 
+    <div
+        class="evidence-list"
+        id="evidenceFileList"
+    >
+        <div class="no-evidence">
+            No evidence files added.
+        </div>
+    </div>
+
+</div>
 
 <!-- SUBMIT -->
 
@@ -635,12 +783,10 @@ alt=""
     SUBMIT INTELLIGENCE
 </button>
 
-
 <div
     class="message"
     id="message"
 ></div>
-
 
 </section>
 
@@ -654,14 +800,11 @@ alt=""
 
 <script>
 
-
 const SUPABASE_URL =
     'https://mtlozyseibrefhxnocvb.supabase.co';
 
-
 const SUPABASE_KEY =
     'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
-
 
 const supabaseClient =
     window.supabase.createClient(
@@ -671,11 +814,289 @@ const supabaseClient =
 
 
 // ======================================================
+// PENDING EVIDENCE
+// ======================================================
+
+let pendingEvidenceLinks = [];
+
+let pendingEvidenceFiles = [];
+
+
+// ======================================================
+// RENDER EVIDENCE LISTS
+// ======================================================
+
+function renderEvidenceLists() {
+
+    const linkList =
+        document.getElementById(
+            'evidenceLinkList'
+        );
+
+    const fileList =
+        document.getElementById(
+            'evidenceFileList'
+        );
+
+
+    // ==================================================
+    // LINKS
+    // ==================================================
+
+    if (
+        pendingEvidenceLinks.length === 0
+    ) {
+
+        linkList.innerHTML = `
+            <div class="no-evidence">
+                No evidence links added.
+            </div>
+        `;
+
+    } else {
+
+        linkList.innerHTML =
+            pendingEvidenceLinks
+                .map(
+                    (url, index) => `
+                        <div class="evidence-item">
+
+                            <div class="evidence-item-info">
+
+                                <div class="evidence-item-type">
+                                    URL
+                                </div>
+
+                                <div class="evidence-item-name">
+                                    ${escapeHtml(url)}
+                                </div>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="evidence-remove"
+                                onclick="removeEvidenceLink(${index})"
+                            >
+                                REMOVE
+                            </button>
+
+                        </div>
+                    `
+                )
+                .join('');
+
+    }
+
+
+    // ==================================================
+    // FILES
+    // ==================================================
+
+    if (
+        pendingEvidenceFiles.length === 0
+    ) {
+
+        fileList.innerHTML = `
+            <div class="no-evidence">
+                No evidence files added.
+            </div>
+        `;
+
+    } else {
+
+        fileList.innerHTML =
+            pendingEvidenceFiles
+                .map(
+                    (file, index) => `
+                        <div class="evidence-item">
+
+                            <div class="evidence-item-info">
+
+                                <div class="evidence-item-type">
+                                    FILE
+                                </div>
+
+                                <div class="evidence-item-name">
+                                    ${escapeHtml(file.name)}
+                                </div>
+
+                            </div>
+
+                            <button
+                                type="button"
+                                class="evidence-remove"
+                                onclick="removeEvidenceFile(${index})"
+                            >
+                                REMOVE
+                            </button>
+
+                        </div>
+                    `
+                )
+                .join('');
+
+    }
+
+}
+
+
+// ======================================================
+// ESCAPE HTML
+// ======================================================
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+        .replace(
+            /</g,
+            '&lt;'
+        )
+        .replace(
+            />/g,
+            '&gt;'
+        )
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+        .replace(
+            /'/g,
+            '&#039;'
+        );
+
+}
+
+
+// ======================================================
+// ADD EVIDENCE LINK
+// ======================================================
+
+function addEvidenceLink() {
+
+    const input =
+        document.getElementById(
+            'evidenceLink'
+        );
+
+    const url =
+        input.value.trim();
+
+
+    if (!url) {
+        return;
+    }
+
+
+    try {
+
+        const parsedUrl =
+            new URL(url);
+
+        if (
+            parsedUrl.protocol !== 'http:' &&
+            parsedUrl.protocol !== 'https:'
+        ) {
+            throw new Error();
+        }
+
+    } catch {
+
+        alert(
+            'Please enter a valid HTTP or HTTPS URL.'
+        );
+
+        return;
+
+    }
+
+
+    pendingEvidenceLinks.push(
+        url
+    );
+
+
+    input.value = '';
+
+
+    renderEvidenceLists();
+
+}
+
+
+// ======================================================
+// REMOVE EVIDENCE LINK
+// ======================================================
+
+function removeEvidenceLink(index) {
+
+    pendingEvidenceLinks.splice(
+        index,
+        1
+    );
+
+    renderEvidenceLists();
+
+}
+
+
+// ======================================================
+// ADD EVIDENCE FILE
+// ======================================================
+
+document
+    .getElementById('evidenceFile')
+    .addEventListener(
+        'change',
+        function () {
+
+            const file =
+                this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            pendingEvidenceFiles.push(
+                file
+            );
+
+
+            this.value = '';
+
+
+            renderEvidenceLists();
+
+        }
+    );
+
+
+// ======================================================
+// REMOVE EVIDENCE FILE
+// ======================================================
+
+function removeEvidenceFile(index) {
+
+    pendingEvidenceFiles.splice(
+        index,
+        1
+    );
+
+    renderEvidenceLists();
+
+}
+
+
+// ======================================================
 // SUBMIT INTELLIGENCE
 // ======================================================
 
 async function submitIntel() {
-
 
     const reporterName =
         document
@@ -723,21 +1144,6 @@ async function submitIntel() {
             .getElementById('source')
             .value
             .trim();
-
-
-    const evidenceLink =
-        document
-            .getElementById('evidenceLink')
-            .value
-            .trim();
-
-
-    const evidenceFileInput =
-        document.getElementById('evidenceFile');
-
-
-    const evidenceFile =
-        evidenceFileInput.files[0] || null;
 
 
     const message =
@@ -841,29 +1247,32 @@ async function submitIntel() {
 
 
     // ==================================================
-    // UPLOAD EVIDENCE FILE IF PROVIDED
+    // UPLOAD EVIDENCE FILES
     // ==================================================
 
-    let uploadedEvidenceLink =
-        evidenceLink || null;
+    const uploadedAttachments = [];
 
 
-    if (evidenceFile) {
+    for (
+        const evidenceFile
+        of pendingEvidenceFiles
+    ) {
 
         const filePath =
-            `intel/non-scu/${Date.now()}_${evidenceFile.name}`;
+            `intel/non-scu/${Date.now()}_${crypto.randomUUID()}_${evidenceFile.name}`;
 
 
         const {
             error: uploadError
-        } = await supabaseClient.storage
+        } =
+            await supabaseClient.storage
 
-            .from('intel-evidence')
+                .from('intel-evidence')
 
-            .upload(
-                filePath,
-                evidenceFile
-            );
+                .upload(
+                    filePath,
+                    evidenceFile
+                );
 
 
         if (uploadError) {
@@ -899,19 +1308,52 @@ async function submitIntel() {
 
         const {
             data: publicData
-        } = supabaseClient.storage
+        } =
+            supabaseClient.storage
 
-            .from('intel-evidence')
+                .from('intel-evidence')
 
-            .getPublicUrl(
-                filePath
-            );
+                .getPublicUrl(
+                    filePath
+                );
 
 
-        uploadedEvidenceLink =
-            publicData.publicUrl;
+        uploadedAttachments.push({
+
+            type: 'file',
+
+            file_name:
+                evidenceFile.name,
+
+            url:
+                publicData.publicUrl
+
+        });
 
     }
+
+
+    // ==================================================
+    // ADD EVIDENCE LINKS
+    // ==================================================
+
+    pendingEvidenceLinks.forEach(
+
+        url => {
+
+            uploadedAttachments.push({
+
+                type: 'url',
+
+                file_name: null,
+
+                url: url
+
+            });
+
+        }
+
+    );
 
 
     // ==================================================
@@ -919,36 +1361,42 @@ async function submitIntel() {
     // ==================================================
 
     const {
-        data,
+        data: reportId,
         error
-    } = await supabaseClient.rpc(
-        'submit_non_scu_intel',
-        {
-            p_reporter_name:
-                reporterName,
+    } =
+        await supabaseClient.rpc(
 
-            p_reporter_callsign:
-                reporterCallsign,
+            'submit_non_scu_intel',
 
-            p_intel_type:
-                intelType,
+            {
 
-            p_subject:
-                subject,
+                p_reporter_name:
+                    reporterName,
 
-            p_finding:
-                finding,
+                p_reporter_callsign:
+                    reporterCallsign,
 
-            p_location:
-                location || null,
+                p_intel_type:
+                    intelType,
 
-            p_source:
-                source || null,
+                p_subject:
+                    subject,
 
-            p_evidence:
-                uploadedEvidenceLink || null
-        }
-    );
+                p_finding:
+                    finding,
+
+                p_location:
+                    location || null,
+
+                p_source:
+                    source || null,
+
+                p_evidence:
+                    null
+
+            }
+
+        );
 
 
     if (error) {
@@ -977,6 +1425,66 @@ async function submitIntel() {
 
 
         return;
+
+    }
+
+
+    // ==================================================
+    // SAVE ATTACHMENTS
+    // ==================================================
+
+    if (
+        uploadedAttachments.length > 0
+    ) {
+
+        const {
+            error: attachmentError
+        } =
+            await supabaseClient.rpc(
+
+                'add_non_scu_intel_attachments',
+
+                {
+
+                    p_report_id:
+                        reportId,
+
+                    p_attachments:
+                        uploadedAttachments
+
+                }
+
+            );
+
+
+        if (attachmentError) {
+
+            console.error(
+                'Non-SCU attachment error:',
+                attachmentError
+            );
+
+
+            message.classList.add(
+                'error'
+            );
+
+
+            message.textContent =
+                'Intelligence was submitted, but the evidence could not be attached. Please contact SCU command.';
+
+
+            submitButton.disabled =
+                false;
+
+
+            submitButton.textContent =
+                'SUBMIT INTELLIGENCE';
+
+
+            return;
+
+        }
 
     }
 
@@ -1033,9 +1541,12 @@ async function submitIntel() {
         .value = '';
 
 
-    document
-        .getElementById('evidenceLink')
-        .value = '';
+    pendingEvidenceLinks = [];
+
+    pendingEvidenceFiles = [];
+
+
+    renderEvidenceLists();
 
 
     document
@@ -1052,8 +1563,16 @@ async function submitIntel() {
 
 }
 
+
+// ======================================================
+// INITIAL EVIDENCE DISPLAY
+// ======================================================
+
+renderEvidenceLists();
+
 </script>
 
 </body>
 
 </html>
+```
