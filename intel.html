@@ -4,7 +4,6 @@
 
 <head>
 
-```
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,7 +11,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>a
+<style>
 
     * {
         box-sizing: border-box;
@@ -344,6 +343,38 @@
         margin: 0;
     }
 
+    .evidence-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid #202b36;
+    }
+
+    .evidence-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .evidence-item:first-child {
+        padding-top: 0;
+    }
+
+    .evidence-item-type {
+        flex-shrink: 0;
+        color: #667381;
+        font-size: 9px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        min-width: 42px;
+    }
+
+    .evidence-item-link {
+        min-width: 0;
+        flex: 1;
+    }
+
     .evidence-link {
         display: block;
         width: 100%;
@@ -354,6 +385,7 @@
         text-align: left;
         margin: 0;
         padding: 0;
+        word-break: break-word;
     }
 
     .evidence-link:hover {
@@ -660,13 +692,11 @@
     }
 
 </style>
-```
 
 </head>
 
 <body>
 
-```
 <img
     class="background-logo background-logo-left"
     src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
@@ -818,6 +848,7 @@
     let currentRole = null;
     let scaAgents = [];
     let nonScuReports = [];
+    let intelAttachments = [];
 
     let intelTypeOptions = new Map();
 
@@ -865,6 +896,38 @@
             .replace(/"/g, '&quot;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
+
+    }
+
+
+    function getSafeEvidenceUrl(value) {
+
+        const raw =
+            String(value ?? '').trim();
+
+        if (!raw) {
+            return null;
+        }
+
+        try {
+
+            const url =
+                new URL(raw);
+
+            if (
+                url.protocol !== 'http:' &&
+                url.protocol !== 'https:'
+            ) {
+                return null;
+            }
+
+            return url.href;
+
+        } catch {
+
+            return null;
+
+        }
 
     }
 
@@ -1515,6 +1578,314 @@
 
 
     /* ================================================== */
+    /* LOAD ATTACHMENTS */
+    /* ================================================== */
+
+    async function loadIntelAttachments(
+        scuIntel
+    ) {
+
+        intelAttachments = [];
+
+
+        const groupIds = [
+            ...new Set(
+                (scuIntel || [])
+                    .map(
+                        intel =>
+                            intel.intel_group_id
+                    )
+                    .filter(Boolean)
+            )
+        ];
+
+
+        const nonScuReportIds =
+            hasFullIntelAccess()
+                ? [
+                    ...new Set(
+                        (nonScuReports || [])
+                            .map(
+                                report =>
+                                    report.id
+                            )
+                            .filter(Boolean)
+                    )
+                ]
+                : [];
+
+
+        const attachmentQueries = [];
+
+
+        if (
+            groupIds.length > 0
+        ) {
+
+            attachmentQueries.push(
+                supabaseClient
+                    .from('intel_attachments')
+                    .select(`
+                        id,
+                        intel_group_id,
+                        non_scu_report_id,
+                        attachment_type,
+                        file_name,
+                        attachment_url,
+                        created_at
+                    `)
+                    .in(
+                        'intel_group_id',
+                        groupIds
+                    )
+                    .order(
+                        'created_at',
+                        {
+                            ascending: true
+                        }
+                    )
+            );
+
+        }
+
+
+        if (
+            nonScuReportIds.length > 0
+        ) {
+
+            attachmentQueries.push(
+                supabaseClient
+                    .from('intel_attachments')
+                    .select(`
+                        id,
+                        intel_group_id,
+                        non_scu_report_id,
+                        attachment_type,
+                        file_name,
+                        attachment_url,
+                        created_at
+                    `)
+                    .in(
+                        'non_scu_report_id',
+                        nonScuReportIds
+                    )
+                    .order(
+                        'created_at',
+                        {
+                            ascending: true
+                        }
+                    )
+            );
+
+        }
+
+
+        if (
+            attachmentQueries.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        const results =
+            await Promise.all(
+                attachmentQueries
+            );
+
+
+        const failedResult =
+            results.find(
+                result =>
+                    result.error
+            );
+
+
+        if (failedResult) {
+
+            console.error(
+                'Intel attachment loading error:',
+                failedResult.error
+            );
+
+            return;
+
+        }
+
+
+        results.forEach(
+            result => {
+
+                intelAttachments.push(
+                    ...(result.data || [])
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ================================================== */
+    /* BUILD EVIDENCE HTML */
+    /* ================================================== */
+
+    function buildEvidenceHtml(
+        legacyEvidence,
+        attachments = []
+    ) {
+
+        const evidenceItems = [];
+
+
+        const safeLegacyUrl =
+            getSafeEvidenceUrl(
+                legacyEvidence
+            );
+
+
+        if (
+            safeLegacyUrl
+        ) {
+
+            evidenceItems.push({
+                type: 'Evidence',
+                name: 'OPEN ATTACHMENT',
+                url: safeLegacyUrl
+            });
+
+        }
+
+
+        (attachments || []).forEach(
+            attachment => {
+
+                const safeUrl =
+                    getSafeEvidenceUrl(
+                        attachment.attachment_url
+                    );
+
+
+                if (!safeUrl) {
+
+                    return;
+
+                }
+
+
+                const isFile =
+                    attachment.attachment_type === 'file';
+
+
+                evidenceItems.push({
+
+                    type:
+                        isFile
+                            ? 'File'
+                            : 'Link',
+
+                    name:
+                        isFile
+                            ? (
+                                attachment.file_name ||
+                                'OPEN EVIDENCE FILE'
+                            )
+                            : 'OPEN EVIDENCE LINK',
+
+                    url:
+                        safeUrl
+
+                });
+
+            }
+        );
+
+
+        if (
+            evidenceItems.length === 0
+        ) {
+
+            return '';
+
+        }
+
+
+        return `
+
+            <div class="section">
+
+                <div class="section-title">
+                    Evidence
+                </div>
+
+                <div class="evidence-content">
+
+                    ${
+                        evidenceItems
+                            .map(
+                                item => `
+
+                                    <div class="evidence-item">
+
+                                        <div class="evidence-item-type">
+                                            ${escapeHtml(item.type)}
+                                        </div>
+
+                                        <div class="evidence-item-link">
+
+                                            <a
+                                                class="evidence-link"
+                                                href="${escapeAttribute(item.url)}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                ${escapeHtml(item.name)}
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                `
+                            )
+                            .join('')
+                    }
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    function getGroupAttachments(
+        groupId
+    ) {
+
+        return intelAttachments.filter(
+            attachment =>
+                attachment.intel_group_id === groupId
+        );
+
+    }
+
+
+    function getNonScuAttachments(
+        reportId
+    ) {
+
+        return intelAttachments.filter(
+            attachment =>
+                attachment.non_scu_report_id === reportId
+        );
+
+    }
+
+
+    /* ================================================== */
     /* BUILD AGENT LIST */
     /* ================================================== */
 
@@ -1701,6 +2072,11 @@
 
         let scuIntel =
             data || [];
+
+
+        await loadIntelAttachments(
+            scuIntel
+        );
 
 
         intelTypeOptions.clear();
@@ -2386,45 +2762,15 @@
                 }
 
 
-                let evidenceHtml = '';
-
-
-                const intelEvidence =
-                    intel.evidence_link ||
-                    intel.evidence ||
-                    null;
-
-
-                if (
-                    intelEvidence
-                ) {
-
-                    evidenceHtml = `
-
-                        <div class="section">
-
-                            <div class="section-title">
-                                Evidence
-                            </div>
-
-                            <div class="evidence-content">
-
-                                <a
-                                    class="evidence-link"
-                                    href="${escapeAttribute(intelEvidence)}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    OPEN ATTACHMENT
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
+                const evidenceHtml =
+                    buildEvidenceHtml(
+                        intel.evidence_link ||
+                        intel.evidence ||
+                        null,
+                        getGroupAttachments(
+                            groupId
+                        )
+                    );
 
 
                 const card =
@@ -2682,37 +3028,13 @@
         }
 
 
-        let evidenceHtml = '';
-
-
-        if (
-            report.evidence
-        ) {
-
-            evidenceHtml = `
-
-                <div class="section">
-
-                    <div class="section-title">Evidence</div>
-
-                    <div class="section-content">
-
-                        <a
-                            class="evidence-link"
-                            href="${escapeAttribute(report.evidence)}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            OPEN ATTACHMENT
-                        </a>
-
-                    </div>
-
-                </div>
-
-            `;
-
-        }
+        const evidenceHtml =
+            buildEvidenceHtml(
+                report.evidence || null,
+                getNonScuAttachments(
+                    report.id
+                )
+            );
 
 
         const card =
@@ -3145,14 +3467,6 @@
         }
 
 
-        const existingRecipientIds =
-            rows
-                .map(
-                    row => row.recipient_id
-                )
-                .filter(Boolean);
-
-
         const sourceCopy = {
             ...sourceRow
         };
@@ -3540,6 +3854,12 @@
                     source:
                         reporterSource,
 
+                    /*
+                     * New attachments are stored in
+                     * intel_attachments. The legacy evidence
+                     * field is still carried across for old
+                     * Non-SCU reports that used it.
+                     */
                     evidence_link:
                         report.evidence ||
                         null
@@ -3593,6 +3913,51 @@
         );
 
 
+        /*
+         * Move all new attachment records from the
+         * public Non-SCU report onto the SCU intel group.
+         */
+        const {
+            error: attachmentMoveError
+        } = await supabaseClient
+
+            .rpc(
+                'assign_non_scu_intel_attachments',
+                {
+                    p_report_id:
+                        reportId,
+
+                    p_intel_group_id:
+                        groupId
+                }
+            );
+
+
+        if (
+            attachmentMoveError
+        ) {
+
+            console.error(
+                'NON-SCU attachment assignment error:',
+                attachmentMoveError
+            );
+
+            alert(
+                `The intelligence was created, but its evidence could not be transferred.\n\n${attachmentMoveError.message || attachmentMoveError}\n\nThe original report has NOT been marked as assigned.`
+            );
+
+            if (button) {
+
+                button.disabled = false;
+                button.textContent = 'SEND INTEL';
+
+            }
+
+            return;
+
+        }
+
+
         const {
             error: statusError
         } = await supabaseClient
@@ -3601,7 +3966,16 @@
 
             .update({
                 status:
-                    'assigned'
+                    'assigned',
+
+                assigned_intel_id:
+                    insertedIntel &&
+                    insertedIntel.length > 0
+                        ? insertedIntel[0].id
+                        : null,
+
+                assigned_at:
+                    new Date().toISOString()
             })
 
             .eq(
@@ -3657,10 +4031,12 @@
             )
             .single();
 
+
         if (
             intelCheckError ||
             !intelRecord
         ) {
+
             console.error(
                 'Intel permission check error:',
                 intelCheckError
@@ -3671,6 +4047,7 @@
             );
 
             return;
+
         }
 
 
@@ -3682,57 +4059,116 @@
                 intelRecord.recipient_id === currentUser.id
             );
 
+
         if (!canDelete) {
+
             alert(
                 'You do not have permission to delete this intelligence.'
             );
+
             return;
+
         }
+
 
         if (
             !confirm(
                 'Are you sure you want to permanently delete this intelligence?'
             )
         ) {
+
             return;
+
         }
+
+
+        /*
+         * A grouped Intel submission creates one database row
+         * for each recipient but is displayed as one card.
+         *
+         * Masters delete the whole group and its attachment
+         * records. A normal recipient only deletes their own
+         * copy, preserving the other recipients' copies and
+         * therefore preserving the group attachments.
+         */
+
+        if (
+            hasFullIntelAccess() &&
+            intelRecord.intel_group_id
+        ) {
+
+            const {
+                error: attachmentDeleteError
+            } = await supabaseClient
+
+                .from('intel_attachments')
+
+                .delete()
+
+                .eq(
+                    'intel_group_id',
+                    intelRecord.intel_group_id
+                );
+
+
+            if (
+                attachmentDeleteError
+            ) {
+
+                console.error(
+                    'Intel attachment deletion error:',
+                    attachmentDeleteError
+                );
+
+                alert(
+                    `Unable to delete the intelligence attachments.\n\n${attachmentDeleteError.message || attachmentDeleteError}`
+                );
+
+                return;
+
+            }
+
+        }
+
 
         let deleteQuery =
             supabaseClient
                 .from('intel_submissions')
                 .delete();
 
-        /*
-         * A grouped Intel submission creates one database row
-         * for each recipient but is displayed as one card.
-         * Masters delete the whole group so the displayed Intel
-         * actually disappears. A normal recipient only deletes
-         * their own copy, preserving the other recipients' copies.
-         */
+
         if (
             hasFullIntelAccess()
             &&
             intelRecord.intel_group_id
         ) {
+
             deleteQuery =
                 deleteQuery.eq(
                     'intel_group_id',
                     intelRecord.intel_group_id
                 );
+
         }
+
         else {
+
             deleteQuery =
                 deleteQuery.eq(
                     'id',
                     intelId
                 );
+
         }
+
 
         const {
             error
         } = await deleteQuery;
 
+
         if (error) {
+
             console.error(
                 'Intel deletion error:',
                 error
@@ -3743,9 +4179,12 @@
             );
 
             return;
+
         }
 
+
         await loadIntel();
+
     }
 
 
@@ -3790,9 +4229,45 @@
 
         if (
             !confirm(
-                'DELETE BOGUS REPORT?\n\nThis will permanently delete this NON-SCU intelligence report and it cannot be recovered.'
+                'DELETE BOGUS REPORT?\n\nThis will permanently delete this NON-SCU intelligence report and its evidence. It cannot be recovered.'
             )
         ) {
+
+            return;
+
+        }
+
+
+        /*
+         * Delete attachment records first because the attachment
+         * table intentionally has no automatic foreign-key cascade.
+         */
+        const {
+            error: attachmentDeleteError
+        } = await supabaseClient
+
+            .from('intel_attachments')
+
+            .delete()
+
+            .eq(
+                'non_scu_report_id',
+                reportId
+            );
+
+
+        if (
+            attachmentDeleteError
+        ) {
+
+            console.error(
+                'NON-SCU attachment deletion error:',
+                attachmentDeleteError
+            );
+
+            alert(
+                `Unable to delete NON-SCU evidence.\n\n${attachmentDeleteError.message || attachmentDeleteError}`
+            );
 
             return;
 
@@ -3877,7 +4352,6 @@
     initialise();
 
 </script>
-```
 
 </body>
 
