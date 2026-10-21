@@ -1529,11 +1529,7 @@ async function loadOfficerAccess() {
         await supabaseClient
             .from('officers')
             .select(
-                'id, full_name, rank, callsign, active'
-            )
-            .eq(
-                'is_scu_agent',
-                true
+                'id, full_name, rank, portal_title, callsign, active, is_scu_agent'
             )
             .eq(
                 'active',
@@ -1622,40 +1618,57 @@ async function loadOfficerAccess() {
         'Head of SCU': 1,
         'Assistant Head of SCU': 2,
         'Head of Weapons': 3,
-        'Head of Drugs': 4,
-        'Head of Gangs': 5,
-        'Detective': 6
+        'Head of Drugs': 3,
+        'Head of Gangs': 3,
+        'Detective': 4
 
     };
+
+
+    function getOfficerPortalRank(officer) {
+
+        const savedRank =
+            String(officer.rank || '').trim();
+
+        const portalTitle =
+            String(officer.portal_title || '').trim();
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                rankOrder,
+                portalTitle
+            )
+        ) {
+            return portalTitle;
+        }
+
+        if (
+            Object.prototype.hasOwnProperty.call(
+                rankOrder,
+                savedRank
+            )
+        ) {
+            return savedRank;
+        }
+
+        return '';
+    }
 
 
     const filteredOfficers =
         (officers || [])
             .filter(
-                officer => {
-
-                    const rank =
-                        (officer.rank || '')
-                            .trim();
-
-                    return Object.prototype
-                        .hasOwnProperty.call(
-                            rankOrder,
-                            rank
-                        );
-
-                }
+                officer =>
+                    Boolean(getOfficerPortalRank(officer))
             )
             .sort(
                 (a, b) => {
 
                     const rankA =
-                        (a.rank || '')
-                            .trim();
+                        getOfficerPortalRank(a);
 
                     const rankB =
-                        (b.rank || '')
-                            .trim();
+                        getOfficerPortalRank(b);
 
 
                     const difference =
@@ -1809,7 +1822,9 @@ async function loadOfficerAccess() {
 
 
             rank.textContent =
-                officer.rank || '';
+                getOfficerPortalRank(officer) ||
+                officer.rank ||
+                '';
 
 
             label.appendChild(
