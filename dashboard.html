@@ -336,6 +336,35 @@
         color: #60a5fa;
     }
 
+    /* SCU CHAT BUTTON */
+    .chat-dashboard-button {
+        position: relative;
+        background: #172b3d;
+        border: 1px solid #31516c;
+        color: #e8edf2;
+    }
+
+    .chat-dashboard-button:hover {
+        background: #1b3a52;
+        border-color: #4b91c8;
+    }
+
+    .chat-unread-badge {
+        display: none;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        margin-left: 8px;
+        border-radius: 10px;
+        background: #dc2626;
+        color: #fff;
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
     .panel {
         background: #111821;
         border: 1px solid #293542;
@@ -736,6 +765,16 @@
 
 
     <button
+        class="dashboard-button chat-dashboard-button"
+        id="chatDashboardButton"
+        onclick="window.location.href='chat.html'"
+        aria-label="Open SCU Chat"
+    >
+        SCU CHAT <span class="chat-unread-badge" id="chatUnreadBadge" aria-live="polite">0</span>
+    </button>
+
+
+    <button
         class="dashboard-button officers-button"
         id="officersButton"
         onclick="window.location.href='officers.html'"
@@ -1029,6 +1068,11 @@ async function checkLogin() {
     loadIntelCounts(
         userId
     );
+
+
+    loadChatUnreadCount();
+
+    subscribeDashboardChatNotifications(userId);
 
     loadGlobalSearchData(
         userId
@@ -1926,6 +1970,66 @@ function renderCaseList() {
             )
             .join('');
 
+}
+
+
+// ======================================================
+// LOAD SCU CHAT UNREAD COUNT
+// Counts messages from other officers after this officer's
+// per-room read marker. Opening a room marks it as read.
+// ======================================================
+
+async function loadChatUnreadCount() {
+
+    const badge = document.getElementById('chatUnreadBadge');
+    if (!badge) return;
+
+    const { data, error } = await supabaseClient.rpc('scu_chat_unread_count');
+
+    if (error) {
+        console.warn('SCU chat unread count unavailable. Run the SCU Chat SQL setup first.', error.message);
+        badge.style.display = 'none';
+        return;
+    }
+
+    const count = Number(data || 0);
+    badge.textContent = count > 99 ? '99+' : String(count);
+    badge.style.display = count > 0 ? 'inline-block' : 'none';
+    badge.setAttribute('aria-label', count + ' unread chat messages');
+}
+
+
+// Refresh the per-officer chat badge while the dashboard is open.
+let dashboardChatChannel = null;
+
+function subscribeDashboardChatNotifications(userId) {
+
+    if (dashboardChatChannel) {
+        supabaseClient.removeChannel(dashboardChatChannel);
+    }
+
+    dashboardChatChannel = supabaseClient
+        .channel('scu-dashboard-chat-' + userId)
+        .on(
+            'postgres_changes',
+            {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'chat_messages'
+            },
+            () => loadChatUnreadCount()
+        )
+        .on(
+            'postgres_changes',
+            {
+                event: '*',
+                schema: 'public',
+                table: 'chat_room_members',
+                filter: 'user_id=eq.' + userId
+            },
+            () => loadChatUnreadCount()
+        )
+        .subscribe();
 }
 
 
