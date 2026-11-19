@@ -199,22 +199,19 @@
            OFFICERS
         ========================= */
 
-        .officers {
+       .officers {
             margin-top: 10px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        .agent-column {
-            flex: 1;
-            min-width: 250px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 20px;
+            background: #0b0f14;
             border: 1px solid #26313c;
             border-radius: 5px;
             overflow: hidden;
-            background: #0b0f14;
+        }
+
+        .agent-column {
+            min-width: 0;
         }
 
         .agent-option {
@@ -230,40 +227,31 @@
             font-size: 13px;
         }
 
-        .agent-option:last-child {
-            border-bottom: none;
-        }
-
         .agent-option:hover {
             background: #111820;
         }
 
         .agent-option input {
-            width: auto;
+            width: 16px;
+            height: 16px;
             margin: 0;
             flex-shrink: 0;
-        }
-
-        .agent-info {
-            flex: 1;
-            min-width: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            accent-color: #1d4ed8;
+            cursor: pointer;
         }
 
         .agent-name {
+            flex: 1;
+            min-width: 0;
             color: #e6edf3;
             font-size: 13px;
         }
 
-        .agent-callsign {
-            color: #e6edf3;
-            font-weight: bold;
-        }
-
         .agent-rank {
             color: #6f7c88;
+            font-size: 11px;
+            margin-left: 8px;
+            flex-shrink: 0;
         }
 
         .no-officers {
@@ -386,9 +374,7 @@
             .cancel {
                 order: 2;
             }
-
-            .agent-column {
-                min-width: 240px;
+.officers { grid-template-columns: 1fr; }
             }
 
         }
@@ -664,7 +650,7 @@ async function loadOfficers() {
         await supabaseClient
             .from('officers')
             .select(
-                'id, callsign, full_name, rank, portal_title'
+                'id, callsign, full_name, rank, portal_title, role'
             )
             .eq(
                 'active',
@@ -703,28 +689,54 @@ async function loadOfficers() {
 
 
     /* =========================
-       RANK ORDER
+       RANK ORDER (Detectives & Above)
     ========================= */
 
     const rankOrder = {
 
-        'Head of SCU': 1,
+        'head of scu': 1,
 
-        'Head of Gangs': 2,
+        'head of gangs': 2,
 
-        'Head of Drugs': 3,
+        'head of drugs': 3,
 
-        'Head of Weapons': 4,
+        'head of weapons': 4,
 
-        'Assistant Head of SCU': 5,
+        'assistant head of scu': 5,
 
-        'Detective': 6
+        'detective': 6
 
     };
 
 
+    function getOfficerTitle(officer) {
+
+        const portalTitle =
+            (officer.portal_title || '').trim();
+
+        const savedRank =
+            (officer.rank || '').trim();
+
+
+        if (Object.prototype.hasOwnProperty.call(rankOrder, portalTitle.toLowerCase())) {
+
+            return portalTitle;
+
+        }
+
+        if (Object.prototype.hasOwnProperty.call(rankOrder, savedRank.toLowerCase())) {
+
+            return savedRank;
+
+        }
+
+        return '';
+
+    }
+
+
     /* =========================
-       FILTER OFFICERS
+       FILTER & SORT OFFICERS
     ========================= */
 
     const officers =
@@ -732,17 +744,13 @@ async function loadOfficers() {
             .filter(
                 officer => {
 
-                    const portalTitle =
-                        (officer.portal_title || '').trim();
+                    const role =
+                        (officer.role || '').trim().toLowerCase();
 
                     return (
-                        officer.id !== currentUser.id
+                        role !== 'probationary'
                         &&
-                        portalTitle !== 'GOV'
-                        &&
-                        portalTitle !== 'High Command'
-                        &&
-                        portalTitle !== 'Probationary'
+                        Boolean(getOfficerTitle(officer))
                     );
 
                 }
@@ -750,26 +758,25 @@ async function loadOfficers() {
             .sort(
                 (a, b) => {
 
-                    const rankA =
-                        rankOrder[a.portal_title] ||
-                        rankOrder[a.rank] ||
-                        99;
+                    const titleA =
+                        getOfficerTitle(a).toLowerCase();
 
-                    const rankB =
-                        rankOrder[b.portal_title] ||
-                        rankOrder[b.rank] ||
-                        99;
+                    const titleB =
+                        getOfficerTitle(b).toLowerCase();
 
-                    if (rankA !== rankB) {
 
-                        return rankA - rankB;
+                    if (rankOrder[titleA] !== rankOrder[titleB]) {
+
+                        return rankOrder[titleA] - rankOrder[titleB];
 
                     }
 
                     return (
-                        (a.callsign || '')
+                        (a.full_name || '')
+                            .trim()
+                            .toLowerCase()
                             .localeCompare(
-                                b.callsign || ''
+                                (b.full_name || '').trim().toLowerCase()
                             )
                     );
 
@@ -834,33 +841,19 @@ async function loadOfficers() {
                                             class="officer-checkbox"
                                         >
 
-                                        <div class="agent-info">
+                                        <span class="agent-name">
+                                            ${escapeHtml(
+                                                officer.full_name ||
+                                                officer.callsign ||
+                                                'Unknown Officer'
+                                            )}
+                                        </span>
 
-                                            <span class="agent-callsign">
-                                                ${escapeHtml(
-                                                    officer.callsign ||
-                                                    'UNASSIGNED'
-                                                )}
-                                            </span>
-
-                                            <span class="agent-rank">
-                                                —
-                                                ${escapeHtml(
-                                                    officer.portal_title ||
-                                                    officer.rank ||
-                                                    'Officer'
-                                                )}
-                                            </span>
-
-                                            <span class="agent-name">
-                                                —
-                                                ${escapeHtml(
-                                                    officer.full_name ||
-                                                    ''
-                                                )}
-                                            </span>
-
-                                        </div>
+                                        <span class="agent-rank">
+                                            ${escapeHtml(
+                                                getOfficerTitle(officer)
+                                            )}
+                                        </span>
 
                                     </label>
 
