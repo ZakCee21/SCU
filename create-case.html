@@ -665,6 +665,10 @@ async function loadOfficers() {
             .from('officers')
             .select(
                 'id, callsign, full_name, rank, portal_title'
+            )
+            .eq(
+                'active',
+                true
             );
 
 
@@ -706,13 +710,15 @@ async function loadOfficers() {
 
         'Head of SCU': 1,
 
-        'Assistant Head of SCU': 2,
+        'Head of Gangs': 2,
 
-        'Head of Weapons': 3,
+        'Head of Drugs': 3,
 
-        'Head of Drugs': 4,
+        'Head of Weapons': 4,
 
-        'Detective': 5
+        'Assistant Head of SCU': 5,
+
+        'Detective': 6
 
     };
 
@@ -735,6 +741,8 @@ async function loadOfficers() {
                         portalTitle !== 'GOV'
                         &&
                         portalTitle !== 'High Command'
+                        &&
+                        portalTitle !== 'Probationary'
                     );
 
                 }
