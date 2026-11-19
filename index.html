@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,455 +7,436 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCU Case Management</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #080c11;
+            color: #e8edf2;
+            position: relative;
+            overflow: hidden;
+        }
 
-    * {
-        box-sizing: border-box;
-    }
+        .background-logo {
+            position: fixed;
+            top: 50%;
+            width: 320px;
+            max-width: 30vw;
+            opacity: 0.5;
+            transform: translateY(-50%);
+            z-index: 0;
+            pointer-events: none;
+        }
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Arial, sans-serif;
-        background: #080c11;
-        color: #e8edf2;
-        position: relative;
-        overflow: hidden;
-    }
+        .background-logo-left {
+            left: calc(50% - 380px);
+            transform: translate(-50%, -50%);
+        }
 
-    /* =========================
-       SCU BACKGROUND LOGO
-    ========================= */
+        .background-logo-right {
+            left: calc(50% + 380px);
+            transform: translate(-50%, -50%);
+        }
 
-  .background-logo {
-    position: fixed;
-    top: 50%;
-    width: 320px;
-    max-width: 30vw;
-    opacity: 0.5;
-    transform: translateY(-50%);
-    z-index: 0;
-    pointer-events: none;
-}
+        .login-box {
+            position: relative;
+            z-index: 2;
+            width: 400px;
+            max-width: 90%;
+            background: #111821;
+            border: 1px solid #293542;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.45);
+        }
 
-.background-logo-left {
-    left: calc(50% - 380px);
-    transform: translate(-50%, -50%);
-}
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
 
-.background-logo-right {
-    left: calc(50% + 380px);
-    transform: translate(-50%, -50%);
-}
+        .logo h1 {
+            margin: 0;
+            font-size: 27px;
+            letter-spacing: 2px;
+        }
 
-    /* =========================
-       LOGIN BOX
-    ========================= */
+        .logo p {
+            margin: 8px 0 0;
+            color: #7f8c99;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
 
-    .login-box {
-        position: relative;
-        z-index: 2;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aeb9c4;
+            font-size: 13px;
+        }
 
-        width: 400px;
-        max-width: 90%;
-        background: #111821;
-        border: 1px solid #293542;
-        border-radius: 10px;
-        padding: 40px;
-        box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 20px;
+            border: 1px solid #303c48;
+            border-radius: 6px;
+            background: #0b1117;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
 
-    .logo {
-        text-align: center;
-        margin-bottom: 35px;
-    }
+        input:focus {
+            border-color: #667788;
+        }
 
-    .logo h1 {
-        margin: 0;
-        font-size: 27px;
-        letter-spacing: 2px;
-    }
+        button {
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 6px;
+            background: #263746;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-    .logo p {
-        margin: 8px 0 0;
-        color: #7f8c99;
-        font-size: 12px;
-        letter-spacing: 1px;
-    }
+        button:hover {
+            background: #32495c;
+        }
 
-    label {
-        display: block;
-        margin-bottom: 8px;
-        color: #aeb9c4;
-        font-size: 13px;
-    }
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
 
-    input {
-        width: 100%;
-        padding: 13px;
-        margin-bottom: 20px;
-        border: 1px solid #303c48;
-        border-radius: 6px;
-        background: #0b1117;
-        color: white;
-        font-size: 14px;
-        outline: none;
-    }
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #596673;
+            font-size: 11px;
+        }
 
-    input:focus {
-        border-color: #667788;
-    }
+        .non-scu-button {
+            margin-top: 12px;
+            background: #3a2525;
+            border: 1px solid #654040;
+        }
 
-    button {
-        width: 100%;
-        padding: 14px;
-        border: 0;
-        border-radius: 6px;
-        background: #263746;
-        color: white;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background: #32495c;
-    }
-
-    button:disabled {
-        opacity: 0.6;
-        cursor: wait;
-    }
-
-    .footer {
-        text-align: center;
-        margin-top: 25px;
-        color: #596673;
-        font-size: 11px;
-    }
-.non-scu-button {
-    margin-top: 12px;
-    background: #3a2525;
-    border: 1px solid #654040;
-}
-
-.non-scu-button:hover {
-    background: #513131;
-}
-</style>
-
-
+        .non-scu-button:hover {
+            background: #513131;
+        }
+    </style>
 </head>
 
 <body>
 
+    <img
+        class="background-logo background-logo-left"
+        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+        alt=""
+    >
 
-<!-- SCU LOGO BEHIND LOGIN BOX -->
+    <img
+        class="background-logo background-logo-right"
+        src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
+        alt=""
+    >
 
-<img
-    class="background-logo background-logo-left"
-    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
-    alt=""
->
+    <div class="login-box">
 
-<img
-    class="background-logo background-logo-right"
-    src="https://r2.fivemanage.com/PtUBr7btDsJIJroZ84fAB/SCU.webp"
-    alt=""
->
-<!-- LOGIN BOX -->
+        <div class="logo">
+            <h1>SCU CASE MANAGEMENT</h1>
+            <p>STREET CRIMES UNIT</p>
+        </div>
 
-<div class="login-box">
+        <form id="loginForm">
 
-    <div class="logo">
-        <h1>SCU CASE MANAGEMENT</h1>
-        <p>STREET CRIMES UNIT</p>
+            <label for="username">In-City Name</label>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter your in-city name"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">Password</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit" id="loginButton">
+                SECURE LOGIN
+            </button>
+
+            <button
+                type="button"
+                class="non-scu-button"
+                onclick="window.location.href='non-scu-intel.html'"
+            >
+                NON-SCU MEMBER REPORT
+            </button>
+
+        </form>
+
+        <div class="footer">
+            AUTHORISED PERSONNEL ONLY
+        </div>
+
     </div>
 
-    <form id="loginForm">
+    <script>
 
-        <label for="username">In-City Name</label>
+        const SUPABASE_URL =
+            'https://mtlozyseibrefhxnocvb.supabase.co';
 
-        <input
-            type="text"
-            id="username"
-            placeholder="Enter your in-city name"
-            autocomplete="username"
-            required
-        >
+        const SUPABASE_KEY =
+            'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
 
-        <label for="password">Password</label>
+        if (!window.supabase) {
 
-        <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-            required
-        >
+            alert(
+                'SYSTEM ERROR\n\n' +
+                'The SCU database service could not be loaded.\n\n' +
+                'Please refresh the page and try again.'
+            );
 
-       <button type="submit" id="loginButton">
-    SECURE LOGIN
-</button>
+            throw new Error('Supabase library failed to load.');
+        }
 
-<button
-    type="button"
-    class="non-scu-button"
-    onclick="window.location.href='non-scu-intel.html'"
->
-    NON-SCU MEMBER REPORT
-</button>
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
 
-    </form>
+        const loginForm =
+            document.getElementById('loginForm');
 
-    <div class="footer">
-        AUTHORISED PERSONNEL ONLY
-    </div>
+        const loginButton =
+            document.getElementById('loginButton');
 
-</div>
+        loginForm.addEventListener(
+            'submit',
+            async function (event) {
 
-<script>
+                event.preventDefault();
 
-    /* =========================
-       SUPABASE CONFIGURATION
-    ========================= */
+                loginButton.disabled = true;
+                loginButton.textContent = 'VERIFYING...';
 
-    const SUPABASE_URL =
-        'https://mtlozyseibrefhxnocvb.supabase.co';
+                try {
 
-    const SUPABASE_KEY =
-        'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+                    const username =
+                        document
+                            .getElementById('username')
+                            .value
+                            .trim();
 
+                    const password =
+                        document
+                            .getElementById('password')
+                            .value;
 
-    /* =========================
-       CHECK SUPABASE LOADED
-    ========================= */
+                    /* CHECK APPROVED ACTIVE OFFICER */
 
-    if (!window.supabase) {
+                    const {
+                        data: loginEmail,
+                        error: lookupError
+                    } = await supabaseClient.rpc(
+                        'get_login_email',
+                        {
+                            p_username: username
+                        }
+                    );
 
-        alert(
-            'SYSTEM ERROR\n\n' +
-            'The SCU database service could not be loaded.\n\n' +
-            'Please refresh the page and try again.'
-        );
+                    if (lookupError) {
 
-        throw new Error('Supabase library failed to load.');
-    }
+                        console.error(
+                            'LOGIN EMAIL LOOKUP ERROR:',
+                            lookupError
+                        );
 
+                        alert(
+                            'LOGIN FAILED\n\n' +
+                            'Unable to verify officer account.'
+                        );
 
-    /* =========================
-       CREATE SUPABASE CLIENT
-    ========================= */
-
-    const supabaseClient =
-        window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_KEY
-        );
-
-
-    /* =========================
-       LOGIN FORM
-    ========================= */
-
-    const loginForm =
-        document.getElementById('loginForm');
-
-    const loginButton =
-        document.getElementById('loginButton');
-
-
-    loginForm.addEventListener(
-        'submit',
-        async function (event) {
-
-            event.preventDefault();
-
-
-            /* Prevent double-clicks */
-            loginButton.disabled = true;
-            loginButton.textContent = 'VERIFYING...';
-
-
-            try {
-
-                const username =
-                    document
-                        .getElementById('username')
-                        .value
-                        .trim();
-
-                const password =
-                    document
-                        .getElementById('password')
-                        .value;
-
-
-                /* =========================
-                   FIND OFFICER EMAIL
-                ========================= */
-
-                const {
-                    data: loginEmail,
-                    error: lookupError
-                } = await supabaseClient.rpc(
-                    'get_login_email',
-                    {
-                        p_username: username
+                        return;
                     }
-                );
 
+                    /* CHECK WHETHER APPLICANT IS PENDING */
 
-                if (lookupError) {
+                    if (!loginEmail) {
 
-                    console.error(
-                        'LOGIN EMAIL LOOKUP ERROR:',
-                        lookupError
-                    );
+                        const {
+                            data: applicationStatus,
+                            error: statusError
+                        } = await supabaseClient.rpc(
+                            'get_application_status',
+                            {
+                                p_username: username
+                            }
+                        );
 
-                    alert(
-                        'LOGIN FAILED\n\n' +
-                        'Unable to verify officer account.'
-                    );
+                        if (statusError) {
 
-                    return;
+                            console.error(
+                                'APPLICATION STATUS ERROR:',
+                                statusError
+                            );
+
+                            alert(
+                                'LOGIN FAILED\n\n' +
+                                'Unable to verify officer account.'
+                            );
+
+                            return;
+                        }
+
+                        if (
+                            applicationStatus &&
+                            applicationStatus.toLowerCase() === 'pending'
+                        ) {
+
+                            alert(
+                                'CONFIRMED — WAITING FOR APPROVAL\n\n' +
+                                'Your SCU application has been received.\n\n' +
+                                'Your account is waiting for approval from SCU Command.\n\n' +
+                                'You will be able to access the portal once approved.'
+                            );
+
+                            return;
+                        }
+
+                        alert(
+                            'LOGIN FAILED\n\n' +
+                            'In-city name not found, or the officer account is inactive.'
+                        );
+
+                        return;
+                    }
+
+                    /* SUPABASE AUTH LOGIN */
+
+                    const {
+                        data,
+                        error
+                    } = await supabaseClient.auth
+                        .signInWithPassword({
+                            email: loginEmail,
+                            password: password
+                        });
+
+                    if (error) {
+
+                        console.error(
+                            'AUTH LOGIN ERROR:',
+                            error
+                        );
+
+                        alert(
+                            'LOGIN FAILED\n\n' +
+                            error.message
+                        );
+
+                        return;
+                    }
+
+                    /* CHECK OFFICER PROFILE */
+
+                    const {
+                        data: officer,
+                        error: officerError
+                    } = await supabaseClient
+                        .from('officers')
+                        .select('active')
+                        .eq('id', data.user.id)
+                        .single();
+
+                    if (officerError || !officer) {
+
+                        console.error(
+                            'OFFICER PROFILE ERROR:',
+                            officerError
+                        );
+
+                        await supabaseClient.auth.signOut();
+
+                        alert(
+                            'OFFICER PROFILE NOT FOUND'
+                        );
+
+                        return;
+                    }
+
+                    /* CHECK ACCOUNT ACTIVE */
+
+                    if (!officer.active) {
+
+                        await supabaseClient.auth.signOut();
+
+                        alert(
+                            'ACCESS DENIED\n\n' +
+                            'Your SCU account has been deactivated.\n\n' +
+                            'Please contact a Master if you believe this is an error.'
+                        );
+
+                        return;
+                    }
+
+                    /* SUCCESS */
+
+                    window.location.href =
+                        'dashboard.html';
+
                 }
 
-
-                if (!loginEmail) {
-
-                    alert(
-                        'LOGIN FAILED\n\n' +
-                        'In-city name not found, or the officer account is inactive.'
-                    );
-
-                    return;
-                }
-
-
-                /* =========================
-                   SUPABASE AUTH LOGIN
-                ========================= */
-
-                const {
-                    data,
-                    error
-                } = await supabaseClient.auth
-                    .signInWithPassword({
-                        email: loginEmail,
-                        password: password
-                    });
-
-
-                if (error) {
+                catch (error) {
 
                     console.error(
-                        'AUTH LOGIN ERROR:',
+                        'UNEXPECTED LOGIN ERROR:',
                         error
                     );
 
                     alert(
                         'LOGIN FAILED\n\n' +
-                        error.message
+                        'An unexpected system error occurred.\n\n' +
+                        'Please try again.'
                     );
 
-                    return;
                 }
 
+                finally {
 
-                /* =========================
-                   CHECK OFFICER PROFILE
-                ========================= */
+                    loginButton.disabled = false;
+                    loginButton.textContent = 'SECURE LOGIN';
 
-                const {
-                    data: officer,
-                    error: officerError
-                } = await supabaseClient
-                    .from('officers')
-                    .select('active')
-                    .eq('id', data.user.id)
-                    .single();
-
-
-                if (officerError || !officer) {
-
-                    console.error(
-                        'OFFICER PROFILE ERROR:',
-                        officerError
-                    );
-
-                    await supabaseClient.auth.signOut();
-
-                    alert(
-                        'OFFICER PROFILE NOT FOUND'
-                    );
-
-                    return;
                 }
 
-
-                /* =========================
-                   CHECK ACCOUNT ACTIVE
-                ========================= */
-
-                if (!officer.active) {
-
-                    await supabaseClient.auth.signOut();
-
-                    alert(
-                        'ACCESS DENIED\n\n' +
-                        'Your SCU account has been deactivated.\n\n' +
-                        'Please contact a Master if you believe this is an error.'
-                    );
-
-                    return;
-                }
-
-
-                /* =========================
-                   SUCCESS
-                ========================= */
-
-                window.location.href =
-                    'dashboard.html';
-
             }
+        );
 
-            catch (error) {
-
-                console.error(
-                    'UNEXPECTED LOGIN ERROR:',
-                    error
-                );
-
-                alert(
-                    'LOGIN FAILED\n\n' +
-                    'An unexpected system error occurred.\n\n' +
-                    'Please try again.'
-                );
-
-            }
-
-            finally {
-
-                loginButton.disabled = false;
-                loginButton.textContent = 'SECURE LOGIN';
-
-            }
-
-        }
-    );
-
-</script>
-
+    </script>
 
 </body>
-
 </html>
