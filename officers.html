@@ -1,1636 +1,471 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SCU Officer Management</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0b0f14;
-            color: #e6edf3;
-        }
-
-        header {
-            background: #111820;
-            border-bottom: 1px solid #26313c;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 2px;
-        }
-
-        .master {
-            color: #7dd3fc;
-            font-size: 13px;
-            margin-right: 15px;
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        h2 {
-            margin: 0;
-        }
-
-        button {
-            background: #1d4ed8;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #2563eb;
-        }
-
-        .logout {
-            background: #374151;
-        }
-
-        .logout:hover {
-            background: #4b5563;
-        }
-
-        .back-dashboard {
-            background: #263746;
-            border: 1px solid #354554;
-            margin-left: 10px;
-        }
-
-        .back-dashboard:hover {
-            background: #32495c;
-        }
-
-        .panel {
-            background: #111820;
-            border: 1px solid #26313c;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
-
-        th,
-        td {
-            padding: 14px;
-            text-align: left;
-            border-bottom: 1px solid #26313c;
-        }
-
-        th {
-            background: #151d26;
-            color: #94a3b8;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        td {
-            font-size: 14px;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 9px;
-            background: #0b0f14;
-            color: white;
-            border: 1px solid #374151;
-            border-radius: 4px;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #7dd3fc;
-        }
-
-        .save {
-            background: #15803d;
-        }
-
-        .save:hover {
-            background: #16a34a;
-        }
-
-        .status {
-            color: #4ade80;
-            font-weight: bold;
-        }
-
-        .empty {
-            padding: 30px;
-            text-align: center;
-            color: #94a3b8;
-        }
-
-        .warning {
-            margin-bottom: 20px;
-            padding: 14px;
-            background: #151d26;
-            border: 1px solid #26313c;
-            border-radius: 6px;
-            color: #94a3b8;
-            font-size: 13px;
-        }
-        .sort-bar {
-            margin-bottom: 20px;
-            padding: 14px;
-            background: #111820;
-            border: 1px solid #26313c;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .sort-label {
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .sort-bar select {
-            width: auto;
-            min-width: 180px;
-        }
-
-        .sort-direction {
-            background: #263746;
-            border: 1px solid #354554;
-        }
-
-        .sort-direction:hover {
-            background: #32495c;
-        }
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCU Officer Management</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0b0f14;color:#e6edf3}
+header{background:#111820;border-bottom:1px solid #26313c;padding:20px 30px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+header h1{margin:0;font-size:22px;letter-spacing:2px}
+.master{color:#7dd3fc;font-size:13px;margin-right:15px}
+main{max-width:1200px;margin:30px auto;padding:0 20px}
+.top-bar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:25px}
+h2{margin:0}
+button{background:#1d4ed8;color:white;border:none;padding:10px 16px;border-radius:5px;cursor:pointer;font-weight:bold}
+button:hover{background:#2563eb}
+button:disabled{opacity:.55;cursor:not-allowed}
+.logout{background:#374151}.logout:hover{background:#4b5563}
+.back-dashboard{background:#263746;border:1px solid #354554}
+.back-dashboard:hover{background:#32495c}
+.panel{background:#111820;border:1px solid #26313c;border-radius:8px;overflow-x:auto;margin-bottom:30px}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:14px;text-align:left;border-bottom:1px solid #26313c}
+th{background:#151d26;color:#94a3b8;font-size:12px;text-transform:uppercase}
+td{font-size:14px}
+input,select{width:100%;padding:9px;background:#0b0f14;color:white;border:1px solid #374151;border-radius:4px}
+input:focus,select:focus{outline:none;border-color:#7dd3fc}
+.save,.approve{background:#15803d}.save:hover,.approve:hover{background:#16a34a}
+.reject{background:#991b1b}.reject:hover{background:#b91c1c}
+.status{color:#4ade80;font-weight:bold}
+.empty{padding:30px;text-align:center;color:#94a3b8}
+.warning{margin-bottom:20px;padding:14px;background:#151d26;border:1px solid #26313c;border-radius:6px;color:#94a3b8;font-size:13px}
+.sort-bar{margin-bottom:20px;padding:14px;background:#111820;border:1px solid #26313c;border-radius:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sort-label{color:#94a3b8;font-size:13px;font-weight:bold;text-transform:uppercase}
+.sort-bar select{width:auto;min-width:180px}
+.sort-direction{background:#263746;border:1px solid #354554}
+.sort-direction:hover{background:#32495c}
+.section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 20px}
+.section-heading h2{font-size:19px}
+.section-note{color:#94a3b8;font-size:13px;padding:0 20px 16px}
+.application-table{min-width:760px}
+.role-select{min-width:180px}
+.button-stack{display:flex;gap:8px;flex-wrap:wrap}
+.pending-count{color:#fbbf24;font-size:13px;font-weight:bold}
+@media(max-width:650px){header{padding:16px}header h1{font-size:17px}main{margin:20px auto;padding:0 12px}.top-bar{align-items:flex-start}.master{display:none}th,td{padding:10px}}
+</style>
 </head>
-
-
 <body>
-
-
 <header>
-
-    <h1>
-        SCU // OFFICER MANAGEMENT
-    </h1>
-
-
-    <div>
-
-        <span class="master">
-            SCU COMMAND ACCESS
-        </span>
-
-
-        <button
-            class="logout"
-            onclick="logout()"
-        >
-            LOGOUT
-        </button>
-
-    </div>
-
+  <h1>SCU // OFFICER MANAGEMENT</h1>
+  <div>
+    <span class="master">SCU COMMAND ACCESS</span>
+    <button class="logout" onclick="logout()">LOGOUT</button>
+  </div>
 </header>
 
-
 <main>
+  <div class="top-bar">
+    <h2>Officer Management</h2>
+    <button class="back-dashboard" onclick="window.location.href='dashboard.html'">BACK TO DASHBOARD</button>
+  </div>
 
+  <div class="warning">
+    Changes made here are saved directly to the SCU database. System roles control website permissions.
+    Pending applicants cannot access the portal until a Master approves them.
+  </div>
 
-    <div class="top-bar">
-
-        <h2>
-            Authorised Officers
-        </h2>
-
-        <button
-            class="back-dashboard"
-            onclick="window.location.href='dashboard.html'"
-        >
-            BACK TO DASHBOARD
-        </button>
-
-    </div>
-
-
-    <div class="warning">
-
-        Changes made here are saved directly to the SCU database.
-        System roles control website permissions.
-
-    </div>
-
-    <div class="sort-bar">
-
-        <span class="sort-label">
-            SORT BY
-        </span>
-
-        <select id="sortBy">
-
-            <option value="callsign">
-                Callsign
-            </option>
-
-            <option value="full_name">
-                In-Game Name
-            </option>
-
-            <option value="rank">
-                Rank
-            </option>
-
-            <option value="role">
-                System Role
-            </option>
-
-            <option value="active">
-                Status
-            </option>
-
-        </select>
-
-
-        <button
-            type="button"
-            class="sort-direction"
-            id="sortDirection"
-            onclick="toggleSortDirection()"
-        >
-            A → Z
-        </button>
-
-    </div>
+  <section id="applicationsSection" style="display:none">
     <div class="panel">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Callsign</th>
-
-                    <th>In-Game Name</th>
-
-                    <th>Rank</th>
-
-                    <th>System Role</th>
-
-                    <th>Status</th>
-
-                    <th>Action</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody id="officerList">
-
-                <tr>
-
-                    <td
-                        colspan="6"
-                        class="empty"
-                    >
-                        Loading officers...
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
+      <div class="section-heading">
+        <h2>Pending Applications</h2>
+        <span class="pending-count" id="pendingCount">Loading applications...</span>
+      </div>
+      <div class="section-note">Review new applications and select the role to assign. New approvals default to Probationary.</div>
+      <table class="application-table">
+        <thead><tr><th>Callsign</th><th>In-Game Name</th><th>Applied</th><th>Role on Approval</th><th>Action</th></tr></thead>
+        <tbody id="applicationList"><tr><td colspan="5" class="empty">Loading applications...</td></tr></tbody>
+      </table>
     </div>
+  </section>
 
+  <div class="top-bar">
+    <h2>Authorised Officers</h2>
+  </div>
 
+  <div class="sort-bar">
+    <span class="sort-label">SORT BY</span>
+    <select id="sortBy">
+      <option value="callsign">Callsign</option>
+      <option value="full_name">In-Game Name</option>
+      <option value="rank">Rank</option>
+      <option value="role">System Role</option>
+      <option value="active">Status</option>
+    </select>
+    <button type="button" class="sort-direction" id="sortDirection" onclick="toggleSortDirection()">A → Z</button>
+  </div>
+
+  <div class="panel">
+    <table>
+      <thead><tr><th>Callsign</th><th>In-Game Name</th><th>Rank</th><th>System Role</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="officerList"><tr><td colspan="6" class="empty">Loading officers...</td></tr></tbody>
+    </table>
+  </div>
 </main>
 
-
 <script>
+const SUPABASE_URL = 'https://mtlozyseibrefhxnocvb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-
-const SUPABASE_URL =
-    'https://mtlozyseibrefhxnocvb.supabase.co';
-
-
-const SUPABASE_KEY =
-    'sb_publishable_IdOfodEMDP68oUfwh2KKWg_Z1wExmJ1';
-
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-
-// ======================================================
-// BACKEND ROLE VALUES
-// ======================================================
-//
-// IMPORTANT:
-// These are the existing database values.
-// DO NOT rename them.
-//
-// master      = SCU command
-// Officer     = Detective
-// investigator = Head of Drugs
-// Case Lead   = Head of Weapons
-//
-// ======================================================
-
-
-const ROLE_MASTER =
-    'master';
-
-
-const ROLE_DETECTIVE =
-    'Officer';
-
-
-const ROLE_HEAD_DRUGS =
-    'investigator';
-
-
-const ROLE_HEAD_WEAPONS =
-    'Case Lead';
-
-
-// ======================================================
-// MASTER CHECK
-// ======================================================
+const ROLE_MASTER = 'master';
+let officersData = [];
+let currentSort = 'callsign';
+let sortAscending = true;
+let currentUserId = null;
 
 function isMasterRole(role) {
-
-    return String(
-        role || ''
-    )
-    .trim()
-    .toLowerCase() ===
-        ROLE_MASTER;
-
+  return String(role || '').trim().toLowerCase() === ROLE_MASTER;
 }
-
-
-// ======================================================
-// ESCAPE HTML
-// ======================================================
 
 function escapeHtml(value) {
-
-    return String(value ?? '')
-
-        .replace(
-            /&/g,
-            '&amp;'
-        )
-
-        .replace(
-            /</g,
-            '&lt;'
-        )
-
-        .replace(
-            />/g,
-            '&gt;'
-        )
-
-        .replace(
-            /"/g,
-            '&quot;'
-        )
-
-        .replace(
-            /'/g,
-            '&#039;'
-        );
-
+  return String(value ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
-
-
-// ======================================================
-// ESCAPE JAVASCRIPT
-// ======================================================
-
-function escapeJs(value) {
-
-    return String(value ?? '')
-
-        .replace(
-            /\\/g,
-            '\\\\'
-        )
-
-        .replace(
-            /'/g,
-            "\\'"
-        )
-
-        .replace(
-            /"/g,
-            '\\"'
-        )
-
-        .replace(
-            /\r/g,
-            '\\r'
-        )
-
-        .replace(
-            /\n/g,
-            '\\n'
-        );
-
-}
-
-
-// ======================================================
-// DEFAULT DISPLAY TITLE
-// ======================================================
 
 function getDefaultPortalTitle(role) {
-
-    const normalRole =
-        String(
-            role || ''
-        )
-        .trim()
-        .toLowerCase();
-
-
-    switch (normalRole) {
-
-        case 'master':
-            return 'High Command';
-
-
-        case 'officer':
-            return 'Detective';
-
-
-        case 'investigator':
-            return 'Head of Drugs';
-
-
-        case 'case lead':
-            return 'Head of Weapons';
-
-
-        case 'probationary':
-            return 'Probationary';
-
-
-        default:
-            return '';
-
-    }
-
+  switch (String(role || '').trim().toLowerCase()) {
+    case 'master': return 'High Command';
+    case 'officer': return 'Detective';
+    case 'investigator': return 'Head of Drugs';
+    case 'case lead': return 'Head of Weapons';
+    case 'probationary': return 'Probationary';
+    default: return '';
+  }
 }
-
-
-// ======================================================
-// CHECK COMMAND ACCESS
-// ======================================================
 
 async function checkCommandAccess() {
+  const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+  if (sessionError || !session) {
+    window.location.href = 'index.html';
+    return;
+  }
+  currentUserId = session.user.id;
 
-    const {
-        data: {
-            session
-        },
-        error: sessionError
-    } =
-        await supabaseClient.auth.getSession();
+  const { data: officer, error } = await supabaseClient
+    .from('officers').select('role,active').eq('id', currentUserId).single();
 
+  if (error || !officer || !officer.active || !isMasterRole(officer.role)) {
+    alert('ACCESS DENIED');
+    window.location.href = 'dashboard.html';
+    return;
+  }
 
-    if (
-        sessionError ||
-        !session
-    ) {
-
-        window.location.href =
-            'index.html';
-
-        return;
-
-    }
-
-
-    const {
-        data: officer,
-        error
-    } =
-        await supabaseClient
-
-            .from('officers')
-
-            .select('role')
-
-            .eq(
-                'id',
-                session.user.id
-            )
-
-            .single();
-
-
-    if (
-        error ||
-        !officer ||
-        !isMasterRole(
-            officer.role
-        )
-    ) {
-
-        alert(
-            'ACCESS DENIED'
-        );
-
-        window.location.href =
-            'dashboard.html';
-
-        return;
-
-    }
-
-
-    loadOfficers();
-
+  document.getElementById('applicationsSection').style.display = 'block';
+  await Promise.all([loadApplications(), loadOfficers()]);
 }
 
+async function loadApplications() {
+  const list = document.getElementById('applicationList');
+  const count = document.getElementById('pendingCount');
+  const { data, error } = await supabaseClient
+    .from('officers')
+    .select('id,callsign,full_name,created_at')
+    .eq('application_status', 'pending')
+    .order('created_at', { ascending: true });
 
-// ======================================================
-// OFFICER SORTING
-// ======================================================
+  if (error) {
+    console.error('Application load error:', error);
+    list.innerHTML = `<tr><td colspan="5" class="empty">Unable to load applications: ${escapeHtml(error.message)}</td></tr>`;
+    count.textContent = 'Unable to load';
+    return;
+  }
 
-let officersData = [];
+  const applicants = data || [];
+  count.textContent = `${applicants.length} pending application${applicants.length === 1 ? '' : 's'}`;
 
-let currentSort =
-    'callsign';
+  if (!applicants.length) {
+    list.innerHTML = '<tr><td colspan="5" class="empty">There are no pending applications.</td></tr>';
+    return;
+  }
 
-let sortAscending =
-    true;
+  list.innerHTML = applicants.map(applicant => {
+    const id = escapeHtml(applicant.id);
+    const date = applicant.created_at
+      ? new Date(applicant.created_at).toLocaleDateString('en-GB')
+      : '—';
+    return `
+      <tr>
+        <td>${escapeHtml(applicant.callsign || '—')}</td>
+        <td>${escapeHtml(applicant.full_name || 'Unknown')}</td>
+        <td>${escapeHtml(date)}</td>
+        <td>
+          <select class="role-select" id="app-role-${id}">
+            <option value="probationary" selected>Probationary (default)</option>
+            <option value="Officer">Detective</option>
+            <option value="investigator">Head of Drugs</option>
+            <option value="Case Lead">Head of Weapons</option>
+          </select>
+        </td>
+        <td>
+          <div class="button-stack">
+            <button class="approve" id="approve-${id}" onclick="approveApplication('${id}')">APPROVE</button>
+            <button class="reject" id="reject-${id}" onclick="rejectApplication('${id}')">REJECT</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
 
+async function approveApplication(id) {
+  const roleSelect = document.getElementById(`app-role-${id}`);
+  if (!roleSelect) return;
+  const selectedRole = roleSelect.value;
+  const selectedLabel = roleSelect.options[roleSelect.selectedIndex].text;
+  if (!confirm(`Approve this application and assign ${selectedLabel}?`)) return;
 
-// ======================================================
-// LOAD OFFICERS
-// ======================================================
+  const approveButton = document.getElementById(`approve-${id}`);
+  if (approveButton) {
+    approveButton.disabled = true;
+    approveButton.textContent = 'APPROVING...';
+  }
+
+  const { error } = await supabaseClient.rpc('approve_scu_application', {
+    p_officer_id: id,
+    p_role: selectedRole
+  });
+
+  if (error) {
+    console.error('Approval error:', error);
+    alert('APPROVAL FAILED: ' + error.message);
+    if (approveButton) {
+      approveButton.disabled = false;
+      approveButton.textContent = 'APPROVE';
+    }
+    return;
+  }
+
+  alert('APPLICATION APPROVED. The officer can now log in.');
+  await Promise.all([loadApplications(), loadOfficers()]);
+}
+
+async function rejectApplication(id) {
+  if (!confirm('Reject this application? The applicant will remain inactive and will not receive portal access.')) return;
+
+  const rejectButton = document.getElementById(`reject-${id}`);
+  if (rejectButton) {
+    rejectButton.disabled = true;
+    rejectButton.textContent = 'REJECTING...';
+  }
+
+  const { error } = await supabaseClient.rpc('reject_scu_application', {
+    p_officer_id: id
+  });
+
+  if (error) {
+    console.error('Rejection error:', error);
+    alert('REJECTION FAILED: ' + error.message);
+    if (rejectButton) {
+      rejectButton.disabled = false;
+      rejectButton.textContent = 'REJECT';
+    }
+    return;
+  }
+
+  alert('APPLICATION REJECTED.');
+  await loadApplications();
+}
 
 async function loadOfficers() {
+  const list = document.getElementById('officerList');
+  const { data, error } = await supabaseClient.from('officers').select('*');
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
+  if (error) {
+    console.error(error);
+    list.innerHTML = `<tr><td colspan="6" class="empty">Unable to load officers: ${escapeHtml(error.message)}</td></tr>`;
+    return;
+  }
 
-            .from('officers')
-
-            .select('*');
-
-
-    const list =
-        document.getElementById(
-            'officerList'
-        );
-
-
-    if (error) {
-
-        console.error(
-            error
-        );
-
-
-        list.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="6"
-                    class="empty"
-                >
-                    Unable to load officers.
-                </td>
-
-            </tr>
-
-        `;
-
-        return;
-
-    }
-
-
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        list.innerHTML = `
-
-            <tr>
-
-                <td
-                    colspan="6"
-                    class="empty"
-                >
-                    No officers found.
-                </td>
-
-            </tr>
-
-        `;
-
-        return;
-
-    }
-
-
-    officersData =
-        data;
-
-
-    renderOfficers();
-
+  // Pending and rejected applications are shown only in the application workflow.
+  officersData = (data || []).filter(o =>
+    o.application_status !== 'pending' && o.application_status !== 'rejected'
+  );
+  renderOfficers();
 }
-
-
-// ======================================================
-// RENDER OFFICERS
-// ======================================================
 
 function renderOfficers() {
-
-    const list =
-        document.getElementById(
-            'officerList'
-        );
-
-
-    const sortedData =
-        [...officersData].sort(
-            (a, b) => {
-
-                let valueA;
-                let valueB;
-
-
-                if (
-                    currentSort ===
-                    'active'
-                ) {
-
-                    valueA =
-                        Boolean(
-                            a.active
-                        )
-                            ? 1
-                            : 0;
-
-                    valueB =
-                        Boolean(
-                            b.active
-                        )
-                            ? 1
-                            : 0;
-
-                }
-
-                else if (
-                    currentSort ===
-                    'role'
-                ) {
-
-                    valueA =
-                        String(
-                            a.portal_title ||
-                            getDefaultPortalTitle(
-                                a.role
-                            ) ||
-                            a.role ||
-                            ''
-                        )
-                        .trim()
-                        .toLowerCase();
-
-
-                    valueB =
-                        String(
-                            b.portal_title ||
-                            getDefaultPortalTitle(
-                                b.role
-                            ) ||
-                            b.role ||
-                            ''
-                        )
-                        .trim()
-                        .toLowerCase();
-
-                }
-
-                else {
-
-                    valueA =
-                        String(
-                            a[currentSort] || ''
-                        )
-                        .trim()
-                        .toLowerCase();
-
-
-                    valueB =
-                        String(
-                            b[currentSort] || ''
-                        )
-                        .trim()
-                        .toLowerCase();
-
-                }
-
-
-                if (
-                    valueA < valueB
-                ) {
-
-                    return sortAscending
-                        ? -1
-                        : 1;
-
-                }
-
-
-                if (
-                    valueA > valueB
-                ) {
-
-                    return sortAscending
-                        ? 1
-                        : -1;
-
-                }
-
-
-                return 0;
-
-            }
-        );
-
-
-    list.innerHTML =
-        sortedData.map(
-            officer => {
-
-                const id =
-                    escapeJs(
-                        officer.id
-                    );
-
-
-                const safeId =
-                    escapeHtml(
-                        officer.id
-                    );
-
-
-                const callsign =
-                    escapeHtml(
-                        officer.callsign || ''
-                    );
-
-
-                const fullName =
-                    escapeHtml(
-                        officer.full_name || ''
-                    );
-
-
-                const rank =
-                    escapeHtml(
-                        officer.rank || ''
-                    );
-
-
-                const active =
-                    Boolean(
-                        officer.active
-                    );
-
-
-                const backendRole =
-                    String(
-                        officer.role || ''
-                    ).trim();
-
-
-                const normalRole =
-                    backendRole.toLowerCase();
-
-
-                const portalTitle =
-                    officer.portal_title ||
-                    getDefaultPortalTitle(
-                        backendRole
-                    );
-
-
-                let roleOptions = '';
-
-
-                // ==================================================
-                // MASTER ACCOUNT
-                // ==================================================
-
-                if (
-                    normalRole === 'master'
-                ) {
-
-                    roleOptions = `
-
-                        <option
-                            value="master|Head of SCU"
-                            ${
-                                portalTitle === 'Head of SCU'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Head of SCU
-                        </option>
-
-
-                        <option
-                            value="master|Assistant Head of SCU"
-                            ${
-                                portalTitle === 'Assistant Head of SCU'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Assistant Head of SCU
-                        </option>
-
-
-                        <option
-                            value="master|GOV"
-                            ${
-                                portalTitle === 'GOV'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            GOV
-                        </option>
-
-
-                        <option
-                            value="master|High Command"
-                            ${
-                                portalTitle === 'High Command'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            High Command
-                        </option>
-
-
-                        <option
-                            value="Officer|Detective"
-                        >
-                            Detective
-                        </option>
-
-
-                        <option
-                            value="investigator|Head of Drugs"
-                        >
-                            Head of Drugs
-                        </option>
-
-
-                        <option
-                            value="Case Lead|Head of Weapons"
-                        >
-                            Head of Weapons
-                        </option>
-
-
-                        <option
-                            value="probationary|Probationary"
-                            ${
-                                normalRole === 'probationary'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Probationary
-                        </option>
-
-                    `;
-
-                }
-
-
-                // ==================================================
-                // NON-MASTER ACCOUNT
-                // ==================================================
-
-                else {
-
-                    roleOptions = `
-
-                        <option
-                            value="Officer|Detective"
-                            ${
-                                normalRole === 'officer'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Detective
-                        </option>
-
-
-                        <option
-                            value="investigator|Head of Drugs"
-                            ${
-                                normalRole === 'investigator'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Head of Drugs
-                        </option>
-
-
-                        <option
-                            value="Case Lead|Head of Weapons"
-                            ${
-                                normalRole === 'case lead'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Head of Weapons
-                        </option>
-
-
-                        <option
-                            value="probationary|Probationary"
-                            ${
-                                normalRole === 'probationary'
-                                    ? 'selected'
-                                    : ''
-                            }
-                        >
-                            Probationary
-                        </option>
-
-
-                        <option
-                            value="master|Head of SCU"
-                        >
-                            Head of SCU
-                        </option>
-
-
-                        <option
-                            value="master|Assistant Head of SCU"
-                        >
-                            Assistant Head of SCU
-                        </option>
-
-
-                        <option
-                            value="master|GOV"
-                        >
-                            GOV
-                        </option>
-
-
-                        <option
-                            value="master|High Command"
-                        >
-                            High Command
-                        </option>
-
-                    `;
-
-                }
-
-
-                return `
-
-                    <tr>
-
-
-                        <td>
-
-                            <input
-                                id="callsign-${safeId}"
-                                value="${callsign}"
-                            >
-
-                        </td>
-
-
-                        <td>
-
-                            <input
-                                id="name-${safeId}"
-                                value="${fullName}"
-                            >
-
-                        </td>
-
-
-                        <td>
-
-                            <input
-                                id="rank-${safeId}"
-                                value="${rank}"
-                                placeholder="e.g. Detective"
-                            >
-
-                        </td>
-
-
-                        <td>
-
-                            <select
-                                id="role-${safeId}"
-                            >
-
-                                ${roleOptions}
-
-                            </select>
-
-                        </td>
-
-
-                        <td class="status">
-
-                            ${
-                                active
-                                    ? 'ACTIVE'
-                                    : 'INACTIVE'
-                            }
-
-                        </td>
-
-
-                        <td>
-
-                            <button
-                                class="save"
-                                onclick="saveOfficer('${id}')"
-                            >
-                                SAVE
-                            </button>
-
-
-                            <br>
-
-
-                            <button
-                                onclick="toggleOfficerStatus(
-                                    '${id}',
-                                    ${active}
-                                )"
-                                style="
-                                    margin-top:8px;
-                                    background:${
-                                        active
-                                            ? '#991b1b'
-                                            : '#15803d'
-                                    };
-                                "
-                            >
-
-                                ${
-                                    active
-                                        ? 'DEACTIVATE'
-                                        : 'REACTIVATE'
-                                }
-
-                            </button>
-
-                        </td>
-
-                    </tr>
-
-                `;
-
-            }
-        )
-        .join('');
-
+  const list = document.getElementById('officerList');
+  const sortedData = [...officersData].sort((a, b) => {
+    let valueA, valueB;
+    if (currentSort === 'active') {
+      valueA = a.active ? 1 : 0;
+      valueB = b.active ? 1 : 0;
+    } else if (currentSort === 'role') {
+      valueA = String(a.portal_title || getDefaultPortalTitle(a.role) || a.role || '').trim().toLowerCase();
+      valueB = String(b.portal_title || getDefaultPortalTitle(b.role) || b.role || '').trim().toLowerCase();
+    } else {
+      valueA = String(a[currentSort] || '').trim().toLowerCase();
+      valueB = String(b[currentSort] || '').trim().toLowerCase();
+    }
+    if (valueA < valueB) return sortAscending ? -1 : 1;
+    if (valueA > valueB) return sortAscending ? 1 : -1;
+    return 0;
+  });
+
+  if (!sortedData.length) {
+    list.innerHTML = '<tr><td colspan="6" class="empty">No authorised officers found.</td></tr>';
+    return;
+  }
+
+  list.innerHTML = sortedData.map(officer => {
+    const id = escapeHtml(officer.id);
+    const callsign = escapeHtml(officer.callsign || '');
+    const fullName = escapeHtml(officer.full_name || '');
+    const rank = escapeHtml(officer.rank || '');
+    const active = Boolean(officer.active);
+    const backendRole = String(officer.role || '').trim();
+    const normalRole = backendRole.toLowerCase();
+    const portalTitle = officer.portal_title || getDefaultPortalTitle(backendRole);
+
+    let roleOptions = '';
+    if (normalRole === 'master') {
+      roleOptions = `
+        <option value="master|Head of SCU" ${portalTitle === 'Head of SCU' ? 'selected' : ''}>Head of SCU</option>
+        <option value="master|Assistant Head of SCU" ${portalTitle === 'Assistant Head of SCU' ? 'selected' : ''}>Assistant Head of SCU</option>
+        <option value="master|GOV" ${portalTitle === 'GOV' ? 'selected' : ''}>GOV</option>
+        <option value="master|High Command" ${portalTitle === 'High Command' ? 'selected' : ''}>High Command</option>
+        <option value="Officer|Detective">Detective</option>
+        <option value="investigator|Head of Drugs">Head of Drugs</option>
+        <option value="Case Lead|Head of Weapons">Head of Weapons</option>
+        <option value="probationary|Probationary">Probationary</option>`;
+    } else {
+      roleOptions = `
+        <option value="Officer|Detective" ${normalRole === 'officer' ? 'selected' : ''}>Detective</option>
+        <option value="investigator|Head of Drugs" ${normalRole === 'investigator' ? 'selected' : ''}>Head of Drugs</option>
+        <option value="Case Lead|Head of Weapons" ${normalRole === 'case lead' ? 'selected' : ''}>Head of Weapons</option>
+        <option value="probationary|Probationary" ${normalRole === 'probationary' ? 'selected' : ''}>Probationary</option>
+        <option value="master|Head of SCU">Head of SCU</option>
+        <option value="master|Assistant Head of SCU">Assistant Head of SCU</option>
+        <option value="master|GOV">GOV</option>
+        <option value="master|High Command">High Command</option>`;
+    }
+
+    return `
+      <tr>
+        <td><input id="callsign-${id}" value="${callsign}"></td>
+        <td><input id="name-${id}" value="${fullName}"></td>
+        <td><input id="rank-${id}" value="${rank}" placeholder="e.g. Detective"></td>
+        <td><select id="role-${id}">${roleOptions}</select></td>
+        <td class="status">${active ? 'ACTIVE' : 'INACTIVE'}</td>
+        <td>
+          <button class="save" onclick="saveOfficer('${id}')">SAVE</button><br>
+          <button onclick="toggleOfficerStatus('${id}', ${active})"
+            style="margin-top:8px;background:${active ? '#991b1b' : '#15803d'}">
+            ${active ? 'DEACTIVATE' : 'REACTIVATE'}
+          </button>
+        </td>
+      </tr>`;
+  }).join('');
 }
 
-
-// ======================================================
-// SORT CHANGE
-// ======================================================
-
-document
-    .getElementById('sortBy')
-    .addEventListener(
-        'change',
-        function () {
-
-            currentSort =
-                this.value;
-
-            renderOfficers();
-
-        }
-    );
-
-
-// ======================================================
-// TOGGLE SORT DIRECTION
-// ======================================================
+document.getElementById('sortBy').addEventListener('change', function() {
+  currentSort = this.value;
+  renderOfficers();
+});
 
 function toggleSortDirection() {
-
-    sortAscending =
-        !sortAscending;
-
-
-    document
-        .getElementById(
-            'sortDirection'
-        )
-        .textContent =
-            sortAscending
-                ? 'A → Z'
-                : 'Z → A';
-
-
-    renderOfficers();
-
+  sortAscending = !sortAscending;
+  document.getElementById('sortDirection').textContent = sortAscending ? 'A → Z' : 'Z → A';
+  renderOfficers();
 }
-
-// ======================================================
-// SAVE OFFICER
-// ======================================================
 
 async function saveOfficer(id) {
-
-    const {
-        data: {
-            session
-        }
-    } =
-        await supabaseClient.auth.getSession();
-
-
-    if (!session) {
-
-        alert(
-            'You are not logged in.'
-        );
-
-        return;
-
-    }
-
-
-    const callsign =
-        document
-            .getElementById(
-                `callsign-${id}`
-            )
-            .value
-            .trim();
-
-
-    const fullName =
-        document
-            .getElementById(
-                `name-${id}`
-            )
-            .value
-            .trim();
-
-
-    const rank =
-        document
-            .getElementById(
-                `rank-${id}`
-            )
-            .value
-            .trim();
-
-
-    const roleSelection =
-        document
-            .getElementById(
-                `role-${id}`
-            )
-            .value;
-
-
-    const separatorIndex =
-        roleSelection.indexOf('|');
-
-
-    if (
-        separatorIndex === -1
-    ) {
-
-        alert(
-            'Invalid system role.'
-        );
-
-        return;
-
-    }
-
-
-    const role =
-        roleSelection.substring(
-            0,
-            separatorIndex
-        );
-
-
-    const portalTitle =
-        roleSelection.substring(
-            separatorIndex + 1
-        );
-
-
-    if (
-        !callsign ||
-        !fullName ||
-        !rank
-    ) {
-
-        alert(
-            'Please complete Callsign, Name and Rank.'
-        );
-
-        return;
-
-    }
-
-
-    // ==================================================
-    // ONLY EXISTING BACKEND ROLES
-    // ==================================================
-
-    const allowedRoles = [
-
-        'master',
-
-        'Officer',
-
-        'investigator',
-
-        'Case Lead',
-
-        'probationary'
-
-    ];
-
-
-    if (
-        !allowedRoles.includes(
-            role
-        )
-    ) {
-
-        alert(
-            'Invalid system role.'
-        );
-
-        return;
-
-    }
-
-
-    // ==================================================
-    // PREVENT SELF-REMOVAL OF MASTER ACCESS
-    // ==================================================
-
-    if (
-        id === session.user.id &&
-        !isMasterRole(role)
-    ) {
-
-        alert(
-            'You cannot remove your own SCU Command access.'
-        );
-
-        return;
-
-    }
-
-
-    // ==================================================
-    // VERIFY CURRENT MASTER
-    // ==================================================
-
-    const {
-        data: currentUser,
-        error: currentUserError
-    } =
-        await supabaseClient
-
-            .from('officers')
-
-            .select('role')
-
-            .eq(
-                'id',
-                session.user.id
-            )
-
-            .single();
-
-
-    if (
-        currentUserError ||
-        !currentUser ||
-        !isMasterRole(
-            currentUser.role
-        )
-    ) {
-
-        alert(
-            'Unable to verify your permissions.'
-        );
-
-        return;
-
-    }
-
-
-    // ==================================================
-    // PREVENT SELF DOWNGRADE
-    // ==================================================
-
-    if (
-        id === session.user.id &&
-        isMasterRole(
-            currentUser.role
-        ) &&
-        !isMasterRole(role)
-    ) {
-
-        alert(
-            'You cannot downgrade your own SCU Command access.'
-        );
-
-        return;
-
-    }
-
-
-    // ==================================================
-    // SAVE
-    // ==================================================
-
-    const {
-        error
-    } =
-        await supabaseClient
-
-            .from('officers')
-
-            .update({
-
-                callsign:
-                    callsign,
-
-                full_name:
-                    fullName,
-
-                rank:
-                    rank,
-
-                role:
-                    role,
-
-                portal_title:
-                    portalTitle
-
-            })
-
-            .eq(
-                'id',
-                id
-            );
-
-
-    if (error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            'SAVE FAILED: ' +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    alert(
-        'OFFICER UPDATED SUCCESSFULLY'
-    );
-
-
-    loadOfficers();
-
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    alert('You are not logged in.');
+    return;
+  }
+
+  const callsign = document.getElementById(`callsign-${id}`).value.trim();
+  const fullName = document.getElementById(`name-${id}`).value.trim();
+  const rank = document.getElementById(`rank-${id}`).value.trim();
+  const roleSelection = document.getElementById(`role-${id}`).value;
+  const separatorIndex = roleSelection.indexOf('|');
+
+  if (separatorIndex === -1) {
+    alert('Invalid system role.');
+    return;
+  }
+
+  const role = roleSelection.substring(0, separatorIndex);
+  const portalTitle = roleSelection.substring(separatorIndex + 1);
+  if (!callsign || !fullName || !rank) {
+    alert('Please complete Callsign, Name and Rank.');
+    return;
+  }
+
+  const allowedRoles = ['master', 'Officer', 'investigator', 'Case Lead', 'probationary'];
+  if (!allowedRoles.includes(role)) {
+    alert('Invalid system role.');
+    return;
+  }
+
+  const { data: currentUser, error: currentUserError } = await supabaseClient
+    .from('officers').select('role,active').eq('id', session.user.id).single();
+
+  if (currentUserError || !currentUser || !currentUser.active || !isMasterRole(currentUser.role)) {
+    alert('Unable to verify your permissions.');
+    return;
+  }
+
+  if (id === session.user.id && !isMasterRole(role)) {
+    alert('You cannot remove or downgrade your own SCU Command access.');
+    return;
+  }
+
+  const { error } = await supabaseClient.from('officers').update({
+    callsign, full_name: fullName, rank, role, portal_title: portalTitle
+  }).eq('id', id);
+
+  if (error) {
+    console.error(error);
+    alert('SAVE FAILED: ' + error.message);
+    return;
+  }
+
+  alert('OFFICER UPDATED SUCCESSFULLY');
+  await loadOfficers();
 }
 
+async function toggleOfficerStatus(id, currentlyActive) {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) {
+    alert('You are not logged in.');
+    return;
+  }
 
-// ======================================================
-// ACTIVATE / DEACTIVATE
-// ======================================================
+  if (id === session.user.id && currentlyActive) {
+    alert('You cannot deactivate your own account.');
+    return;
+  }
 
-async function toggleOfficerStatus(
-    id,
-    currentlyActive
-) {
+  const newStatus = !currentlyActive;
+  const action = newStatus ? 'reactivate' : 'deactivate';
+  if (!confirm(`Are you sure you want to ${action} this officer?`)) return;
 
-    const {
-        data: {
-            session
-        }
-    } =
-        await supabaseClient.auth.getSession();
+  const { error } = await supabaseClient.from('officers')
+    .update({ active: newStatus }).eq('id', id);
 
+  if (error) {
+    console.error(error);
+    alert('STATUS UPDATE FAILED: ' + error.message);
+    return;
+  }
 
-    if (!session) {
-
-        alert(
-            'You are not logged in.'
-        );
-
-        return;
-
-    }
-
-
-    if (
-        id === session.user.id &&
-        currentlyActive
-    ) {
-
-        alert(
-            'You cannot deactivate your own account.'
-        );
-
-        return;
-
-    }
-
-
-    const newStatus =
-        !currentlyActive;
-
-
-    const action =
-        newStatus
-            ? 'reactivate'
-            : 'deactivate';
-
-
-    const confirmed =
-        confirm(
-            `Are you sure you want to ${action} this officer?`
-        );
-
-
-    if (!confirmed) {
-
-        return;
-
-    }
-
-
-    const {
-        error
-    } =
-        await supabaseClient
-
-            .from('officers')
-
-            .update({
-
-                active:
-                    newStatus
-
-            })
-
-            .eq(
-                'id',
-                id
-            );
-
-
-    if (error) {
-
-        console.error(
-            error
-        );
-
-
-        alert(
-            'STATUS UPDATE FAILED: ' +
-            error.message
-        );
-
-        return;
-
-    }
-
-
-    alert(
-        newStatus
-            ? 'OFFICER REACTIVATED SUCCESSFULLY'
-            : 'OFFICER DEACTIVATED SUCCESSFULLY'
-    );
-
-
-    loadOfficers();
-
+  alert(newStatus ? 'OFFICER REACTIVATED SUCCESSFULLY' : 'OFFICER DEACTIVATED SUCCESSFULLY');
+  await loadOfficers();
 }
-
-
-// ======================================================
-// LOGOUT
-// ======================================================
 
 async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    window.location.href =
-        'index.html';
-
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
 }
 
-
-// ======================================================
-// START
-// ======================================================
-
 checkCommandAccess();
-
-
 </script>
-
 </body>
 </html>
