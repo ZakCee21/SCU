@@ -985,29 +985,29 @@ async function loadAgents() {
     }
 
 
-   // ==================================================
-    // RANK ORDER
+ // ==================================================
+    // RANK ORDER (all lowercase keys for case-insensitive matching)
     // ==================================================
 
     const rankOrder = {
 
-        'Head of SCU': 1,
+        'head of scu': 1,
 
-        'Head of Gangs': 2,
+        'head of gangs': 2,
 
-        'Head of Drugs': 3,
+        'head of drugs': 3,
 
-        'Head of Weapons': 4,
+        'head of weapons': 4,
 
-        'Assistant Head of SCU': 5,
+        'assistant head of scu': 5,
 
-        'Detective': 6
+        'detective': 6
 
     };
 
 
     // ==================================================
-    // REMOVE HIGH COMMAND / GOV
+    // REMOVE HIGH COMMAND / GOV / PROBATIONARY
     // AND ANY OTHER UNWANTED RANKS
     // ==================================================
 
@@ -1016,7 +1016,7 @@ async function loadAgents() {
             agent => {
 
                 const rank =
-                    (agent.rank || '').trim();
+                    (agent.rank || '').trim().toLowerCase();
 
                 return Object.prototype.hasOwnProperty.call(
                     rankOrder,
@@ -1036,10 +1036,10 @@ async function loadAgents() {
         (a, b) => {
 
             const rankA =
-                (a.rank || '').trim();
+                (a.rank || '').trim().toLowerCase();
 
             const rankB =
-                (b.rank || '').trim();
+                (b.rank || '').trim().toLowerCase();
 
 
             const rankDifference =
@@ -1072,7 +1072,6 @@ async function loadAgents() {
 
         }
     );
-
 
     // ==================================================
     // CLEAR LIST
