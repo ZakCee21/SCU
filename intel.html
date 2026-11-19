@@ -1393,119 +1393,82 @@
     /* LOAD ACTIVE SCU AGENTS */
     /* ================================================== */
 
-    async function loadScuAgents() {
 
-        const {
-            data,
+async function loadScuAgents() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from('officers')
+        .select('id, full_name, rank, callsign, portal_title')
+        .eq('is_scu_agent', true)
+        .eq('active', true);
+
+    if (error) {
+
+        console.error(
+            'SCU agent loading error:',
             error
-        } = await supabaseClient
-
-            .from('officers')
-
-            .select(
-                'id, full_name, rank, callsign'
-            )
-
-            .eq(
-                'is_scu_agent',
-                true
-            )
-
-            .eq(
-                'active',
-                true
-            );
-
-
-        if (error) {
-
-            console.error(
-                'SCU agent loading error:',
-                error
-            );
-
-            scaAgents = [];
-
-            return;
-
-        }
-
-
-        const rankOrder = {
-
-            'Head of SCU': 1,
-            'Assistant Head of SCU': 2,
-            'Head of Weapons': 3,
-            'Head of Drugs': 4,
-            'Head of Gangs': 5,
-            'Detective': 6
-
-        };
-
-
-        const filteredAgents =
-            (data || []).filter(
-                agent => {
-
-                    const rank =
-                        (agent.rank || '').trim();
-
-                    return Object.prototype.hasOwnProperty.call(
-                        rankOrder,
-                        rank
-                    );
-
-                }
-            );
-
-
-        filteredAgents.sort(
-            (a, b) => {
-
-                const rankA =
-                    (a.rank || '').trim();
-
-                const rankB =
-                    (b.rank || '').trim();
-
-
-                const rankDifference =
-                    rankOrder[rankA] -
-                    rankOrder[rankB];
-
-
-                if (
-                    rankDifference !== 0
-                ) {
-
-                    return rankDifference;
-
-                }
-
-
-                const nameA =
-                    (a.full_name || '')
-                        .trim()
-                        .toLowerCase();
-
-                const nameB =
-                    (b.full_name || '')
-                        .trim()
-                        .toLowerCase();
-
-
-                return nameA.localeCompare(
-                    nameB
-                );
-
-            }
         );
 
-
-        scaAgents =
-            filteredAgents;
-
+        scaAgents = [];
+        return;
     }
+
+    const rankOrder = {
+        'Head of SCU': 1,
+        'Head of Gangs': 2,
+        'Head of Drugs': 3,
+        'Head of Weapons': 4,
+        'Assistant Head of SCU': 5,
+        'Detective': 6
+    };
+
+    const filteredAgents = (data || [])
+        .map(agent => {
+
+            const title =
+                (agent.portal_title || agent.rank || '')
+                    .trim();
+
+            return {
+                ...agent,
+                rank: title
+            };
+
+        })
+        .filter(agent => {
+
+            return Object.prototype.hasOwnProperty.call(
+                rankOrder,
+                agent.rank
+            );
+
+        });
+
+    filteredAgents.sort((a, b) => {
+
+        const rankDifference =
+            rankOrder[a.rank] - rankOrder[b.rank];
+
+        if (rankDifference !== 0) {
+            return rankDifference;
+        }
+
+        return (a.full_name || '')
+            .trim()
+            .toLowerCase()
+            .localeCompare(
+                (b.full_name || '').trim().toLowerCase()
+            );
+
+    });
+
+    scaAgents = filteredAgents;
+
+}
+
 
 
     /* ================================================== */
