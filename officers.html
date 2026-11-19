@@ -519,6 +519,10 @@ function getDefaultPortalTitle(role) {
             return 'Head of Weapons';
 
 
+        case 'probationary':
+            return 'Probationary';
+
+
         default:
             return '';
 
@@ -954,6 +958,18 @@ function renderOfficers() {
                             Head of Weapons
                         </option>
 
+
+                        <option
+                            value="probationary|Probationary"
+                            ${
+                                normalRole === 'probationary'
+                                    ? 'selected'
+                                    : ''
+                            }
+                        >
+                            Probationary
+                        </option>
+
                     `;
 
                 }
@@ -1000,6 +1016,18 @@ function renderOfficers() {
                             }
                         >
                             Head of Weapons
+                        </option>
+
+
+                        <option
+                            value="probationary|Probationary"
+                            ${
+                                normalRole === 'probationary'
+                                    ? 'selected'
+                                    : ''
+                            }
+                        >
+                            Probationary
                         </option>
 
 
@@ -1304,7 +1332,9 @@ async function saveOfficer(id) {
 
         'investigator',
 
-        'Case Lead'
+        'Case Lead',
+
+        'probationary'
 
     ];
 
