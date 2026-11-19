@@ -574,6 +574,28 @@
         border-top: 1px solid #1c2732;
     }
 
+    /* PROBATIONARY DASHBOARD RESTRICTIONS */
+
+    body.probationary-mode .welcome,
+    body.probationary-mode .global-search,
+    body.probationary-mode .cards,
+    body.probationary-mode .panel {
+        display: none !important;
+    }
+
+    body.probationary-mode .dashboard-buttons > button:not(.intel-button) {
+        display: none !important;
+    }
+
+    body.probationary-mode .dashboard-buttons {
+        margin-top: 35px;
+        justify-content: center;
+    }
+
+    body.probationary-mode .intel-button {
+        display: inline-block;
+    }
+
     @media (max-width: 700px) {
 
         .header {
@@ -1055,10 +1077,76 @@ async function checkLogin() {
         session.user.id;
 
 
-    loadOfficerDetails(
+    // Check the officer's active status and system role before
+    // loading any case, intel, chat or global-search information.
+
+    const {
+        data: officerAccess,
+        error: officerAccessError
+    } = await supabaseClient
+
+        .from('officers')
+
+        .select('role, active')
+
+        .eq('id', userId)
+
+        .single();
+
+
+    if (
+        officerAccessError ||
+        !officerAccess ||
+        officerAccess.active !== true
+    ) {
+
+        console.error(
+            'Dashboard officer access check failed:',
+            officerAccessError
+        );
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href =
+            'index.html';
+
+        return;
+
+    }
+
+
+    // Load the normal header details for every authorised officer.
+
+    await loadOfficerDetails(
         userId
     );
 
+
+    const role =
+        String(
+            officerAccess.role || ''
+        )
+        .trim()
+        .toLowerCase();
+
+
+    // Probationary officers receive a deliberately limited dashboard.
+    // Do not load cases, received intel, chat counts or global search.
+
+    if (
+        role === 'probationary'
+    ) {
+
+        document.body.classList.add(
+            'probationary-mode'
+        );
+
+        return;
+
+    }
+
+
+    // Existing dashboard loading for all other roles remains unchanged.
 
     loadCases(
         userId
