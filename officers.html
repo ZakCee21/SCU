@@ -321,28 +321,25 @@ function renderOfficers() {
     const normalRole = backendRole.toLowerCase();
     const portalTitle = officer.portal_title || getDefaultPortalTitle(backendRole);
 
-    let roleOptions = '';
-    if (normalRole === 'master') {
-      roleOptions = `
-        <option value="master|Head of SCU" ${portalTitle === 'Head of SCU' ? 'selected' : ''}>Head of SCU</option>
-        <option value="master|Assistant Head of SCU" ${portalTitle === 'Assistant Head of SCU' ? 'selected' : ''}>Assistant Head of SCU</option>
-        <option value="master|GOV" ${portalTitle === 'GOV' ? 'selected' : ''}>GOV</option>
-        <option value="master|High Command" ${portalTitle === 'High Command' ? 'selected' : ''}>High Command</option>
-        <option value="Officer|Detective">Detective</option>
-        <option value="investigator|Head of Drugs">Head of Drugs</option>
-        <option value="Case Lead|Head of Weapons">Head of Weapons</option>
-        <option value="probationary|Probationary">Probationary</option>`;
-    } else {
-      roleOptions = `
-        <option value="Officer|Detective" ${normalRole === 'officer' ? 'selected' : ''}>Detective</option>
-        <option value="investigator|Head of Drugs" ${normalRole === 'investigator' ? 'selected' : ''}>Head of Drugs</option>
-        <option value="Case Lead|Head of Weapons" ${normalRole === 'case lead' ? 'selected' : ''}>Head of Weapons</option>
-        <option value="probationary|Probationary" ${normalRole === 'probationary' ? 'selected' : ''}>Probationary</option>
-        <option value="master|Head of SCU">Head of SCU</option>
-        <option value="master|Assistant Head of SCU">Assistant Head of SCU</option>
-        <option value="master|GOV">GOV</option>
-        <option value="master|High Command">High Command</option>`;
-    }
+  const roleOptionsList = [
+      { value: 'master|Head of SCU', label: 'Head of SCU' },
+      { value: 'master|Assistant Head of SCU', label: 'Assistant Head of SCU' },
+      { value: 'investigator|Head of Gangs', label: 'Head of Gangs' },
+      { value: 'investigator|Head of Drugs', label: 'Head of Drugs' },
+      { value: 'Case Lead|Head of Weapons', label: 'Head of Weapons' },
+      { value: 'Officer|Detective', label: 'Detective' },
+      { value: 'probationary|Probationary', label: 'Probationary' },
+      { value: 'master|GOV', label: 'GOV' },
+      { value: 'master|High Command', label: 'High Command' }
+    ];
+
+    const roleOptions = roleOptionsList.map(opt => {
+      const [optRole, optTitle] = opt.value.split('|');
+      const isSelected =
+        optRole.toLowerCase() === normalRole &&
+        optTitle.toLowerCase() === String(portalTitle || '').trim().toLowerCase();
+      return `<option value="${opt.value}" ${isSelected ? 'selected' : ''}>${opt.label}</option>`;
+    }).join('');
 
     return `
       <tr>
